@@ -1,5 +1,4 @@
 <template>
-  <div class="container">
     <nav>
       <div class="hamburger">
         <div class="line"></div>
@@ -13,9 +12,8 @@
         <li><router-link class="links" to="/agregarProductos">Agregar</router-link></li>
         <li><router-link class="links" to="/productos">Productos</router-link></li>
       </ul>
-    </nav>
     <router-view/>
-  </div>
+    </nav>
 </template>
 <script>
 export default {
@@ -23,9 +21,11 @@ export default {
 }
 </script>
 <style lang="scss">
-
 nav{
+  margin: 0;
+  padding: 0;
   height: 10vh;
+  width: 100%;
   background: #5b78c7;
 }
 
@@ -33,9 +33,31 @@ li{
   list-style: none;
 }
 
-.nav-links .links {
+.nav-links{
+  display: flex;
+  list-style: none;
+  background: coral;
+  width: 50%;
+  height: 100%;
+  padding: 0;
+  justify-content: space-around;
+  align-items: center;
+  margin-left: auto;
+}
+
+.links{
   color: white;
   text-decoration: none;
   font-size: 16px;
+}
+@media(max-width: 768px)  {
+  .nav-links{
+    position: fixed;
+    background: #5b78c7;
+    height: 100vh;
+    width: 100%;
+    flex-direction: column;
+    // display: none;
+  }
 }
 </style>

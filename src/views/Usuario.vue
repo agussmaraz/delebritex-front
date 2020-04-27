@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="usuario">
 <Titulo></Titulo>
 </div>
 </template>
@@ -14,5 +14,7 @@ export default {
 </script>
 
 <style>
-
+.usuario{
+    margin: 10%;
+}
 </style>

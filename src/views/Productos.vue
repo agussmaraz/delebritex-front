@@ -1,5 +1,5 @@
 <template>
-    <article class="container">
+    <article class="container productos">
         <h1>Productos</h1>
         <table class="table table-hover crud">
             <thead>
@@ -53,11 +53,16 @@
 </script>
 
 <style>
-    .crud {
-        border: 1px solid#dee2e6;
-        margin: 2em;
-    }
-    .button-crud {
-        margin-left: 10px;
-    }
+.productos{
+    margin: 10%;
+}
+
+.crud {   
+  border: 1px solid#dee2e6;
+  margin: 2em;
+}
+
+.button-crud {
+  margin-left: 10px;    
+}
 </style>

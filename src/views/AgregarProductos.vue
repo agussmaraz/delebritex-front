@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="agregarProductos">
         <h1>Agregar nuevos productos</h1>
         <form class="container" @submit.prevent="nuevoProducto(producto)">
             <div class="form-group">
@@ -119,19 +119,25 @@
 </script>
 
 <style>
-    .input-form {
-        width: 250px;
-        margin: 0 auto;
-    }
-    .article-flex {
-        display: flex;
-        justify-content: center;
-    }
-    .empaque {
-        margin-left: 20px;
-    }
+.agregarProductos{
+  margin: 10%;
+}
 
-    select {
-        width: 100px;
-    }
+.input-form{
+  width: 250px;
+  margin: 0 auto;
+}
+
+.article-flex{
+  display: flex;
+  justify-content: center;
+}
+    
+.empaque{
+  margin-left: 20px;
+}
+
+select{
+  width: 100px;
+}
 </style>
