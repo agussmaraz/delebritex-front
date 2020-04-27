@@ -23,17 +23,20 @@
                 </div>
             </article>
 
-            <div class="form-group">
-                <label>Unidades por paquetes</label>
-                <input type="number" class="form-control input-form " v-model="producto.unidadPorEmpaque" />
-            </div>
-            <div class="form-group">
+            <div class="form-group" v-if="producto.empaqueId == '1'">
                 <label> Cantidad de paquetes</label>
                 <input type="number" class="form-control input-form paquetes" v-model="producto.cantidadPaquetes" />
             </div>
             <div class="form-group">
+                <label v-if="producto.empaqueId !== 1" >Unidades</label>
+                <label v-else>Unidades por paquetes</label>
+                <input type="number" class="form-control input-form " v-model="producto.unidadPorEmpaque" />
+                <p v-if="producto.empaqueId == 1">El total de unidades es de: {{totalUnidadesPorPaquete}} </p>
+            </div>
+            <div class="form-group">
                 <label>Peso por unidad</label>
                 <input type="number" class="form-control input-form " v-model="producto.pesoUnidad" />
+                <p>El peso total es de: {{totalPeso}}</p>
             </div>
             <div class="form-group">
                 <label>Categoria</label>
@@ -49,6 +52,21 @@
 
 <script>
     export default {
+        computed: {
+                totalUnidadesPorPaquete(){
+                    const totalUnidadPorEmpaque = this.producto.cantidadPaquetes * this.producto.unidadPorEmpaque;
+                    return totalUnidadPorEmpaque;
+                },
+                totalPeso(){
+                    if(this.producto.empaqueId == '1'){
+                    const totalPeso = this.totalUnidadesPorPaquete * this.producto.pesoUnidad;
+                    return totalPeso;
+                    }else{
+                        const totalPesoPorUnidad = this.producto.unidadPorEmpaque * this.producto.pesoUnidad;
+                        return totalPesoPorUnidad
+                    }
+                }
+            },
         data() {
             return {
                 producto: {
@@ -73,6 +91,10 @@
         },
         methods: {
             nuevoProducto() {
+                if(this.totalUnidades){
+                    console.log(this.producto.totalUnidad);
+                    this.producto.totalUnidad = this.totalUnidades;
+                }
                 this.axios.post('/nuevoProducto', this.producto).then((res) => {
                     this.producto.push(res.data);
                 });
@@ -91,7 +113,7 @@
                 this.axios.get('categoriaBuscar').then((res) => {
                     this.categoria = res.data;
                 });
-            },
+            }
         },
     };
 </script>
