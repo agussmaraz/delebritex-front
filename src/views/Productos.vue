@@ -120,7 +120,6 @@
 </script>
 
 <style>
-<<<<<<< HEAD
 .productos{
     margin: 10%;
 }
@@ -133,24 +132,4 @@
 .button-crud {
   margin-left: 10px;    
 }
-=======
-    .crud {
-        border: 1px solid#dee2e6;
-        margin: 2em;
-    }
-    .button-crud {
-        margin-left: 10px;
-        color: white;
-    }
-    .form-editar {
-        width: 400px;
-        margin: 0 auto;
-    }
-    .form-editar-flex {
-        display: flex;
-    }
-    .parteDos-formEditar {
-        margin-left: 20px;
-    }
->>>>>>> 44299c8034355fd21abc562821db142a939f7261
 </style>

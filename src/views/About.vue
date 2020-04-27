@@ -6,9 +6,5 @@
 <style lang="scss">
 .about{
   margin: 10%;
-
-@media(max-width: 768px) {
-    margin-top: 20%;
-  }
 }
 </style>
