@@ -96,6 +96,12 @@
                     this.producto.totalUnidad = this.totalUnidades;
                 }
                 this.axios.post('/nuevoProducto', this.producto).then((res) => {
+                    this.producto.nombre = '';
+                    this.producto.medidaId = '';
+                    this.producto.empaqueId = '';
+                    this.producto.unidadPorEmpaque = '';
+                    this.producto.pesoUnidad = '';
+                    this.producto.categoriaId= '';
                     this.producto.push(res.data);
                 });
             },
