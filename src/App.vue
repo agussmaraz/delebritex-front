@@ -5,6 +5,8 @@
       <router-link to="/about">About</router-link> |
       <router-link to="/usuario">Usuarios</router-link> |
       <router-link to="/agregarProductos">Agregar</router-link> |
+      <router-link to="/productos">Productos</router-link> 
+
 
 
     </div>

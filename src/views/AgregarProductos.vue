@@ -1,30 +1,46 @@
 <template>
     <div>
         <h1>Agregar nuevos productos</h1>
-        <form class="container-form">
+        <form class="container" @submit.prevent="nuevoProducto(producto)">
             <div class="form-group">
                 <label>Producto</label>
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control input-form" v-model="producto.nombre" />
+            </div>
+            <article class="article-flex">
+                <div class="form-group">
+                    <label>Medida</label>
+                    <br />
+                    <select v-model="producto.medidaId">
+                        <option v-for="(item, index) in medida" :key="index" :value="item.id">{{ item.medida }} </option>
+                    </select>
+                </div>
+                <div class="form-group empaque">
+                    <label>Empaque</label>
+                    <br />
+                    <select v-model="producto.empaqueId">
+                        <option v-for="(item, index) in empaque" :key="index" :value="item.id">{{ item.nombre }}</option>
+                    </select>
+                </div>
+            </article>
+
+            <div class="form-group">
+                <label>Unidades por paquetes</label>
+                <input type="number" class="form-control input-form " v-model="producto.unidadPorEmpaque" />
             </div>
             <div class="form-group">
-                <label>Medida</label>
-                <input type="text" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Empaque</label>
-                <input type="text" class="form-control" />
+                <label> Cantidad de paquetes</label>
+                <input type="number" class="form-control input-form paquetes" v-model="producto.cantidadPaquetes" />
             </div>
             <div class="form-group">
                 <label>Peso por unidad</label>
-                <input type="number" class="form-control" />
+                <input type="number" class="form-control input-form " v-model="producto.pesoUnidad" />
             </div>
             <div class="form-group">
-                <label>Unidades por paquetes</label>
-                <input type="number" class="form-control" />
-            </div>
-               <div class="form-group">
                 <label>Categoria</label>
-                <input type="number" class="form-control" />
+                <br />
+                <select v-model="producto.categoriaId">
+                    <option v-for="(item, index) in categoria" :key="index" :value="item.id"> {{ item.nombre }}</option>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -32,12 +48,68 @@
 </template>
 
 <script>
-    export default {};
+    export default {
+        data() {
+            return {
+                producto: {
+                    nombre: '',
+                    totalUnidad: '',
+                    empaqueId: '',
+                    medidaId: '',
+                    pesoUnidad: '',
+                    unidadPorEmpaque: '',
+                    categoriaId: '',
+                    cantidadPaquetes: '',
+                },
+                medida: [],
+                empaque: [],
+                categoria: [],
+            };
+        },
+        created() {
+            this.listarMedida();
+            this.listarEmpaque();
+            this.listarCategoria();
+        },
+        methods: {
+            nuevoProducto() {
+                this.axios.post('/nuevoProducto', this.producto).then((res) => {
+                    this.producto.push(res.data);
+                });
+            },
+            listarMedida() {
+                this.axios.get('/buscarMedida').then((res) => {
+                    this.medida = res.data;
+                });
+            },
+            listarEmpaque() {
+                this.axios.get('/empaqueBuscar').then((res) => {
+                    this.empaque = res.data;
+                });
+            },
+            listarCategoria() {
+                this.axios.get('categoriaBuscar').then((res) => {
+                    this.categoria = res.data;
+                });
+            },
+        },
+    };
 </script>
 
 <style>
-    .container-form {
-        width: 50%;
-        margin: 10px auto;
+    .input-form {
+        width: 250px;
+        margin: 0 auto;
+    }
+    .article-flex {
+        display: flex;
+        justify-content: center;
+    }
+    .empaque {
+        margin-left: 20px;
+    }
+
+    select {
+        width: 100px;
     }
 </style>
