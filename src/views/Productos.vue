@@ -106,6 +106,7 @@
                 this.editar = false;
             },
             editarProducto(item) {
+                console.log(item);
                 this.axios.put(`/editarProducto/${item.id}`, item).then((res) => {
                     const index = this.producto.findIndex((index) => index._id === this.productoEditar._id);
                     this.producto[index].nombre = this.productoEditar.nombre;
