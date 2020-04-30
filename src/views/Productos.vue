@@ -48,7 +48,7 @@
                         {{ item.totalUnidad }}
                         <button @click="aumentarCantidad(item, item.id)">+</button>
                     </td>
-                    <td>{{ item.cantidadPaquetes }}</td>
+                    <td>{{cantidadPaquetes(item) }}</td>
                     <td>
                         <button type="button" class="btn btn-danger" @click="eliminarProducto(item.id)">Eliminar</button>
                         <button type="button" class="btn btn-warning button-crud" @click="editarProductoId(item.id)">Editar</button>
@@ -91,6 +91,7 @@
                 });
             },
             eliminarProducto(id) {
+                console.log(id)
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
                     const index = this.producto.findIndex((item) => item.id == res.data.id);
                     this.producto.splice(index, 1);
@@ -116,14 +117,20 @@
                     this.productoEditar = {};
                 });
             },
+            cantidadPaquetes(item){
+                if(item.empaqueId == '1'){
+                    const paquetes = item.totalUnidad / item.unidadPorEmpaque;
+                    return Math.ceil(paquetes);
+                } else if(item.empaqueId == '2'){
+                    const paquetePorUnidad = 0;
+                    return Math.ceil(paquetePorUnidad);
+                }
+            }
         },
     };
 </script>
 
 <style>
-.productos{
-  margin-top: 2%;
-}
 
 .crud {   
   border: 1px solid#dee2e6;
@@ -132,5 +139,13 @@
 
 .button-crud {
   margin-left: 10px;    
+  color: white;
+}
+.form-editar-flex {
+    display:  flex;
+    justify-content: center;
+}
+.parteDos-formEditar {
+    margin-left: 20px;
 }
 </style>

@@ -28,15 +28,15 @@
                 <input type="number" class="form-control input-form paquetes" v-model="producto.cantidadPaquetes" />
             </div>
             <div class="form-group">
-                <label v-if="producto.empaqueId !== 1" >Unidades</label>
+                <label v-if="producto.empaqueId !== 1">Unidades</label>
                 <label v-else>Unidades por paquetes</label>
                 <input type="number" class="form-control input-form " v-model="producto.unidadPorEmpaque" />
-                <p v-if="producto.empaqueId == 1">El total de unidades es de: {{totalUnidadesPorPaquete}} </p>
+                <p v-if="producto.empaqueId == 1">El total de unidades es de: {{ totalUnidadesPorPaquete }}</p>
             </div>
             <div class="form-group">
                 <label>Peso por unidad</label>
                 <input type="number" class="form-control input-form " v-model="producto.pesoUnidad" />
-                <p>El peso total es de: {{totalPeso}}</p>
+                <p>El peso total es de: {{ totalPeso }}</p>
             </div>
             <div class="form-group">
                 <label>Categoria</label>
@@ -53,20 +53,28 @@
 <script>
     export default {
         computed: {
-                totalUnidadesPorPaquete(){
+            totalUnidadesPorPaquete() {
+                if (this.producto.empaqueId == '1') {
                     const totalUnidadPorEmpaque = this.producto.cantidadPaquetes * this.producto.unidadPorEmpaque;
                     return totalUnidadPorEmpaque;
-                },
-                totalPeso(){
-                    if(this.producto.empaqueId == '1'){
-                    const totalPeso = this.totalUnidadesPorPaquete * this.producto.pesoUnidad;
-                    return totalPeso;
-                    }else{
-                        const totalPesoPorUnidad = this.producto.unidadPorEmpaque * this.producto.pesoUnidad;
-                        return totalPesoPorUnidad
-                    }
                 }
             },
+            totalUnidades() {
+                if(this.producto.empaqueId == '2'){
+                    const totalUnidades = this.producto.unidadPorEmpaque;
+                    return totalUnidades;
+                }
+            },
+            totalPeso() {
+                if (this.producto.empaqueId == '1') {
+                    const totalPeso = this.totalUnidadesPorPaquete * this.producto.pesoUnidad;
+                    return totalPeso;
+                } else {
+                    const totalPesoPorUnidad = this.producto.unidadPorEmpaque * this.producto.pesoUnidad;
+                    return totalPesoPorUnidad;
+                }
+            },
+        },
         data() {
             return {
                 producto: {
@@ -77,7 +85,6 @@
                     pesoUnidad: '',
                     unidadPorEmpaque: '',
                     categoriaId: '',
-                    cantidadPaquetes: '',
                 },
                 medida: [],
                 empaque: [],
@@ -91,8 +98,9 @@
         },
         methods: {
             nuevoProducto() {
-                if(this.totalUnidades){
-                    console.log(this.producto.totalUnidad);
+                if (this.totalUnidadesPorPaquete) {
+                    this.producto.totalUnidad = this.totalUnidadesPorPaquete;
+                } else if(!this.totalUnidadesPorPaquete){
                     this.producto.totalUnidad = this.totalUnidades;
                 }
                 this.axios.post('/nuevoProducto', this.producto).then((res) => {
@@ -101,7 +109,7 @@
                     this.producto.empaqueId = '';
                     this.producto.unidadPorEmpaque = '';
                     this.producto.pesoUnidad = '';
-                    this.producto.categoriaId= '';
+                    this.producto.categoriaId = '';
                     this.producto.push(res.data);
                 });
             },
@@ -119,32 +127,31 @@
                 this.axios.get('categoriaBuscar').then((res) => {
                     this.categoria = res.data;
                 });
-            }
+            },
         },
     };
 </script>
 
 <style>
-.agregarProductos{
-  margin-top: 2%;
-}
+    .agregarProductos {
+        margin: 10%;
+    }
 
-.input-form{
-  width: 250px;
-  margin: 0 auto;
-}
+    .input-form {
+        width: 250px;
+        margin: 0 auto;
+    }
 
-.article-flex{
-  display: flex;
-  justify-content: center;
-}
-    
-.empaque{
-  margin-left: 20px;
-}
+    .article-flex {
+        display: flex;
+        justify-content: center;
+    }
 
-select{
-  width: 100px;
-}
+    .empaque {
+        margin-left: 20px;
+    }
 
+    select {
+        width: 100px;
+    }
 </style>
