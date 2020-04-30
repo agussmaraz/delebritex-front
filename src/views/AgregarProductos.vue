@@ -126,7 +126,7 @@
 
 <style>
 .agregarProductos{
-  margin: 10%;
+  margin-top: 2%;
 }
 
 .input-form{

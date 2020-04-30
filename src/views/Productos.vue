@@ -122,7 +122,7 @@
 
 <style>
 .productos{
-    margin: 10%;
+  margin-top: 2%;
 }
 
 .crud {   

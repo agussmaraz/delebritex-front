@@ -1,20 +1,13 @@
 <template>
 <div class="usuario">
-<Titulo></Titulo>
+  <h1>esto es un usuario</h1>
 </div>
 </template>
-
 <script>
-import Titulo from '../components/Titulo'
-export default {
-    components: {
-        'Titulo': Titulo
-    }
-}
 </script>
 
 <style>
 .usuario{
-    margin: 10%;
+  margin-top: 2%;
 }
 </style>
