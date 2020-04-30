@@ -4,8 +4,8 @@
         <h5>{{ nombre }}</h5>
         <h5>{{ email }}</h5>
     </div>
-</template>
 
+</template>
 <script>
     import Titulo from '../components/Titulo';
     import jwtDecode from 'jwt-decode';
@@ -29,4 +29,11 @@
     .usuario {
         margin: 10%;
     }
+</style>
+</script>
+
+<style>
+.usuario{
+  margin-top: 2%;
+}
 </style>

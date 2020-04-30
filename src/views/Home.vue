@@ -7,6 +7,7 @@
 </script>
 <style lang="scss">
 .home{
-  margin: 10%;
+  margin-top: 2%;
 }
+
 </style>

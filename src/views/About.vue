@@ -5,6 +5,6 @@
 </template>
 <style lang="scss">
 .about{
-  margin: 10%;
+  margin-top: 2%;
 }
 </style>
