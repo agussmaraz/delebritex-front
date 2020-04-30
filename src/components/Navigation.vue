@@ -11,6 +11,10 @@
         <li><router-link class="links" to="/usuario">Usuarios</router-link></li>
         <li><router-link class="links" to="/agregarProductos">Agregar</router-link></li>
         <li><router-link class="links" to="/productos">Productos</router-link></li>
+        <li><router-link class="links" to="/register">Registro</router-link></li>
+        <li><router-link class="links" to="/login">Iniciar sesion</router-link></li>
+
+
       </ul>
     <router-view/>
     </nav>

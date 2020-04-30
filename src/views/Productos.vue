@@ -48,7 +48,7 @@
                         {{ item.totalUnidad }}
                         <button @click="aumentarCantidad(item, item.id)">+</button>
                     </td>
-                    <td>{{cantidadPaquetes(item) }}</td>
+                    <td>{{ cantidadPaquetes(item) }}</td>
                     <td>
                         <button type="button" class="btn btn-danger" @click="eliminarProducto(item.id)">Eliminar</button>
                         <button type="button" class="btn btn-warning button-crud" @click="editarProductoId(item.id)">Editar</button>
@@ -91,9 +91,9 @@
                 });
             },
             eliminarProducto(id) {
-                console.log(id)
+                console.log(id);
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
-                    const index = this.producto.findIndex((item) => item.id == res.data.id);
+                    let index = this.producto.findIndex((item) => item._id === res.data._id);
                     this.producto.splice(index, 1);
                 });
             },
@@ -117,35 +117,34 @@
                     this.productoEditar = {};
                 });
             },
-            cantidadPaquetes(item){
-                if(item.empaqueId == '1'){
+            cantidadPaquetes(item) {
+                if (item.empaqueId == '1') {
                     const paquetes = item.totalUnidad / item.unidadPorEmpaque;
                     return Math.ceil(paquetes);
-                } else if(item.empaqueId == '2'){
+                } else if (item.empaqueId == '2') {
                     const paquetePorUnidad = 0;
                     return Math.ceil(paquetePorUnidad);
                 }
-            }
+            },
         },
     };
 </script>
 
 <style>
+    .crud {
+        border: 1px solid#dee2e6;
+        margin: 2em;
+    }
 
-.crud {   
-  border: 1px solid#dee2e6;
-  margin: 2em;
-}
-
-.button-crud {
-  margin-left: 10px;    
-  color: white;
-}
-.form-editar-flex {
-    display:  flex;
-    justify-content: center;
-}
-.parteDos-formEditar {
-    margin-left: 20px;
-}
+    .button-crud {
+        margin-left: 10px;
+        color: white;
+    }
+    .form-editar-flex {
+        display: flex;
+        justify-content: center;
+    }
+    .parteDos-formEditar {
+        margin-left: 20px;
+    }
 </style>
