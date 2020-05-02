@@ -1,13 +1,12 @@
 <template>
     <div class="usuario">
-        <Titulo></Titulo>
+        <h1>Hola </h1>
         <h5>{{ nombre }}</h5>
         <h5>{{ email }}</h5>
     </div>
 
 </template>
 <script>
-    import Titulo from '../components/Titulo';
     import jwtDecode from 'jwt-decode';
     export default {
         data() {
@@ -19,9 +18,7 @@
                 contraseña: decoded.contraseña
             };
         },
-        components: {
-            Titulo: Titulo,
-        },
+       
     };
 </script>
 
