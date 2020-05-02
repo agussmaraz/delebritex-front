@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-import BootstrapVue from 'bootstrap-vue';
+import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import VueMq from 'vue-mq';
 
 Vue.use(VueMq, {
@@ -13,6 +13,7 @@ Vue.use(VueMq, {
     }
 })
 
+Vue.use(BootstrapVueIcons);
 Vue.use(BootstrapVue);
 
 import 'bootstrap/dist/css/bootstrap.css';

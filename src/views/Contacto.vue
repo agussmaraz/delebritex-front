@@ -1,10 +1,10 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="contacto">
+    <h1>aca irian las cosas de contacto</h1>
   </div>
 </template>
 <style lang="scss">
-.about{
+.contacto{
   margin-top: 2%;
 }
 </style>

@@ -7,7 +7,6 @@
 
 </template>
 <script>
-    import Titulo from '../components/Titulo';
     import jwtDecode from 'jwt-decode';
     export default {
         data() {
