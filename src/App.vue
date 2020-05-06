@@ -9,10 +9,10 @@
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-nav-item to="/">Inicio</b-nav-item>
-        <b-nav-item to="/about">Contacto</b-nav-item>
+        <b-nav-item to="/catalogo">Contacto</b-nav-item>
         <b-nav-item to="/agregarProductos">Nuevo Producto</b-nav-item>
         <b-nav-item to="/catalogo">Catalogo</b-nav-item>
-        <b-nav-item to="/productos">Listado</b-nav-item>
+        <b-nav-item to="/productos">Listado</b-nav-item>  
         <b-nav-item><b-icon icon="bag"></b-icon></b-nav-item>
         <b-nav-form>
           <b-form-input size="sm" class="mr-sm-2" placeholder="¿Qué estas buscando?"></b-form-input>

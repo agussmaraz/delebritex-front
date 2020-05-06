@@ -223,6 +223,11 @@ export default{
   @media screen and (max-width:680px) {
     margin: 6%;
   }
+  @media screen and (max-width: 1280px) {
+    .card{
+        min-width: 375px !important;
+    }
+  }
 }
 .contenedor{
   max-width: 1455px !important;
