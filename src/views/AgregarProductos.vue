@@ -14,7 +14,7 @@
                         <option v-for="(item, index) in medida" :key="index" :value="item.id">{{ item.medida }} </option>
                     </select>
                 </div>
-                <div class="form-group empaque">
+                <div class="empaque">
                     <label>Empaque</label>
                     <br />
                     <select v-model="producto.empaqueId">
@@ -23,6 +23,7 @@
                 </div>
             </article>
 
+            <br />
             <div class="form-group" v-if="producto.empaqueId == '1'">
                 <label> Cantidad de paquetes</label>
                 <input type="number" class="form-control input-form paquetes" v-model="producto.cantidadPaquetes" />
@@ -60,7 +61,7 @@
                 }
             },
             totalUnidades() {
-                if(this.producto.empaqueId == '2'){
+                if (this.producto.empaqueId == '2') {
                     const totalUnidades = this.producto.unidadPorEmpaque;
                     return totalUnidades;
                 }
@@ -100,7 +101,7 @@
             nuevoProducto() {
                 if (this.totalUnidadesPorPaquete) {
                     this.producto.totalUnidad = this.totalUnidadesPorPaquete;
-                } else if(!this.totalUnidadesPorPaquete){
+                } else if (!this.totalUnidadesPorPaquete) {
                     this.producto.totalUnidad = this.totalUnidades;
                 }
                 this.axios.post('/nuevoProducto', this.producto).then((res) => {
@@ -134,7 +135,7 @@
 
 <style>
     .agregarProductos {
-        margin: 10%;
+        margin: 20px;
     }
 
     .input-form {

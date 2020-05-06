@@ -9,44 +9,56 @@
             </div>
             <div class="form-group">
                 <label>Apellido</label>
-                <input type="text" class="form-control" v-model="usuario.apellido"/>
+                <input type="text" class="form-control" v-model="usuario.apellido" />
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Email</label>
-                <input type="email" class="form-control" v-model="usuario.email"/>
+                <input type="email" class="form-control" v-model="usuario.email" />
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" v-model="usuario.contraseña"/>
+                <input type="password" class="form-control" id="exampleInputPassword1" v-model="usuario.contraseña" />
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
     </div>
 </template>
 
 <script>
+import router from '../router'
     export default {
-        data(){
+        
+        data() {
             return {
                 usuario: {
                     nombre: '',
                     apellido: '',
                     email: '',
                     contraseña: '',
-                }
-            }
+                },
+            };
         },
         methods: {
-            registrarUsuario(){
+            registrarUsuario() {
                 this.axios.post('/register', this.usuario).then((res) => {
+                    const payload = {
+                        id: res.data.id,
+                        token: res.data.token,
+                        estado: res.data.estado
+                    }
+                    localStorage.setItem('usertoken', JSON.stringify(payload));
                     this.usuario.nombre = '';
                     this.usuario.apellido = '';
                     this.usuario.email = '';
                     this.usuario.contraseña = '';
-                    this.usuario.push(res.data);
+                    this.usuario = res.data;
+                    this.$router.push({ name: 'Home' });
                 })
-            }
-        }
+                .catch(err => {
+                    console.log(err)
+                })
+            },
+        },
     };
 </script>
 
