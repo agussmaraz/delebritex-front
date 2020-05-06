@@ -131,6 +131,9 @@
 </script>
 
 <style>
+    .productos {
+        margin-top: 3%;
+    }
     .crud {
         border: 1px solid#dee2e6;
         margin: 2em;

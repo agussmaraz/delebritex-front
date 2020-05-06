@@ -1,38 +1,33 @@
 <template>
     <div class="usuario">
-        <Titulo></Titulo>
-        <h5>{{ nombre }}</h5>
-        <h5>{{ email }}</h5>
+        <h1>Hola {{ usuario.nombre }}</h1>
     </div>
-
 </template>
 <script>
-    import jwtDecode from 'jwt-decode';
     export default {
         data() {
-            const token = localStorage.usertoken;
-            const decoded = jwtDecode(token);
             return {
-                nombre: decoded.nombre,
-                email: decoded.email,
-                contraseña: decoded.contraseña
+                usuario: '',
             };
         },
-        components: {
-            Titulo: Titulo,
+        created() {
+            this.listarUsuario();
+        },
+        methods: {
+            listarUsuario() {
+                const usuarios = localStorage.getItem('usertoken');
+                const objeto = JSON.parse(usuarios);
+                const id = objeto['id'];
+                this.axios.get(`/usuario/${id}`).then(res => {
+                    this.usuario = res.data;
+                })
+            },
         },
     };
 </script>
 
 <style>
     .usuario {
-        margin: 10%;
+        margin: 2%;
     }
-</style>
-</script>
-
-<style>
-.usuario{
-  margin-top: 2%;
-}
 </style>

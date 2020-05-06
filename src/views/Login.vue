@@ -10,12 +10,14 @@
                 <label for="exampleInputPassword1">Password</label>
                 <input type="password" class="form-control" v-model="usuario.contraseña" />
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Entrar</button>
         </form>
     </div>
 </template>
 
 <script>
+    import { mapState, mapGetters, mapActions } from 'vuex';
+    import router from '../router'
     export default {
         data() {
             return {
@@ -25,13 +27,38 @@
                 },
             };
         },
+        computed: {
+            ...mapState({
+                user: (state) => state.user,
+            }),
+            ...mapGetters({
+                isLogged: 'isLogged',
+                isAdmin: 'isAdmin',
+            }),
+        },
         methods: {
+            ...mapActions({
+                setUser: 'setUser'
+
+            }),
             loguearUsuario() {
-                this.axios.post('/login', this.usuario).then((res) => {
-                    localStorage.setItem('usertoken', res.data.token)
-                    this.email = '',
-                    this.contraseña = ''
-                });
+                this.axios
+                    .post('/login', this.usuario)
+                    .then((res) => {
+                        const payload = {
+                            id: res.data.id,
+                            token: res.data.token,
+                        };
+                        this.setUser(res.data);
+                        // console.log(this.setUser);
+                        localStorage.setItem('usertoken', JSON.stringify(payload));
+                        this.usuario.email = '';
+                        this.usuario.contraseña = '';
+                        this.$router.push({name: 'Home'});
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             },
         },
     };
