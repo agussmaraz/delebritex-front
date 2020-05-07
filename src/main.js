@@ -4,6 +4,7 @@ import router from './router';
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import VueMq from 'vue-mq';
 import store from './store'
+import Slug from 'slug';
 
 Vue.use(VueMq, {
     breakpoints:{
@@ -14,6 +15,7 @@ Vue.use(VueMq, {
     }
 })
 
+Vue.use(Slug);
 Vue.use(BootstrapVueIcons);
 Vue.use(BootstrapVue);
 
@@ -31,6 +33,7 @@ new Vue({
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import vuetify from './plugins/vuetify';
+import slug from 'slug';
 
 Vue.use(VueAxios, axios)
 

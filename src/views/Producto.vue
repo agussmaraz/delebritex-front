@@ -1,5 +1,6 @@
 <template>
     <div class="productoEsp container-fluid">
+        
         <b-card
         title="Card Title"
         img-src="https://picsum.photos/600/300/?image=25"
@@ -11,8 +12,15 @@
         <b-card-text>saasdasdasd</b-card-text>
         <b-button class="button">Añadir al carrito</b-button>
         </b-card>
+        <div></div>
     </div>
 </template>
+<script>
+const slug = require('slug');
+export default {
+    
+}
+</script>
 <style lang="scss">
 .productoEsp{
     margin-top: 3% !important;
