@@ -46,6 +46,11 @@
                     <option v-for="(item, index) in categoria" :key="index" :value="item.id"> {{ item.nombre }}</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label>Categoria</label>
+                <br />
+                <input type="file" @change="imagenSeleccionada"/>
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
@@ -86,10 +91,13 @@
                     pesoUnidad: '',
                     unidadPorEmpaque: '',
                     categoriaId: '',
+                    slug: '',
+                    imagen: '',
                 },
                 medida: [],
                 empaque: [],
                 categoria: [],
+                path: ''
             };
         },
         created() {
@@ -98,12 +106,18 @@
             this.listarCategoria();
         },
         methods: {
+            imagenSeleccionada(e){
+                const files = e.target.files;
+                this.path = files[0].name;
+            },
             nuevoProducto() {
                 if (this.totalUnidadesPorPaquete) {
                     this.producto.totalUnidad = this.totalUnidadesPorPaquete;
                 } else if (!this.totalUnidadesPorPaquete) {
                     this.producto.totalUnidad = this.totalUnidades;
                 }
+                this.producto.imagen = this.path;
+                this.producto.slug = this.producto.nombre;
                 this.axios.post('/nuevoProducto', this.producto).then((res) => {
                     this.producto.nombre = '';
                     this.producto.medidaId = '';
@@ -111,7 +125,7 @@
                     this.producto.unidadPorEmpaque = '';
                     this.producto.pesoUnidad = '';
                     this.producto.categoriaId = '';
-                    this.producto.push(res.data);
+                    // this.producto.Push(res.data);
                 });
             },
             listarMedida() {

@@ -51,7 +51,7 @@
                     <td>{{ cantidadPaquetes(item) }}</td>
                     <td>
                         <button type="button" class="btn btn-danger" @click="eliminarProducto(item.id)">Eliminar</button>
-                        <button type="button" class="btn btn-warning button-crud" @click="editarProductoId(item.id)">Editar</button>
+                        <button type="button" class="btn btn-warning button-crud" @click="editarProductoId(item)">Editar</button>
                     </td>
                 </tr>
             </tbody>
@@ -72,6 +72,8 @@
             this.listarProducto();
         },
         methods: {
+            
+
             listarProducto() {
                 this.axios.get('/producto').then((res) => {
                     this.producto = res.data;
@@ -81,13 +83,18 @@
                 return new Date(fecha).toLocaleDateString();
             },
             aumentarCantidad(item, id) {
-                this.axios.put(`/editarProducto/${id}`, { totalUnidad: item.totalUnidad + 1 }).then((res) => {
+                console.log(item);
+                this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) + 1 }).then((res) => {
                     item.totalUnidad++;
+                    console.log(item)
                 });
             },
             restarCantidad(item, id) {
-                this.axios.put(`/editarProducto/${id}`, { totalUnidad: item.totalUnidad - 1 }).then((res) => {
+                console.log(id);
+                this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) - 1 }).then((res) => {
                     item.totalUnidad--;
+                    console.log(item.totalUnidad)
+
                 });
             },
             eliminarProducto(id) {
@@ -97,9 +104,10 @@
                     this.producto.splice(index, 1);
                 });
             },
-            editarProductoId(id) {
+            editarProductoId(item) {
                 this.editar = true;
-                this.axios.get(`/producto/${id}`).then((res) => {
+                const slug = item.slug;
+                this.axios.get(`/producto/${slug}`).then((res) => {
                     this.productoEditar = res.data;
                 });
             },

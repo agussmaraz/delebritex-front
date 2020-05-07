@@ -2,89 +2,9 @@
     <div class="catalogo">
         <div class="contenedor container">
             <div class="row">
-                <b-card class="card mb-2 card-position" title="asdasd" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-
-                <b-card class="card mb-2 card-position" title="asdasd" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
-                    <template v-slot:footer>
-                        <em>Footer Slot</em>
-                    </template>
-                </b-card>
-             
-                <b-card class="card mb-2 card-position" title="asdsad" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article">
-                    <b-card-text>Header and footers using slots.</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button>
+                <b-card class="card mb-2 card-position" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article" v-for="(item, index) in producto" :key="index">
+                    <b-card-text>{{ item.nombre }} </b-card-text>
+                    <router-link :to="{ name: 'productoSlug', params: {slug: item.slug} }"> Ver mas </router-link>
                     <template v-slot:footer>
                         <em>Footer Slot</em>
                     </template>
@@ -96,17 +16,29 @@
 <script>
     export default {
         data() {
-            return {};
+            return {
+                producto: [],
+            };
+        },
+        created() {
+            this.mostrar();
+        },
+        methods: {
+            mostrar() {
+                this.axios.get('/producto').then((res) => {
+                    this.producto = res.data;
+                });
+            },
         },
     };
 </script>
 <style lang="scss">
     .card {
-    width: 250px;
+        width: 250px;
     }
     .row {
-      width: 100% !important;
-      justify-content: center;
+        width: 100% !important;
+        justify-content: center;
     }
     .catalogo {
         margin-top: 2%;
