@@ -12,6 +12,8 @@
                     <b-nav-item to="/contacto" v-if="isAdmin == 1">Contacto</b-nav-item>
                     <b-nav-item to="/catalogo">Catalogo</b-nav-item>
                     <b-nav-item to="/agregarProductos" v-if="isAdmin == 2">Nuevo Producto</b-nav-item>
+                    <!-- <b-nav-item to="/producto" v-if="isAdmin == 2">Producto</b-nav-item> -->
+
                     <b-nav-item to="/productos" v-if="isAdmin == 2">Listado</b-nav-item>
                     <b-nav-item to="/ventas" v-if="isAdmin == 2">Ventas</b-nav-item>
                     <b-nav-item to="/login" v-if="isLogged == false">Iniciar Sesion</b-nav-item>

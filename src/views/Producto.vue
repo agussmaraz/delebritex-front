@@ -1,36 +1,30 @@
 <template>
-    <div class="productoEsp container-fluid">
-        
-        <b-card
-        title="Card Title"
-        img-src="https://picsum.photos/600/300/?image=25"
-        img-alt="Image"
-        img-top
-        tag="article"
-        class="mx-auto cardSize"
-        >
-        <b-card-text>saasdasdasd</b-card-text>
-        <b-button class="button">Añadir al carrito</b-button>
-        </b-card>
-        <div></div>
+    <div>
+        <h1>{{ this.$route.params.slug }}</h1>
+        <p>stock: {{ producto.totalUnidad }}</p>
     </div>
 </template>
-<script>
-const slug = require('slug');
-export default {
-    
-}
-</script>
-<style lang="scss">
-.productoEsp{
-    margin-top: 3% !important;
-    margin-bottom: 3%;
-}
-.cardSize{
-  max-width: 80%;
-}
-.button{
-    margin-left: auto !important;
-}
 
-</style>
+<script>
+    export default {
+        data() {
+            return {
+                productoSlug: this.$route.params.slug,
+                producto: [],
+            };
+        },
+        computed: {
+            traerProducto() {
+                const slug = this.productoSlug;
+                this.axios.get(`/producto/${slug}`).then((res) => {
+                    if (res.data.slug == this.productoSlug) {
+                        this.producto = res.data;
+                        console.log(this.producto);
+                    }
+                });
+            },
+        },
+    };
+</script>
+
+<style></style>

@@ -41,17 +41,13 @@
         methods: {
             listarMovimientos() {
                 this.axios.get('/movimientos').then((res) => {
-                    console.log(res.data);
                     this.movimientos = res.data;
                 });
             },
             resetearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },
-            // returnData(){
-            //     this.tab = Nuevo
-            //     // console.log()
-            // }
+          
         },
         computed: {
             productos() {
