@@ -47,7 +47,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Categoria</label>
+                <label>Imagen del producto</label>
                 <br />
                 <input type="file" @change="imagenSeleccionada">
 

@@ -41,7 +41,7 @@
             <tbody>
                 <tr v-for="(item, index) in producto" :key="index">
                     <td>{{ formatearFecha(item.createdAt) }}</td>
-                    <td>{{ item.nombre }}</td>
+                    <td>{{ item.nombre }} {{item.id}}</td>
                     <td>{{ item.medida['medida'] }}</td>
                     <td>
                         <button @click="restarCantidad(item, item.id)">-</button>
@@ -100,14 +100,16 @@
             eliminarProducto(id) {
                 console.log(id);
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
-                    let index = this.producto.findIndex((item) => item._id === res.data._id);
+                    console.log(res.data)
+                    const index = this.producto.findIndex((item) => Number(item.id) == Number(res.data) );
                     this.producto.splice(index, 1);
                 });
             },
             editarProductoId(item) {
+                const id = item.id;
                 this.editar = true;
-                const slug = item.slug;
-                this.axios.get(`/producto/${slug}`).then((res) => {
+                this.axios.get(`/producto/${id}`).then((res) => {
+                    console.log(res.data)
                     this.productoEditar = res.data;
                 });
             },
@@ -117,7 +119,7 @@
             editarProducto(item) {
                 console.log(item);
                 this.axios.put(`/editarProducto/${item.id}`, item).then((res) => {
-                    const index = this.producto.findIndex((index) => index._id === this.productoEditar._id);
+                    const index = this.producto.findIndex((index) => index.id === this.productoEditar.id);
                     this.producto[index].nombre = this.productoEditar.nombre;
                     this.producto[index].cantidadPaquetes = this.productoEditar.cantidadPaquetes;
                     this.producto[index].totalUnidad = this.productoEditar.totalUnidad;
