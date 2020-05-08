@@ -15,15 +15,18 @@
         },
         computed: {
             traerProducto() {
-                const slug = this.productoSlug;
-                this.axios.get(`/producto/${slug}`).then((res) => {
-                    if (res.data.slug == this.productoSlug) {
-                        this.producto = res.data;
-                        console.log(this.producto);
-                    }
-                });
+                
             },
         },
+        beforeMount() {
+            const slug = this.productoSlug;
+            this.axios.get(`/producto/${slug}`).then((res) => {
+                if (res.data.slug == slug) {
+                    this.producto = res.data;
+                    console.log(this.producto);
+                }
+            });
+        }
     };
 </script>
 

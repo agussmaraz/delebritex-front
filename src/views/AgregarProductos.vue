@@ -1,7 +1,7 @@
 <template>
     <div class="agregarProductos">
         <h1>Agregar nuevos productos</h1>
-        <form class="container" @submit.prevent="nuevoProducto(producto)">
+        <form class="container" @submit.prevent="nuevoProducto(producto)" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Producto</label>
                 <input type="text" class="form-control input-form" v-model="producto.nombre" />
@@ -49,7 +49,9 @@
             <div class="form-group">
                 <label>Categoria</label>
                 <br />
-                <input type="file" @change="imagenSeleccionada"/>
+                <input type="file" @change="imagenSeleccionada">
+
+                <!-- <input type="file" @change="imagenSeleccionada"/> -->
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -109,6 +111,7 @@
             imagenSeleccionada(e){
                 const files = e.target.files;
                 this.path = files[0].name;
+                
             },
             nuevoProducto() {
                 if (this.totalUnidadesPorPaquete) {
@@ -116,9 +119,11 @@
                 } else if (!this.totalUnidadesPorPaquete) {
                     this.producto.totalUnidad = this.totalUnidades;
                 }
+                
                 this.producto.imagen = this.path;
                 this.producto.slug = this.producto.nombre;
                 this.axios.post('/nuevoProducto', this.producto).then((res) => {
+                    console.log(res.data)
                     this.producto.nombre = '';
                     this.producto.medidaId = '';
                     this.producto.empaqueId = '';

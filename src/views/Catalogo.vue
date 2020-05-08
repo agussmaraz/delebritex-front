@@ -4,6 +4,7 @@
             <div class="row">
                 <b-card class="card mb-2 card-position" footer-tag="footer" img-src="https://i.picsum.photos/id/52/700/500.jpg" img-alt="Image" img-top tag="article" v-for="(item, index) in producto" :key="index">
                     <b-card-text>{{ item.nombre }} </b-card-text>
+                    <b-card-text>{{ item.imagen }} </b-card-text>
                     <router-link :to="{ name: 'productoSlug', params: {slug: item.slug} }"> Ver mas </router-link>
                     <template v-slot:footer>
                         <em>Footer Slot</em>
