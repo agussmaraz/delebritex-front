@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>{{ this.$route.params.slug }}</h1>
+        <h1>{{ this.$route.params.slug}}</h1>
         <p>stock: {{ producto.totalUnidad }}</p>
     </div>
 </template>

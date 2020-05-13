@@ -108,7 +108,7 @@
         methods: {
             imagenSeleccionada(e){
                 const files = e.target.files;
-                this.path = files[0].name;
+                this.producto.imagen = files[0];
             },
             nuevoProducto() {
                 if (this.totalUnidadesPorPaquete) {
@@ -116,9 +116,21 @@
                 } else if (!this.totalUnidadesPorPaquete) {
                     this.producto.totalUnidad = this.totalUnidades;
                 }
-                this.producto.imagen = this.path;
                 this.producto.slug = this.producto.nombre;
-                this.axios.post('/nuevoProducto', this.producto).then((res) => {
+                
+                const formulario = new FormData();
+                
+                formulario.append('nombre', this.producto.nombre);
+                formulario.append('totalUnidad', this.producto.totalUnidad);
+                formulario.append('medidaId', this.producto.medidaId);
+                formulario.append('empaqueId', this.producto.empaqueId);
+                formulario.append('pesoUnidad', this.producto.pesoUnidad);
+                formulario.append('unidadPorEmpaque', this.producto.unidadPorEmpaque);
+                formulario.append('categoriaId', this.producto.categoriaId);
+                formulario.append('slug', this.producto.slug);
+                formulario.append('imagen', this.producto.imagen);
+                
+                this.axios.post('/nuevoProducto', formulario).then((res) => {
                     this.producto.nombre = '';
                     this.producto.medidaId = '';
                     this.producto.empaqueId = '';
