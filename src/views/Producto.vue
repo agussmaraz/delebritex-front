@@ -2,6 +2,7 @@
     <div>
         <h1>{{ this.$route.params.slug }}</h1>
         <p>stock: {{ producto.totalUnidad }}</p>
+
     </div>
 </template>
 
@@ -11,12 +12,11 @@
             return {
                 productoSlug: this.$route.params.slug,
                 producto: [],
+                publicPath: process.env.BASE_URL,
             };
         },
         computed: {
-            traerProducto() {
-                
-            },
+            traerProducto() {},
         },
         beforeMount() {
             const slug = this.productoSlug;
@@ -26,7 +26,7 @@
                     console.log(this.producto);
                 }
             });
-        }
+        },
     };
 </script>
 
