@@ -27,6 +27,7 @@
             <button type="submit" class="btn btn-success">Enviar</button>
             <button type="submit" class="btn bg-secondary button-crud" @click="cancelarEdicion()">Cancelar</button>
         </form>
+        <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
         <table class="table table-hover crud">
             <thead>
                 <tr>
@@ -41,7 +42,7 @@
             <tbody>
                 <tr v-for="(item, index) in producto" :key="index">
                     <td>{{ formatearFecha(item.createdAt) }}</td>
-                    <td>{{ item.nombre }}</td>
+                    <td>{{ item.nombre }} {{ item.id }}</td>
                     <td>{{ item.medida['medida'] }}</td>
                     <td>
                         <button @click="restarCantidad(item, item.id)">-</button>
@@ -56,6 +57,7 @@
                 </tr>
             </tbody>
         </table>
+    
     </article>
 </template>
 
@@ -66,14 +68,15 @@
                 producto: [],
                 productoEditar: [],
                 editar: false,
+                dismissSecs: 5,
+                dismissCountDown: 0,
+                mensaje: { color: '', texto: '' },
             };
         },
         created() {
             this.listarProducto();
         },
         methods: {
-            
-
             listarProducto() {
                 this.axios.get('/producto').then((res) => {
                     this.producto = res.data;
@@ -86,28 +89,30 @@
                 console.log(item);
                 this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) + 1 }).then((res) => {
                     item.totalUnidad++;
-                    console.log(item)
                 });
             },
             restarCantidad(item, id) {
                 console.log(id);
                 this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) - 1 }).then((res) => {
                     item.totalUnidad--;
-                    console.log(item.totalUnidad)
-
                 });
             },
             eliminarProducto(id) {
                 console.log(id);
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
-                    let index = this.producto.findIndex((item) => item._id === res.data._id);
+                    console.log(res.data);
+                    const index = this.producto.findIndex((item) => Number(item.id) == Number(res.data));
                     this.producto.splice(index, 1);
+                     this.mensaje.texto = 'El producto fue eliminado correctamente';
+                    this.mensaje.color = 'success';
+                    this.showAlert();
                 });
             },
             editarProductoId(item) {
+                const id = item.id;
                 this.editar = true;
-                const slug = item.slug;
-                this.axios.get(`/producto/${slug}`).then((res) => {
+                this.axios.get(`/producto/${id}`).then((res) => {
+                    console.log(res.data);
                     this.productoEditar = res.data;
                 });
             },
@@ -117,7 +122,7 @@
             editarProducto(item) {
                 console.log(item);
                 this.axios.put(`/editarProducto/${item.id}`, item).then((res) => {
-                    const index = this.producto.findIndex((index) => index._id === this.productoEditar._id);
+                    const index = this.producto.findIndex((index) => index.id === this.productoEditar.id);
                     this.producto[index].nombre = this.productoEditar.nombre;
                     this.producto[index].cantidadPaquetes = this.productoEditar.cantidadPaquetes;
                     this.producto[index].totalUnidad = this.productoEditar.totalUnidad;
@@ -133,6 +138,12 @@
                     const paquetePorUnidad = 0;
                     return Math.ceil(paquetePorUnidad);
                 }
+            },
+            countDownChanged(dismissCountDown) {
+                this.dismissCountDown = dismissCountDown;
+            },
+            showAlert() {
+                this.dismissCountDown = this.dismissSecs;
             },
         },
     };

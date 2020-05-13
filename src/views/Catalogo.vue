@@ -9,6 +9,7 @@
                         <em>Footer Slot</em>
                     </template>
                 </b-card>
+                </div>
             </div>
         </div> -->
   <v-container-fluid>  

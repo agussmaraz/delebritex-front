@@ -1,10 +1,10 @@
 <template>
     <div class="container">
-        <h1>Ventas</h1>
+        <h1>Ventas del día</h1>
         <br />
         <ul type="none" class="lista-ventas">
-            <li class="li-venta" @click="returnData()">Vendido</li>
-            <li class="nuevo-venta">Nuevo</li>
+            <li class="li-venta" @click="returnData('resta')">Vendido</li>
+            <li class="nuevo-venta" @click="returnData('nuevo')">Nuevo</li>
         </ul>
         <table class="table table-hover crud-ventas">
             <thead>
@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in movimientos" :key="index">
+                <tr v-for="(item, index) in productos" :key="index">
                     <td>{{ resetearFecha(item.fecha) }}</td>
                     <td>{{ item.producto.nombre }}</td>
                     <td>{{ item.valor }}</td>
@@ -32,7 +32,7 @@
         data() {
             return {
                 movimientos: [],
-                tab: 'Todos',
+                tab: 'resta',
             };
         },
         created() {
@@ -47,26 +47,31 @@
             resetearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },
-          
+            returnData(nombre) {
+                this.tab = nombre;
+            },
         },
         computed: {
             productos() {
                 switch (this.tab) {
-                    case 'Vendido':
+                    case 'resta':
                         return this.movimientos.filter((movimiento) => {
                             if (movimiento.accion) {
-                                return movimiento.accion == 'Resta';
+                                return movimiento.accion == 'resta';
                             }
                             return false;
                         });
                         break;
-                    case 'Nuevo':
+                    case 'nuevo':
                         return this.movimientos.filter((movimiento) => {
                             if (movimiento.accion) {
-                                return movimiento.accion == 'Nuevo';
+                                return movimiento.accion != 'resta';
                             }
                             return false;
                         });
+                        break;
+                    default:
+                        return this.movimientos;
                         break;
                 }
             },
