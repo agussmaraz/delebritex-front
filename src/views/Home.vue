@@ -1,13 +1,43 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+    <v-carousel
+    cycle
+    height="100%"
+    width="100%"
+    hide-delimiter-background
+    :show-arrows="false"
+  >
+    <v-carousel-item
+      v-for="(item, index) in slides"
+      :key="index"
+      :src= "item.src"
+    >
+    </v-carousel-item>
+  </v-carousel>
   </div>
 </template>
 <script>
+export default{
+  data(){
+    return {
+      slides: [
+        {
+          src: require('../img/delebritex.jpeg'),
+        },
+        {
+          src: require('../img/faro.jpg'),
+        },
+        {
+          src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+        },
+        {
+          src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+        },
+        ],
+      }
+  }
+}
 </script>
 <style lang="scss">
-.home{
-  margin-top: 2%;
-}
 
 </style>
