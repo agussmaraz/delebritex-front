@@ -42,7 +42,7 @@
             <tbody>
                 <tr v-for="(item, index) in producto" :key="index">
                     <td>{{ formatearFecha(item.createdAt) }}</td>
-                    <td>{{ item.nombre }} {{ item.id }}</td>
+                    <td>{{ item.nombre }}</td>
                     <td>{{ item.medida['medida'] }}</td>
                     <td>
                         <button @click="restarCantidad(item, item.id)">-</button>

@@ -2,10 +2,10 @@
     <div class="catalogo">
         <div class="contenedor container">
             <div class="row" >
-
                 <div v-for="(item, index) in producto" :key="index"> 
-                <b-card class="card mb-2 card-position" footer-tag="footer" img-src="../img/6SxHcq7.jpg" img-alt="Image" img-top tag="article" >
+                <b-card class="card mb-2 card-position" footer-tag="footer" :img-src="item.imagen" img-alt="Image" img-top tag="article" >
                     <b-card-text>{{ item.nombre }} </b-card-text>
+        
                     <router-link :to="{ name: 'productoSlug', params: {slug: item.slug} }"> Ver mas </router-link>
                     <template v-slot:footer>
                         <em>Footer Slot</em>
