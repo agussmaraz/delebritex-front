@@ -2,10 +2,10 @@
     <div class="agregarProductos">
         <h1>Agregar nuevos productos</h1>
         <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-        <form class="container" @submit.prevent="nuevoProducto(producto)" enctype="multipart/form-data">
+        <v-form ref="form" class="container" @submit.prevent="nuevoProducto(producto)" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Producto</label>
-                <input type="text" class="form-control input-form" v-model="producto.nombre" />
+                <input type="text" class="form-control input-form" v-model="producto.nombre" :counter="10" :rules="nameRules" label="Name" required />
                 <p v-if="error" class=" p-error">
                     {{ this.error.nombre }}
                 </p>
@@ -26,16 +26,15 @@
                     </select>
                 </div>
             </article>
-                    <p class="p-error ">
-                        {{ this.error.empaqueId }}
-                    </p>
+            <p class="p-error ">
+                {{ this.error.empaqueId }}
+            </p>
 
             <br />
             <div class="form-group" v-if="producto.empaqueId == '1'">
                 <label> Cantidad de paquetes</label>
                 <input type="number" class="form-control input-form paquetes" v-model="producto.cantidadPaquetes" />
                 <br />
-                <!-- {{ this.error.paquetes }} -->
             </div>
             <div class="form-group">
                 <label v-if="producto.empaqueId !== 1">Unidades</label>
@@ -65,6 +64,11 @@
                 </p>
             </div>
             <div class="form-group">
+                <label>Precio x unidad</label>
+                <br />
+                <input type="number" v-model="producto.precio" />
+            </div>
+            <div class="form-group">
                 <label>Imagen del producto</label>
                 <br />
                 <input type="file" @change="imagenSeleccionada" />
@@ -73,7 +77,7 @@
                 </p>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        </v-form>
     </div>
 </template>
 
@@ -114,6 +118,7 @@
                     categoriaId: '',
                     slug: '',
                     imagen: '',
+                    precio: '',
                 },
                 medida: [],
                 empaque: [],
@@ -182,6 +187,7 @@
                 formulario.append('categoriaId', this.producto.categoriaId);
                 formulario.append('slug', this.producto.slug);
                 formulario.append('imagen', this.producto.imagen);
+                formulario.append('precio', this.producto.precio);
 
                 this.axios.post('/nuevoProducto', formulario).then((res) => {
                     console.log(res.data);
@@ -191,6 +197,7 @@
                     this.producto.unidadPorEmpaque = '';
                     this.producto.pesoUnidad = '';
                     this.producto.categoriaId = '';
+                    this.producto.precio = '';
                     this.producto.imagen = '';
                     this.mensaje.texto = 'El producto fue agregado correctamente';
                     this.mensaje.color = 'success';
@@ -245,6 +252,6 @@
         width: 100px;
     }
     .p-error {
-      color: red;
+        color: red;
     }
 </style>

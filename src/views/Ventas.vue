@@ -6,7 +6,7 @@
             <li class="li-venta" @click="returnData('resta')">Vendido</li>
             <li class="nuevo-venta" @click="returnData('nuevo')">Nuevo</li>
         </ul>
-        <table class="table table-hover crud-ventas">
+        <table class="table table-hover crud-ventas" id="printMe">
             <thead>
                 <tr>
                     <th scope="col">Fecha</th>
@@ -24,6 +24,8 @@
                 </tr>
             </tbody>
         </table>
+        <br />
+        <button v-print="'#printMe'">Imprimir</button>
     </div>
 </template>
 
@@ -33,6 +35,10 @@
             return {
                 movimientos: [],
                 tab: 'resta',
+                printObj: {
+                    id: 'printMe',
+                    popTitle: 'good print',
+                },
             };
         },
         created() {
