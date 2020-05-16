@@ -27,9 +27,6 @@
 <script>
     import { mapState, mapGetters, mapActions } from 'vuex';
     export default {
-        created() {
-            this.mostrar();
-        },
         computed: {
             ...mapState({
                 productos: (state) => state.productos,

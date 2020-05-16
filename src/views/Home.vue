@@ -22,10 +22,10 @@ export default{
     return {
       slides: [
         {
-          src: require('../img/delebritex.jpeg'),
+          src: '/img/delebritex.jpeg',
         },
         {
-          src: require('../img/faro.jpg'),
+          src: '/img/faro.jpg',
         },
         {
           src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',

@@ -25,7 +25,8 @@
             </tbody>
         </table>
         <br />
-        <button v-print="'#printMe'">Imprimir</button>
+        <download-excel :data="json_data" name="excel.xls" class="btn btn-dark" >Guardar excel</download-excel>
+        <button v-print="'#printMe'" class="btn-impr btn btn-dark">Imprimir</button>
     </div>
 </template>
 
@@ -33,6 +34,13 @@
     export default {
         data() {
             return {
+                json_fields: {
+                    Producto: 'producto',
+                    Fecha: 'fecha',
+                    Cantidades: 'cantidades',
+                    Precio: 'precio',
+                },
+                json_data: [],
                 movimientos: [],
                 tab: 'resta',
                 printObj: {
@@ -48,6 +56,20 @@
             listarMovimientos() {
                 this.axios.get('/movimientos').then((res) => {
                     this.movimientos = res.data;
+                    this.movimientos.forEach((movimiento) => {
+                        let movimientosExcel = {};
+                        if (movimiento.accion == 'resta') {
+                            const producto = movimiento.producto.nombre;
+                            const precio = movimiento.producto.precio;
+                            const fecha = new Date(movimiento.fecha).toLocaleDateString();
+                            movimientosExcel.producto = producto;
+                            movimientosExcel.fecha = fecha;
+                            movimientosExcel.cantidades = movimiento.valor;
+                            movimientosExcel.precio = precio;
+                            this.json_data.push(movimientosExcel);
+                        }
+                    });
+                            console.log(this.json_data);
                 });
             },
             resetearFecha(fecha) {
@@ -114,5 +136,8 @@
     ul {
         margin-bottom: 0 !important;
         margin-left: 10%;
+    }
+    .btn-impr{
+        margin-left: 6%;
     }
 </style>
