@@ -20,7 +20,7 @@
                     <b-nav-item to="/register" v-if="isLogged == false">Registrarse</b-nav-item>
 
                     <div class="nav-login" v-if="isLogged == true">
-                        <b-nav-item><b-icon icon="bag"></b-icon></b-nav-item>
+                        <b-nav-item to="/carrito"><b-icon icon="bag"></b-icon></b-nav-item>
                         <b-nav-form>
                             <b-form-input size="sm" class="mr-sm-2" placeholder="¿Qué estas buscando?"></b-form-input>
                             <b-button size="sm" class="my-2 my-sm-0" type="submit">Buscar</b-button>

@@ -7,7 +7,7 @@
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                     <v-card-title>{{ item.nombre }}</v-card-title>
                     <v-card-text class="text--primary">
-                        <div>Whitehaven Beach</div>
+                        <div>{{item.precio}}</div>|
                         <div>Whitsunday Island, Whitsunday Islands</div>
                     </v-card-text>
                     <v-card-actions>
@@ -27,9 +27,6 @@
 <script>
     import { mapState, mapGetters, mapActions } from 'vuex';
     export default {
-        created() {
-            this.mostrar();
-        },
         computed: {
             ...mapState({
                 productos: (state) => state.productos,

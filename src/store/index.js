@@ -54,6 +54,11 @@ const store = new Vuex.Store({
         },
         removeFromCart({commit}){
             commit('REMOVE_FROM_CART')
+        },
+        removeItemFromCart({commit}, producto){
+        if (this.state.carrito.find((e) => e.id == producto.id)) {
+            commit('REMOVE_ITEM_FROM_CART', producto)
+        } 
         }
     },
     mutations: {
@@ -79,6 +84,9 @@ const store = new Vuex.Store({
         },
         REMOVE_FROM_CART(state){
             state.carrito = []
+        },
+        REMOVE_ITEM_FROM_CART(state, producto){
+            state.carrito.pop(producto);
         }
     },
 });
