@@ -31,7 +31,7 @@
                     id: 'printMe',
                     popTitle: 'good print',
                 },
-                headers: [{ text: 'Fecha', value: 'fecha' }, { text: 'Producto', value: 'producto.nombre' }, { text: 'Cantidad', value: 'valor' }, { text: 'Precio', value: 'producto.precioUnidad' }, { text: 'Diferencia' }, { text: 'Accion', value: 'accion' }],
+                headers: [{ text: 'Fecha', value: 'fecha' }, { text: 'Producto', value: 'producto.nombre' }, { text: 'Cantidad', value: 'valor' }, { text: 'Precio', value: 'producto.precioUnidad' }, { text: 'Diferencia', value: ''}, { text: 'Accion', value: 'accion' }],
             };
         },
         created() {
