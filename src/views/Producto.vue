@@ -1,8 +1,12 @@
 <template>
     <div>
-        <h1>{{ this.$route.params.slug}}</h1>
-        <p>stock: {{ producto.totalUnidad }}</p>
-
+       <v-container-fluid>
+           <v-row>
+               <v-card>
+                   <v-img :src="producto.imagen"></v-img>
+               </v-card>
+           </v-row>
+       </v-container-fluid>
     </div>
 </template>
 

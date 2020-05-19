@@ -63,11 +63,32 @@
                     {{ this.error.categoriaId }}
                 </p>
             </div>
-            <div class="form-group">
-                <label>Precio x unidad</label>
-                <br />
-                <input type="number" v-model="producto.precio" />
-            </div>
+            <article>
+                <div class="article-flex">
+                    <div class="form-group">
+                        <label>Precio por unidad</label>
+                        <br />
+                        <input type="number" v-model="producto.precioUnidad" />
+                    </div>
+                    <div v-if="producto.empaqueId == 1" class="form-group">
+                        <label>Precio por bulto</label>
+                        <br />
+                        <input type="number" v-model="producto.precioBulto" />
+                    </div>
+                </div>
+                <div class="article-flex">
+                    <div class="form-group">
+                        <label>Precio por unidad distribuidora</label>
+                        <br />
+                        <input type="number" v-model="producto.precioDistribuidoraUnidad" />
+                    </div>
+                    <div v-if="producto.empaqueId == 1" class="form-group empaque">
+                        <label>Precio por bulto distribuidora</label>
+                        <br />
+                        <input type="number" v-model="producto.precioDistribuidoraBulto" />
+                    </div>
+                </div>
+            </article>
             <div class="form-group">
                 <label>Imagen del producto</label>
                 <br />
@@ -118,7 +139,10 @@
                     categoriaId: '',
                     slug: '',
                     imagen: '',
-                    precio: '',
+                    precioUnidad: '',
+                    precioBulto: '',
+                    precioDistribuidoraUnidad: '',
+                    precioDistribuidoraBulto: ''
                 },
                 medida: [],
                 empaque: [],
@@ -187,7 +211,11 @@
                 formulario.append('categoriaId', this.producto.categoriaId);
                 formulario.append('slug', this.producto.slug);
                 formulario.append('imagen', this.producto.imagen);
-                formulario.append('precio', this.producto.precio);
+                formulario.append('precioUnidad', this.producto.precioUnidad);
+                formulario.append('precioBulto', this.producto.precioBulto);
+                formulario.append('precioDistribuidoraUnidad', this.producto.precioDistribuidoraUnidad);
+                formulario.append('precioDistribuidoraBulto', this.producto.precioDistribuidoraBulto);
+
 
                 this.axios.post('/nuevoProducto', formulario).then((res) => {
                     console.log(res.data);
@@ -197,7 +225,11 @@
                     this.producto.unidadPorEmpaque = '';
                     this.producto.pesoUnidad = '';
                     this.producto.categoriaId = '';
-                    this.producto.precio = '';
+                    this.producto.precioUnidad = '';
+                    this.producto.precioBulto = '';
+                    this.producto.precioDistribuidoraUnidad = '';
+                    this.producto.precioDistribuidoraBulto= '';
+
                     this.producto.imagen = '';
                     this.mensaje.texto = 'El producto fue agregado correctamente';
                     this.mensaje.color = 'success';
