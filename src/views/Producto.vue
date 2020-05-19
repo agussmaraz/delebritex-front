@@ -1,13 +1,28 @@
 <template>
-    <div>
-        <h1>{{ this.$route.params.slug}}</h1>
-        <p>stock: {{ producto.totalUnidad }}</p>
-
-    </div>
+    <v-card 
+    max-height="100%"
+    max-width="100%"
+    >
+        <!-- <h1>{{ this.$route.params.slug}}</h1>
+        <p>stock: {{ producto.totalUnidad }}</p> -->
+        <v-img class="white--text align-end" height="700px" width="auto" :src="require(producto.imagen)"> </v-img>
+        <v-card-title>{{ producto.nombre }}</v-card-title>
+        <v-card-text class="text--primary">
+        <div>{{producto.precio}}</div>
+        <div>{{ producto.totalUnidad }}</div>
+        </v-card-text>
+        <v-card-actions>
+        <v-btn  to="#" @click="addToCart(producto)">
+        Añadir al carrito
+        </v-btn>
+        </v-card-actions>
+        </v-card>
+    </v-card>
 </template>
 
 <script>
-    export default {
+ import { mapState, mapGetters, mapActions } from 'vuex';
+    export default {    
         data() {
             return {
                 productoSlug: this.$route.params.slug,
@@ -17,6 +32,10 @@
         },
         computed: {
             traerProducto() {},
+            ...mapState({
+                productos: (state) => state.productos,
+                carrito: (state) => state.carrito,
+            }),
         },
         beforeMount() {
             const slug = this.productoSlug;
@@ -26,6 +45,13 @@
                     console.log(this.producto);
                 }
             });
+        },
+         methods: {
+            ...mapActions({
+                getProducts: 'getProducts',
+                addToCart: 'addToCart',
+                removeFromCart: 'removeFromCart'
+            }),
         },
     };
 </script>

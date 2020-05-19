@@ -7,6 +7,9 @@ import store from './store'
 import Slug from 'slug';
 import Print from 'vue-print-nb'
 import JsonExcel from 'vue-json-excel'
+import jsPDF from 'jspdf';
+
+Vue.use(jsPDF);
  
 Vue.component('downloadExcel', JsonExcel)
 Vue.use(Print);
