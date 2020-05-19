@@ -7,17 +7,13 @@
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                     <v-card-title>{{ item.nombre }}</v-card-title>
                     <v-card-text class="text--primary">
-                        <div>{{item.precio}}</div>|
+                        <div>{{item.precio}}</div>
                         <div>Whitsunday Island, Whitsunday Islands</div>
                     </v-card-text>
-                    <v-card-actions>
-                        <v-btn color="orange" text :to="{ name: 'productoSlug', params: { slug: item.slug } }">
-                            Ver mas
-                        </v-btn>
-                        <v-btn color="orange" text to="#" @click="addToCart(item)">
+                    <v-card-actions class="justify-center">
+                        <v-btn class="center" to="#" @click="addToCart(item)">
                             Añadir al carrito
                         </v-btn>
-                        <v-btn color="orange" text to="#" @click="removeFromCart()"> Vaciar carrito </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-row>
@@ -74,5 +70,8 @@
     .margen {
         margin: 5px 5px 5px 5px;
         text-decoration: none !important;
+    }
+    .center{
+        text-align: center !important;
     }
 </style>

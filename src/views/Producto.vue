@@ -11,7 +11,8 @@
 </template>
 
 <script>
-    export default {
+ import { mapState, mapGetters, mapActions } from 'vuex';
+    export default {    
         data() {
             return {
                 productoSlug: this.$route.params.slug,
@@ -21,6 +22,10 @@
         },
         computed: {
             traerProducto() {},
+            ...mapState({
+                productos: (state) => state.productos,
+                carrito: (state) => state.carrito,
+            }),
         },
         beforeMount() {
             const slug = this.productoSlug;
@@ -30,6 +35,13 @@
                     console.log(this.producto);
                 }
             });
+        },
+         methods: {
+            ...mapActions({
+                getProducts: 'getProducts',
+                addToCart: 'addToCart',
+                removeFromCart: 'removeFromCart'
+            }),
         },
     };
 </script>
