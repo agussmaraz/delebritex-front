@@ -36,6 +36,8 @@
                     <th scope="col">Medida</th>
                     <th scope="col">Total unidades</th>
                     <th scope="col">Paquetes</th>
+                    <th scope="col">Precio unidad</th>
+                    <th scope="col">Precio bulto</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
@@ -50,6 +52,9 @@
                         <button @click="aumentarCantidad(item, item.id)">+</button>
                     </td>
                     <td>{{ cantidadPaquetes(item) }}</td>
+                    <td>${{ item.precioUnidad }}</td>
+                    <td>${{ item.precioBulto }}</td>
+
                     <td>
                         <button type="button" class="btn btn-danger" @click="eliminarProducto(item.id)">Eliminar</button>
                         <button type="button" class="btn btn-warning button-crud" @click="editarProductoId(item)">Editar</button>
@@ -62,6 +67,8 @@
 </template>
 
 <script>
+ 
+
     export default {
         data() {
             return {
@@ -98,7 +105,6 @@
                 });
             },
             eliminarProducto(id) {
-                console.log(id);
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
                     console.log(res.data);
                     const index = this.producto.findIndex((item) => Number(item.id) == Number(res.data));

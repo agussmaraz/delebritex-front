@@ -1,23 +1,13 @@
 <template>
-    <v-card 
-    max-height="100%"
-    max-width="100%"
-    >
-        <!-- <h1>{{ this.$route.params.slug}}</h1>
-        <p>stock: {{ producto.totalUnidad }}</p> -->
-        <v-img class="white--text align-end" height="700px" width="auto" :src="require(producto.imagen)"> </v-img>
-        <v-card-title>{{ producto.nombre }}</v-card-title>
-        <v-card-text class="text--primary">
-        <div>{{producto.precio}}</div>
-        <div>{{ producto.totalUnidad }}</div>
-        </v-card-text>
-        <v-card-actions>
-        <v-btn  to="#" @click="addToCart(producto)">
-        Añadir al carrito
-        </v-btn>
-        </v-card-actions>
-        </v-card>
-    </v-card>
+    <div>
+       <v-container-fluid>
+           <v-row>
+               <v-card>
+                   <v-img :src="producto.imagen"></v-img>
+               </v-card>
+           </v-row>
+       </v-container-fluid>
+    </div>
 </template>
 
 <script>
