@@ -68,9 +68,9 @@
                 <tr>
                   <td><label class="sub-title">Quantity :</label></td>
                   <td><button onClick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
-                    <input type="text" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty" name="qty">
-                    <button onClick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty )) result.value++;return false;" class="increase items-count" type="button"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
-                    </td>
+                        <input type="text" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty" name="qty">
+                        <button onClick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty )) result.value++;return false;" class="increase items-count" type="button"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+                        </td>
                 </tr>
               </table>
               <div class="cart-btn">

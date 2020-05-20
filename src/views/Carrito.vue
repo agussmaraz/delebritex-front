@@ -8,7 +8,7 @@
       <li class="checkout-product">
         <img :src="item.imagen" alt="" class="product-image">
         <h3 class="product-name">{{item.nombre}}</h3>
-        <span class="product-price">${{item.precio}}</span>
+        <span class="product-price">${{item.precioUnidad}}</span>
         <button class="product-remove" @click="removeItemFromCart(item)">X</button>
       </li>
     </ul>
@@ -36,7 +36,7 @@
             </v-list-item>
 
             <v-list-item>
-              <div>{{item.precio}}</div>
+              <div>{{item.precioUnidad}}</div>
             </v-list-item>
 
            
@@ -70,7 +70,7 @@
         }),
         sumaPrecio(){
           return this.carrito.reduce(
-          (total,item) => total + Number(item.precio),0);
+          (total,item) => total + Number(item.precioUnidad),0);
          },
         closeOverlay(){
           if (this.openTicket = false) {

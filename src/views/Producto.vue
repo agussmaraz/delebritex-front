@@ -1,13 +1,25 @@
 <template>
-    <div>
-       <v-container-fluid>
-           <v-row>
-               <v-card>
-                   <v-img :src="producto.imagen"></v-img>
-               </v-card>
-           </v-row>
-       </v-container-fluid>
-    </div>
+<v-container-fluid>
+    <v-card 
+    max-height="100%"
+    max-width="100%"
+    >
+        <!-- <h1>{{ this.$route.params.slug}}</h1>
+        <p>stock: {{ producto.totalUnidad }}</p> -->
+        <v-img class="white--text align-end" height="700px" width="auto" :src="producto.imagen" :contain="true"> </v-img>
+        <v-card-title>{{ producto.nombre }}</v-card-title>
+        <v-card-text class="text--primary">
+        <div>{{producto.precioUnidad}}</div>
+        <div>{{ producto.totalUnidad }}</div>
+        </v-card-text>
+        <v-card-actions>
+        <v-btn class="text-center" to="#" @click="addToCart(producto)">
+        Añadir al carrito
+        </v-btn>
+        </v-card-actions>
+        </v-card>
+    </v-card>
+</v-container-fluid>
 </template>
 
 <script>
@@ -46,4 +58,5 @@
     };
 </script>
 
-<style></style>
+<style>
+</style>
