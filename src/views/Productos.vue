@@ -1,80 +1,80 @@
 <template>
     <article class="container productos">
         <h1>Productos</h1>
-        <form @submit.prevent="editarProducto(productoEditar)" class="form-editar" v-if="editar">
-            <article class="form-editar-flex">
-                <div>
-                    <div class="form-group">
-                        <label>Producto</label>
-                        <input type="text" class="form-control" v-model="productoEditar.nombre" />
-                    </div>
-                    <div class="form-group">
-                        <label>Total unidades</label>
-                        <input type="number" class="form-control" v-model="productoEditar.totalUnidad" />
-                    </div>
-                </div>
-                <div class="parteDos-formEditar">
-                    <div class="form-group">
-                        <label>Paquetes</label>
-                        <input type="number" class="form-control" v-model="productoEditar.cantidadPaquetes" />
-                    </div>
-                    <div class="form-group">
-                        <label>Peso por unidad</label>
-                        <input type="number" class="form-control" v-model="productoEditar.pesoUnidad" />
-                    </div>
-                </div>
-            </article>
-            <button type="submit" class="btn btn-success">Enviar</button>
-            <button type="submit" class="btn bg-secondary button-crud" @click="cancelarEdicion()">Cancelar</button>
-        </form>
         <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-        <table class="table table-hover crud">
-            <thead>
-                <tr>
-                    <th scope="col">Fecha</th>
-                    <th scope="col">Productos</th>
-                    <th scope="col">Medida</th>
-                    <th scope="col">Total unidades</th>
-                    <th scope="col">Paquetes</th>
-                    <th scope="col">Precio unidad</th>
-                    <th scope="col">Precio bulto</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(item, index) in producto" :key="index">
-                    <td>{{ formatearFecha(item.createdAt) }}</td>
-                    <td>{{ item.nombre }}</td>
-                    <td>{{ item.medida['medida'] }}</td>
-                    <td>
-                        <button @click="restarCantidad(item, item.id)">-</button>
-                        {{ item.totalUnidad }}
-                        <button @click="aumentarCantidad(item, item.id)">+</button>
-                    </td>
-                    <td>{{ cantidadPaquetes(item) }}</td>
-                    <td>${{ item.precioUnidad }}</td>
-                    <td>${{ item.precioBulto }}</td>
 
-                    <td>
-                        <button type="button" class="btn btn-danger" @click="eliminarProducto(item.id)">Eliminar</button>
-                        <button type="button" class="btn btn-warning button-crud" @click="editarProductoId(item)">Editar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    
+        <template>
+                    <!-- <v-dialog v-model="dialog" width="500"> -->
+                        <!-- <template v-slot:activator="{ on }">
+                            <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+                        </template> -->
+
+                        <v-card>
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="productoEditar.nombre" label="Nombre"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="productoEditar.empaqueId" label="Paquetes"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="productoEditar.totalUnidad" label="Total unidades"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="productoEditar.pesoUnidad" label="Peso por unidad"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="productoEditar.precioUnidad" label="Precio Unidad"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="productoEditar.precioBulto" label="Precio Bulto"></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" text @click="cancelarEdicion()">Cancelar</v-btn>
+                                <v-btn color="blue darken-1" text @click="editarProducto(productoEditar)">Save</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    <!-- </v-dialog> -->
+                </template>
+        <template>
+            <v-data-table :headers="headers" :items="obtenerProductos" :items-per-page="5" class="elevation-1">
+                <template v-slot:item.actions="{ item }">
+                    <v-icon small class="mr-2" @click="editarProductoId(item)">
+                        mdi-pencil
+                    </v-icon>
+                    <v-icon small @click="eliminarProducto(item.id)">
+                        mdi-delete
+                    </v-icon>
+                </template>
+            </v-data-table>
+        </template>
     </article>
 </template>
 
 <script>
- 
-
     export default {
         data() {
             return {
+                headers: [
+                    { text: 'Fecha', value: 'createdAt' },
+                    { text: 'Producto', value: 'nombre' },
+                    { text: 'Medida', value: 'medidaId' },
+                    { text: 'Total Unidades', value: 'totalUnidad' },
+                    { text: 'Paquetes', value: 'empaqueId' },
+                    { text: 'Precio Unidad', value: 'precioUnidad' },
+                    { text: 'Precio Bulto', value: 'precioBulto' },
+                    { text: 'Acciones', value: 'actions', sortable: false },
+                ],
                 producto: [],
                 productoEditar: [],
-                editar: false,
+                dialog: false,
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 mensaje: { color: '', texto: '' },
@@ -109,21 +109,22 @@
                     console.log(res.data);
                     const index = this.producto.findIndex((item) => Number(item.id) == Number(res.data));
                     this.producto.splice(index, 1);
-                     this.mensaje.texto = 'El producto fue eliminado correctamente';
+                    this.mensaje.texto = 'El producto fue eliminado correctamente';
                     this.mensaje.color = 'success';
                     this.showAlert();
                 });
             },
             editarProductoId(item) {
                 const id = item.id;
-                this.editar = true;
+                this.dialog = true;
                 this.axios.get(`/producto/${id}`).then((res) => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     this.productoEditar = res.data;
+                    this.editar = false;
                 });
             },
             cancelarEdicion(id) {
-                this.editar = false;
+                this.dialog = false;
             },
             editarProducto(item) {
                 console.log(item);
@@ -150,6 +151,14 @@
             },
             showAlert() {
                 this.dismissCountDown = this.dismissSecs;
+            },
+        },
+        computed: {
+            obtenerProductos() {
+                return this.producto.map((producto) => {
+                    producto.createdAt = this.formatearFecha(producto.createdAt);
+                    return producto;
+                });
             },
         },
     };
