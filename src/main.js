@@ -10,7 +10,7 @@ import JsonExcel from 'vue-json-excel'
 import jsPDF from 'jspdf';
 
 Vue.use(jsPDF);
- 
+
 Vue.component('downloadExcel', JsonExcel)
 Vue.use(Print);
 
@@ -42,6 +42,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import vuetify from './plugins/vuetify';
 import slug from 'slug';
+import '@babel/polyfill'
+import 'roboto-fontface/css/roboto/roboto-fontface.css'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 Vue.use(VueAxios, axios)
 
