@@ -47,7 +47,9 @@
         data() {
             return {
                 openTicket: false,
-                info: '',
+                info: [],
+                bodyInfo: [],
+                ticket: [],
             };
         },
         computed: {
@@ -57,17 +59,11 @@
             sumaPrecio() {
                 return this.carrito.reduce((total, item) => total + Number(item.precioUnidad), 0);
             },
-            closeOverlay() {
-                if ((this.openTicket = false)) {
-                    this.openTicket = true;
-                } else {
-                    this.openTicket = false;
-                }
-                console.log(this.info);
-                return openTicket;
-            },
         },
         methods: {
+            closeOverlay() {
+                this.openTicket = false;
+            },
             ...mapActions({
                 removeFromCart: 'removeFromCart',
                 removeItemFromCart: 'removeItemFromCart',
@@ -75,16 +71,18 @@
             exportPDF() {
                 var doc = new jsPDF('p', 'pt');
                 doc.text('Delebritex', 40, 40);
-                this.carrito.forEach((element) => (this.info = element.nombre));
+                this.info = this.carrito.map((element) => {
+                    return element;
+                });
+                this.info.forEach((element) => {
+                    const new_info = [element.nombre, element.precioUnidad];
+                    this.ticket.push(new_info);
+                });
                 doc.autoTable({
                     theme: 'striped',
                     margin: { top: 60 },
-                    body: [this.info],
-                    colums: [
-                        { header: 'id', dataKey: '' },
-                        { header: 'name', dataKey: 'nombre' },
-                        { header: 'price', dataKey: 'precio' },
-                    ],
+                    head: [['Producto', 'Precio']],
+                    body: this.ticket,
                 });
                 doc.save('ticket.pdf');
             },

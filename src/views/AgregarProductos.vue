@@ -1,104 +1,88 @@
 <template>
     <div class="agregarProductos">
         <h1>Agregar nuevos productos</h1>
-        <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-        <v-form ref="form" class="container" @submit.prevent="nuevoProducto(producto)" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Producto</label>
-                <input type="text" class="form-control input-form" v-model="producto.nombre" :counter="10" :rules="nameRules" label="Name" required />
-                <p v-if="error" class=" p-error">
-                    {{ this.error.nombre }}
-                </p>
-            </div>
-            <article class="article-flex">
-                <div class="form-group">
-                    <label>Medida</label>
-                    <br />
-                    <select v-model="producto.medidaId">
-                        <option v-for="(item, index) in medida" :key="index" :value="item.id">{{ item.medida }} </option>
-                    </select>
-                </div>
-                <div class="empaque">
-                    <label>Empaque</label>
-                    <br />
-                    <select v-model="producto.empaqueId">
-                        <option v-for="(item, index) in empaque" :key="index" :value="item.id">{{ item.nombre }}</option>
-                    </select>
-                </div>
-            </article>
-            <p class="p-error ">
-                {{ this.error.empaqueId }}
-            </p>
 
-            <br />
-            <div class="form-group" v-if="producto.empaqueId == '1'">
-                <label> Cantidad de paquetes</label>
-                <input type="number" class="form-control input-form paquetes" v-model="producto.cantidadPaquetes" />
-                <br />
-            </div>
-            <div class="form-group">
-                <label v-if="producto.empaqueId !== 1">Unidades</label>
-                <label v-else>Unidades por paquetes</label>
-                <input type="number" class="form-control input-form " v-model="producto.unidadPorEmpaque" />
-                <p v-if="producto.empaqueId == 1">El total de unidades es de: {{ totalUnidadesPorPaquete }}</p>
-                <p class="p-error ">
-                    {{ this.error.unidadPorEmpaque }}
-                </p>
-            </div>
-            <div class="form-group">
-                <label>Peso por unidad</label>
-                <input type="number" class="form-control input-form " v-model="producto.pesoUnidad" />
-                <p>El peso total es de: {{ totalPeso }}</p>
-                <p class="p-error ">
-                    {{ this.error.pesoUnidad }}
-                </p>
-            </div>
-            <div class="form-group">
-                <label>Categoria</label>
-                <br />
-                <select v-model="producto.categoriaId">
-                    <option v-for="(item, index) in categoria" :key="index" :value="item.id"> {{ item.nombre }}</option>
-                </select>
-                <p class="p-error ">
-                    {{ this.error.categoriaId }}
-                </p>
-            </div>
-            <article>
-                <div class="article-flex">
-                    <div class="form-group">
-                        <label>Precio por unidad</label>
-                        <br />
-                        <input type="number" v-model="producto.precioUnidad" />
-                    </div>
-                    <div v-if="producto.empaqueId == 1" class="form-group">
-                        <label>Precio por bulto</label>
-                        <br />
-                        <input type="number" v-model="producto.precioBulto" />
-                    </div>
-                </div>
-                <div class="article-flex">
-                    <div class="form-group">
-                        <label>Precio por unidad distribuidora</label>
-                        <br />
-                        <input type="number" v-model="producto.precioDistribuidoraUnidad" />
-                    </div>
-                    <div v-if="producto.empaqueId == 1" class="form-group empaque">
-                        <label>Precio por bulto distribuidora</label>
-                        <br />
-                        <input type="number" v-model="producto.precioDistribuidoraBulto" />
-                    </div>
-                </div>
-            </article>
-            <div class="form-group">
-                <label>Imagen del producto</label>
-                <br />
-                <input type="file" @change="imagenSeleccionada" />
-                <p class="p-error ">
-                    {{ this.error.imagen }}
-                </p>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </v-form>
+        <template>
+            <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
+            <v-form @submit.prevent="nuevoProducto()" enctype="multipart/form-data" data-app>
+                <v-container>
+                    <v-row>
+                        <v-col cols="5" md="6">
+                            <v-text-field v-model="producto.nombre" label="Nombre del producto" required></v-text-field>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.nombre }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-select label="Medida" v-model="producto.medidaId" :items="medida"> </v-select>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-select label="Empaque" v-model="producto.empaqueId" :items="empaque"></v-select>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.empaqueId }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6" v-if="producto.empaqueId == 'caja'">
+                            <v-text-field v-model="producto.cantidadPaquetes" label="Cantidad de paquetes"></v-text-field>
+                        </v-col>
+                        <v-col cols="5" md="6" v-if="this.producto.empaqueId == 'caja'">
+                            <v-text-field v-model="producto.unidadPorEmpaque" label="Unidades por paquetes" required></v-text-field>
+                            <p>El total de unidades son: {{ totalUnidadesPorPaquete }}</p>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.unidadPorEmpaque }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6" v-else>
+                            <v-text-field v-model="producto.unidadPorEmpaque" label="Unidades" required></v-text-field>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-text-field v-model="producto.pesoUnidad" label="Peso por unidad" required></v-text-field>
+                            <p>El peso total es de: {{ totalPeso }}</p>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.pesoUnidad }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-select label="Categoria" v-model="producto.categoriaId" :items="categoria"></v-select>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.categoriaId }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-text-field v-model="producto.precioUnidad" label="Precio unidad" required></v-text-field>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.precioUnidad }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-text-field v-model="producto.precioBulto" label="Precio bulto" required></v-text-field>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.precioBulto }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-text-field v-model="producto.precioDistribuidoraUnidad" label="Precio unidad distribuidora" required></v-text-field>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.precioDistribuidoraUnidad }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-text-field v-model="producto.precioDistribuidoraBulto" label="Precio bulto distribuidora" required></v-text-field>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.precioDistribuidoraBulto }}
+                            </p>
+                        </v-col>
+                        <v-col cols="5" md="6">
+                            <v-file-input multiple label="File input" @change="imagenSeleccionada"></v-file-input>
+                            <p v-if="error" class=" p-error">
+                                {{ this.error.imagen }}
+                            </p>
+                        </v-col>
+                    </v-row>
+                    <button type="submit">Enviar</button>
+                </v-container>
+            </v-form>
+        </template>
     </div>
 </template>
 
@@ -106,19 +90,19 @@
     export default {
         computed: {
             totalUnidadesPorPaquete() {
-                if (this.producto.empaqueId == '1') {
-                    const totalUnidadPorEmpaque = this.producto.cantidadPaquetes * this.producto.unidadPorEmpaque;
+                if (this.producto.empaqueId == 'caja') {
+                    const totalUnidadPorEmpaque = Number(this.producto.cantidadPaquetes) * Number(this.producto.unidadPorEmpaque);
                     return totalUnidadPorEmpaque;
                 }
             },
             totalUnidades() {
-                if (this.producto.empaqueId == '2') {
+                if (this.producto.empaqueId == 'unidad') {
                     const totalUnidades = this.producto.unidadPorEmpaque;
                     return totalUnidades;
                 }
             },
             totalPeso() {
-                if (this.producto.empaqueId == '1') {
+                if (this.producto.empaqueId == 'caja') {
                     const totalPeso = this.totalUnidadesPorPaquete * this.producto.pesoUnidad;
                     return totalPeso;
                 } else {
@@ -142,7 +126,7 @@
                     precioUnidad: '',
                     precioBulto: '',
                     precioDistribuidoraUnidad: '',
-                    precioDistribuidoraBulto: ''
+                    precioDistribuidoraBulto: '',
                 },
                 medida: [],
                 empaque: [],
@@ -161,9 +145,8 @@
         },
         methods: {
             imagenSeleccionada(e) {
-                const files = e.target.files;
-                this.producto.imagen = files[0];
-                // console.log(this.producto.imagen)
+                const files = e[0];
+                this.producto.imagen = files;
             },
             nuevoProducto() {
                 this.error = {};
@@ -179,6 +162,10 @@
                     const peso = 'El peso es obligatorio';
                     this.error.pesoUnidad = peso;
                 }
+                if (this.producto.empaqueId == 'caja' && !this.producto.cantidadPaquetes) {
+                    const cantidadPaquetes = 'La cantidad de paquetes es obligatorio';
+                    this.error.cantidadPaquetes = cantidadPaquetes;
+                }
                 if (!this.producto.unidadPorEmpaque) {
                     const unidades = 'Las unidades es obligatorio';
                     this.error.unidadPorEmpaque = unidades;
@@ -191,6 +178,22 @@
                     const imagen = 'La imagen es obligatoria.';
                     this.error.imagen = imagen;
                 }
+                if (!this.producto.precioUnidad) {
+                    const precioUnidad = 'El precio de la unidad es obligatorio.';
+                    this.error.precioUnidad = precioUnidad;
+                }
+                if (!this.producto.precioBulto) {
+                    const precioBulto = 'El precio por bulto es obligatorio.';
+                    this.error.precioBulto = precioBulto;
+                }
+                if (!this.producto.precioDistribuidoraUnidad) {
+                    const precioDistribuidoraUnidad = 'El precio de la distribuidora es obligatorio.';
+                    this.error.precioDistribuidoraUnidad = precioDistribuidoraUnidad;
+                }
+                if (!this.producto.precioDistribuidoraBulto) {
+                    const precioDistribuidoraBulto = 'El precio de la distribuidora es obligatorio.';
+                    this.error.precioDistribuidoraBulto = precioDistribuidoraBulto;
+                }
                 if (!this.error) {
                     return true;
                 }
@@ -202,23 +205,32 @@
                 }
                 this.producto.slug = this.producto.nombre;
                 const formulario = new FormData();
-                formulario.append('nombre', this.producto.nombre);
-                formulario.append('totalUnidad', this.producto.totalUnidad);
-                formulario.append('medidaId', this.producto.medidaId);
-                formulario.append('empaqueId', this.producto.empaqueId);
-                formulario.append('pesoUnidad', this.producto.pesoUnidad);
-                formulario.append('unidadPorEmpaque', this.producto.unidadPorEmpaque);
-                formulario.append('categoriaId', this.producto.categoriaId);
-                formulario.append('slug', this.producto.slug);
-                formulario.append('imagen', this.producto.imagen);
-                formulario.append('precioUnidad', this.producto.precioUnidad);
-                formulario.append('precioBulto', this.producto.precioBulto);
-                formulario.append('precioDistribuidoraUnidad', this.producto.precioDistribuidoraUnidad);
-                formulario.append('precioDistribuidoraBulto', this.producto.precioDistribuidoraBulto);
-
-
+                formulario.set('nombre', this.producto.nombre);
+                formulario.set('totalUnidad', this.producto.totalUnidad);
+                if (this.producto.medidaId == 'kg') {
+                    formulario.set('medidaId', 2);
+                } else {
+                    formulario.set('medidaId', 1);
+                }
+                if (this.producto.empaqueId == 'caja') {
+                    formulario.set('empaqueId', 1);
+                } else {
+                    formulario.set('empaqueId', 2);
+                }
+                formulario.set('pesoUnidad', this.producto.pesoUnidad);
+                formulario.set('unidadPorEmpaque', this.producto.unidadPorEmpaque);
+                if (this.producto.categoriaId == 'hola') {
+                    formulario.set('categoriaId', 2);
+                } else {
+                    formulario.set('categoriaId', 3);
+                }
+                formulario.set('slug', this.producto.slug);
+                formulario.set('imagen', this.producto.imagen);
+                formulario.set('precioUnidad', this.producto.precioUnidad);
+                formulario.set('precioBulto', this.producto.precioBulto);
+                formulario.set('precioDistribuidoraUnidad', this.producto.precioDistribuidoraUnidad);
+                formulario.set('precioDistribuidoraBulto', this.producto.precioDistribuidoraBulto);
                 this.axios.post('/nuevoProducto', formulario).then((res) => {
-                    console.log(res.data);
                     this.producto.nombre = '';
                     this.producto.medidaId = '';
                     this.producto.empaqueId = '';
@@ -228,7 +240,7 @@
                     this.producto.precioUnidad = '';
                     this.producto.precioBulto = '';
                     this.producto.precioDistribuidoraUnidad = '';
-                    this.producto.precioDistribuidoraBulto= '';
+                    this.producto.precioDistribuidoraBulto = '';
 
                     this.producto.imagen = '';
                     this.mensaje.texto = 'El producto fue agregado correctamente';
@@ -238,17 +250,23 @@
             },
             listarMedida() {
                 this.axios.get('/buscarMedida').then((res) => {
-                    this.medida = res.data;
+                    this.medida = res.data.map((medida) => {
+                        return medida.medida;
+                    });
                 });
             },
             listarEmpaque() {
                 this.axios.get('/empaqueBuscar').then((res) => {
-                    this.empaque = res.data;
+                    this.empaque = res.data.map((empaque) => {
+                        return empaque.nombre;
+                    });
                 });
             },
             listarCategoria() {
                 this.axios.get('categoriaBuscar').then((res) => {
-                    this.categoria = res.data;
+                    this.categoria = res.data.map((categoria) => {
+                        return categoria.nombre;
+                    });
                 });
             },
             countDownChanged(dismissCountDown) {
@@ -285,5 +303,9 @@
     }
     .p-error {
         color: red;
+    }
+    .row {
+        width: 50%;
+        margin: 0 auto !important;
     }
 </style>

@@ -47,6 +47,7 @@
                     console.log(this.producto);
                 }
             });
+        
         },
          methods: {
             ...mapActions({

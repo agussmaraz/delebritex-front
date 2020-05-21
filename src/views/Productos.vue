@@ -1,14 +1,15 @@
 <template>
-    <article class="container productos">
+    <article class="container productos" data-app>
         <h1>Productos</h1>
         <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
 
         <template>
-                    <!-- <v-dialog v-model="dialog" width="500"> -->
-                        <!-- <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
-                        </template> -->
-
+            <v-data-table :headers="headers" :items="obtenerProductos" :items-per-page="5" class="elevation-1">
+                <template v-slot:top>
+                    <v-dialog v-model="dialog" width="500">
+                        <template v-slot:activator="{ on }">
+                            <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo producto</v-btn>
+                        </template>
                         <v-card>
                             <v-card-text>
                                 <v-container>
@@ -41,10 +42,8 @@
                                 <v-btn color="blue darken-1" text @click="editarProducto(productoEditar)">Save</v-btn>
                             </v-card-actions>
                         </v-card>
-                    <!-- </v-dialog> -->
+                    </v-dialog>
                 </template>
-        <template>
-            <v-data-table :headers="headers" :items="obtenerProductos" :items-per-page="5" class="elevation-1">
                 <template v-slot:item.actions="{ item }">
                     <v-icon small class="mr-2" @click="editarProductoId(item)">
                         mdi-pencil
@@ -120,7 +119,6 @@
                 this.axios.get(`/producto/${id}`).then((res) => {
                     // console.log(res.data);
                     this.productoEditar = res.data;
-                    this.editar = false;
                 });
             },
             cancelarEdicion(id) {
@@ -135,6 +133,7 @@
                     this.producto[index].totalUnidad = this.productoEditar.totalUnidad;
                     this.producto[index].pesoUnidad = this.productoEditar.pesoUnidad;
                     this.productoEditar = {};
+                    this.dialog = false;
                 });
             },
             cantidadPaquetes(item) {

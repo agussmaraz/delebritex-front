@@ -81,7 +81,7 @@
                             this.json_data.push(movimientosExcel);
                         }
                     });
-                    // console.log(this.json_data);
+                    console.log(this.json_data);
                 });
             },
             resetearFecha(fecha) {

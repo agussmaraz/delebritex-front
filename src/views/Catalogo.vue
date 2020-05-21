@@ -1,7 +1,6 @@
 <template>
     <div class="catalogo">
-        {{ carrito.length }}
-        <v-container-fluid>
+        <!-- {{ carrito.length }} -->
             <v-row>
                 <v-card v-for="(item, index) in productos" :key="index" class="mx-auto margen" max-width="400" :to="{ name: 'productoSlug', params: { slug: item.slug } }">
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
@@ -17,7 +16,6 @@
                     </v-card-actions>
                 </v-card>
             </v-row>
-        </v-container-fluid>
     </div>
 </template>
 <script>
