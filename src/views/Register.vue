@@ -1,32 +1,29 @@
 <template>
     <div>
-        <form class="form-register" @submit.prevent="registrarUsuario(usuario)">
-            <br>
-            <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-            <h1>Registro</h1>
-            <br />
-            <div class="form-group">
-                <label>Nombre</label>
-                <input type="text" class="form-control" v-model="usuario.nombre" />
-                <p v-if="error" class="error-register">{{ this.error.nombre }}</p>
-            </div>
-            <div class="form-group">
-                <label>Apellido</label>
-                <input type="text" class="form-control" v-model="usuario.apellido" />
-                <p class="error-register">{{ this.error.apellido }}</p>
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Email</label>
-                <input type="email" class="form-control" v-model="usuario.email" />
-                <p class="error-register">{{ this.error.email }}</p>
-            </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" v-model="usuario.contraseña" />
-                <p class="error-register">{{ this.error.contraseña }}</p>
-            </div>
-            <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
+        <h1>Registro</h1>
+        <template>
+            <v-form ref="form" @submit.prevent="registrarUsuario()">
+                <v-container>
+                    <v-row>
+                        <v-col cols="12" md="4" class="mx-auto">
+                        <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
+                            <v-text-field v-model="usuario.nombre" label="Nombre" required></v-text-field>
+                            <p v-if="error" class="error-register">{{ this.error.nombre }}</p>
+
+                            <v-text-field v-model="usuario.apellido" label="Apellido" required></v-text-field>
+                            <p v-if="error" class="error-register">{{ this.error.apellido }}</p>
+
+                            <v-text-field v-model="usuario.email" label="E-mail" required></v-text-field>
+                            <p v-if="error" class="error-register">{{ this.error.email }}</p>
+
+                            <v-text-field type="password" v-model="usuario.contraseña" label="Contraseña" required></v-text-field>
+                            <p v-if="error" class="error-register">{{ this.error.contraseña }}</p>
+                        </v-col>
+                    </v-row>
+                    <button type="submit">Enviar</button>
+                </v-container>
+            </v-form>
+        </template>
     </div>
 </template>
 

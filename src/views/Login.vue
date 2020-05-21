@@ -1,20 +1,24 @@
 <template>
     <div>
-        <form class="form-login" @submit.prevent="loguearUsuario(usuario)">
-            <h1>Login</h1>
-            <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Email</label>
-                <input type="email" class="form-control" v-model="usuario.email" />
-                <p v-if="error" class="error-login">{{ this.error.email }}</p>
-            </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" v-model="usuario.contraseña" />
-                <p class="error-login">{{ this.error.contraseña }}</p>
-            </div>
-            <button type="submit" class="btn btn-primary">Entrar</button>
-        </form>
+        <h1>Iniciar Sesion</h1>
+        <template>
+            <v-form ref="form" @submit.prevent="loguearUsuario()">
+                <v-container>
+                    <v-row>
+                        <v-col cols="12" md="4" class="mx-auto">
+                            <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
+
+                            <v-text-field v-model="usuario.email" label="E-mail" required></v-text-field>
+                            <p v-if="error" class="error-register">{{ this.error.email }}</p>
+
+                            <v-text-field type="password" v-model="usuario.contraseña" label="Contraseña" required></v-text-field>
+                            <p v-if="error" class="error-register">{{ this.error.contraseña }}</p>
+                        </v-col>
+                    </v-row>
+                    <button type="submit">Enviar</button>
+                </v-container>
+            </v-form>
+        </template>
     </div>
 </template>
 
