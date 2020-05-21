@@ -40,61 +40,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-  import {mapState, mapActions} from 'vuex';
-  import jsPDF from 'jspdf'
-  import 'jspdf-autotable'
-  export default {
-    data(){
-      return {
-        openTicket: false,
-        info: ""
-      }
-    },
-    computed: {
-      ...mapState({
-          carrito: (state) => state.carrito
-        }),
-        sumaPrecio(){
-          return this.carrito.reduce(
-          (total,item) => total + Number(item.precioUnidad),0);
-         },
-        closeOverlay(){
-          if (this.openTicket = false) {
-            this.openTicket = true;
-          } else {
-            this.openTicket = false
-          }
-          console.log(this.info)
-          return openTicket
-        }
-    },
-    methods: {
-        ...mapActions({
-            removeFromCart: "removeFromCart",
-            removeItemFromCart: "removeItemFromCart"
-        }),
-        exportPDF(){
-          var doc = new jsPDF('p', 'pt');
-          doc.text('Delebritex', 40, 40);
-          this.carrito.forEach(element => 
-          this.info = element.nombre)
-          doc.autoTable({
-            theme: 'striped',
-            margin: {top: 60},
-            body: [this.info],
-            colums: [
-              {header: "id", dataKey: ""},
-              {header: "name", dataKey: "nombre"},
-              {header: "price", dataKey: "precio"}
-            ]
-        });
-      doc.save('ticket.pdf');
-      }
-        
-    }
-  }
-=======
     import { mapState, mapActions } from 'vuex';
     import jsPDF from 'jspdf';
     import 'jspdf-autotable';
@@ -145,7 +90,6 @@
             },
         },
     };
->>>>>>> 5d27f2dacb28ce4427b4bbcfabede4793817d22d
 </script>
 
 <style>
