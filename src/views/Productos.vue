@@ -91,18 +91,18 @@
             formatearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },
-            aumentarCantidad(item, id) {
-                console.log(item);
-                this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) + 1 }).then((res) => {
-                    item.totalUnidad++;
-                });
-            },
-            restarCantidad(item, id) {
-                console.log(id);
-                this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) - 1 }).then((res) => {
-                    item.totalUnidad--;
-                });
-            },
+            // aumentarCantidad(item, id) {
+            //     console.log(item);
+            //     this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) + 1 }).then((res) => {
+            //         item.totalUnidad++;
+            //     });
+            // },
+            // restarCantidad(item, id) {
+            //     console.log(id);
+            //     this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) - 1 }).then((res) => {
+            //         item.totalUnidad--;
+            //     });
+            // },
             eliminarProducto(id) {
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
                     console.log(res.data);
@@ -132,6 +132,8 @@
                     this.producto[index].cantidadPaquetes = this.productoEditar.cantidadPaquetes;
                     this.producto[index].totalUnidad = this.productoEditar.totalUnidad;
                     this.producto[index].pesoUnidad = this.productoEditar.pesoUnidad;
+                    this.producto[index].precioUnidad = this.productoEditar.precioUnidad;
+                    this.producto[index].precioBulto = this.productoEditar.precioBulto;
                     this.productoEditar = {};
                     this.dialog = false;
                 });

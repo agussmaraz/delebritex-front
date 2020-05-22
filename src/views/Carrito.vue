@@ -30,7 +30,8 @@
                             </v-list-item>
                         </v-list-item>
                     </v-list>
-                    <v-btn @click="exportPDF()">Obtener ticket</v-btn>
+                    <!-- <v-btn @click="exportPDF()" >Obtener ticket</v-btn> -->
+                    <v-btn @click="guardarCarrito()"> Comprar </v-btn>
                     <v-btn @click="closeOverlay()">Cerrar</v-btn>
                 </v-card>
             </v-overlay>
@@ -84,7 +85,12 @@
                     head: [['Producto', 'Precio']],
                     body: this.ticket,
                 });
-                doc.save('ticket.pdf');
+                // doc.save('ticket.pdf');
+            },
+            guardarCarrito() {
+                this.axios.post('/nuevo-carrito', this.carrito).then((res) => {
+                    console.log(res);
+                });
             },
         },
     };
