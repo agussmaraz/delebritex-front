@@ -1,6 +1,5 @@
 <template>
-<v-app id="inspire">
-  
+ <!-- <v-app id="inspire">
     <v-container grid-list-md text-xs-center>
       <v-layout row wrap>
       <v-flex xs5>
@@ -12,11 +11,9 @@
             ></v-img>
           </v-card>
         <v-layout row wrap>
-      <v-flex v-for="item in items" :key="`4${i}`" xs3>
         <v-card class="product-img">
         <v-img class="sub-img" v-bind:class="{activeimg:  item.isActive}"
           :src="item.images"
-           
         ></v-img>
         </v-card>
       </v-flex>
@@ -69,9 +66,8 @@
                 <tr>
                   <td><label class="sub-title">Quantity :</label></td>
                   <td><button onClick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
-                    <input type="text" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty" name="qty">
-                    <button onClick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty )) result.value++;return false;" class="increase items-count" type="button"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
-                    </td>
+                        <input type="text" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty" name="qty">
+                        <button onClick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty )) result.value++;return false;" class="increase items-count" type="button"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
                 </tr>
               </table>
               <div class="cart-btn">
@@ -90,33 +86,18 @@
             </div>
           </div>
         </div>
-      </v-flex>
-       
-   <v-flex xs12>
-          <div class="overview">
-    <v-tabs
-      v-model="active"
-      color="#ff5252"
-      dark
-      slider-color="blue"
-    >
-      <v-tab>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, earum.
-      </v-tab>
-      <v-tab-item>
-        <v-card flat>
-          <v-card-text class="text-sm-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, eum!</v-card-text>
-        </v-card>
-      </v-tab-item>
-    </v-tabs>
-  </div>
-      </v-flex>
-        
-      </v-layout>
-    </v-container>
-  </v-app>
+      </v-flex> -->
+      <div></div>
 </template>
 <style>
+.body{
+  padding: 35px 0px;
+}
+*{
+  box-sizing: border-box;
+ font-family: 'Lora', serif;
+ 
+}
 .product-img{
   cursor: pointer;
   margin-top: 10px;
