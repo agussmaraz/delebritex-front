@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <v-app>
         <b-navbar class="bg-dark" toggleable="lg" type="dark" variant="info">
             <b-navbar-brand to="/">Delebritex</b-navbar-brand>
 
@@ -28,7 +29,7 @@
                         <b-nav-item-dropdown right>
                             <!-- Using 'button-content' slot -->
                             <template v-slot:button-content>
-                                <em>Usuario</em>
+                                <em>{{user.nombre}}</em>
                             </template>
                             <b-dropdown-item to="/usuario">Compras</b-dropdown-item>
                             <b-dropdown-item @click="logout">Cerrar sesión</b-dropdown-item>
@@ -38,6 +39,35 @@
             </b-collapse>
         </b-navbar>
         <router-view />
+        
+        <v-footer
+        class="grey darken-4"
+        padless
+        absolute
+        >
+        <v-card
+      flat
+      tile
+      class="grey darken-4 white--text center"
+        >
+      <v-card-text>
+        <v-btn
+          v-for="icon in icons"
+          :key="icon"
+          class="mx-4 white--text"
+          icon
+        >
+         <a :href="'http://' + icon.redirectTo" class="white--text"><v-icon size="24px" >{{ icon.iconName }}</v-icon></a>
+        </v-btn>
+      </v-card-text>
+
+      <v-card-text class="white--text">
+        {{ new Date().getFullYear() }} — <strong>Delebritex</strong>
+      </v-card-text>
+      
+    </v-card>
+  </v-footer>
+  </v-app>
     </div>
 </template>
 <script>
@@ -45,7 +75,24 @@
     import jwtDecode from 'jwt-decode';
     export default {
         data() {
-            return {};
+            return {
+                icons: [
+                {
+                    iconName: 'fab fa-facebook-f',
+                    redirectTo: 'facebook.com'
+                },
+                {
+                    iconName: 'fab fa-twitter',
+                    redirectTo: 'twitter.com'
+                },
+                {
+                    iconName:'fab fa-instagram',
+                    redirectTo:'instagram.com'
+                }
+                
+                
+      ],
+            };
         },
         computed: {
             ...mapState({
@@ -89,5 +136,8 @@
     }
     .nav-login {
         display: flex;
+    }
+    .center{
+        margin: auto !important;
     }
 </style>

@@ -8,7 +8,7 @@
     >
         <!-- <h1>{{ this.$route.params.slug}}</h1>
         <p>stock: {{ producto.totalUnidad }}</p> -->
-        <v-img class="white--text align-end" height="700px" width="auto" :src="producto.imagen" :contain="true"> </v-img>
+        <v-img class="white--text align-end" height="400px" width="auto" :src="producto.imagen" :contain="true"> </v-img>
         <v-divider></v-divider>
         <v-card-text>
         <div class="font-weight-bold font">{{ producto.nombre }}</div>
@@ -30,6 +30,7 @@
                 productoSlug: this.$route.params.slug,
                 producto: [],
                 publicPath: process.env.BASE_URL,
+                color:"grey lighten-2"
             };
         },
         computed: {
