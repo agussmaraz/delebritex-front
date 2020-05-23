@@ -4,7 +4,8 @@
             <li class="checkout-product">
                 <img :src="item.imagen" alt="" class="product-image" />
                 <h3 class="product-name">{{ item.nombre }}</h3>
-                <span class="product-price">${{ item.precioUnidad }}</span>
+                <span class="product-price">x{{ item.totalUnidad }}</span>
+                <span class="product-price">${{ calcularPrecio(item) }}</span>
                 <button class="product-remove" @click="removeItemFromCart(item)">X</button>
             </li>
         </ul>
@@ -24,7 +25,9 @@
                             <v-list-item>
                                 <div>{{ item.nombre }}</div>
                             </v-list-item>
-
+                            <v-list-item>
+                                <div>x{{ item.totalUnidad }}</div>
+                            </v-list-item>
                             <v-list-item>
                                 <div>{{ item.precioUnidad }}</div>
                             </v-list-item>
@@ -58,8 +61,9 @@
                 carrito: (state) => state.carrito,
             }),
             sumaPrecio() {
-                return this.carrito.reduce((total, item) => total + Number(item.precioUnidad), 0);
+                return this.carrito.reduce((total, item) => total + Number(item.precioUnidad * item.totalUnidad), 0);
             },
+           
         },
         methods: {
             closeOverlay() {
@@ -88,10 +92,26 @@
                 // doc.save('ticket.pdf');
             },
             guardarCarrito() {
-                this.axios.post('/nuevo-carrito', this.carrito).then((res) => {
+                const storage = localStorage.getItem('usertoken');
+                const usuario = JSON.parse(storage);
+                const id = usuario['id'];
+                const payload = this.carrito.map((producto) => {
+                    const info = {
+                        nombre: producto.nombre,
+                        totalUnidad: producto.totalUnidad,
+                        precioUnidad: producto.precioUnidad,
+                        usuarioId: id,
+                        imagen: producto.imagen
+                    };
+                    return info;
+                });
+                this.axios.post('/nuevo-carrito', payload).then((res) => {
                     console.log(res);
                 });
             },
+             calcularPrecio(item){
+                return item.precioUnidad * item.totalUnidad;
+            }
         },
     };
 </script>
@@ -108,7 +128,7 @@
     }
 
     .checkout-list {
-        padding: 0;
+        padding: 0 !important;
     }
 
     .checkout-product {

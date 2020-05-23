@@ -3,7 +3,7 @@
         <!-- {{ carrito.length }} -->
         <v-app>
             <v-row>
-                <v-card v-for="(item, index) in productos" :key="index" class="mr-auto margen" max-width="400" :to="{ name: 'productoSlug', params: { slug: item.slug } }">
+                <v-card v-for="(item, index) in productos" :key="index" class="mr-auto margen" max-width="400" max-height="400" :to="{ name: 'productoSlug', params: { slug: item.slug } }">
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                     <v-card-title>{{ item.nombre }}</v-card-title>
                     <v-card-text class="text--primary">
@@ -15,7 +15,6 @@
                         <v-btn class="center" to="#" @click="addToCart(item)">
                             Añadir al carrito
                         </v-btn>
-                       
                     </v-card-actions>
                 </v-card>
             </v-row>
@@ -26,11 +25,6 @@
     import { mapState, mapGetters, mapActions } from 'vuex';
 
     export default {
-        data() {
-            return {
-                cantidades: 0,
-            };
-        },
         computed: {
             ...mapState({
                 productos: (state) => state.productos,
@@ -43,13 +37,6 @@
                 addToCart: 'addToCart',
                 removeFromCart: 'removeFromCart',
             }),
-            aumentarCantidad() {
-                this.cantidades++;
-                console.log(this.cantidades);
-            },
-            restarCantidad() {
-                this.cantidades--;
-            },
         },
         beforeMount() {
             this.getProducts();

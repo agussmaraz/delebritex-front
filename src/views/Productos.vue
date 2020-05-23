@@ -7,9 +7,9 @@
             <v-data-table :headers="headers" :items="obtenerProductos" :items-per-page="5" class="elevation-1">
                 <template v-slot:top>
                     <v-dialog v-model="dialog" width="500">
-                        <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo producto</v-btn>
-                        </template>
+                        <!-- <template v-slot:activator="{ on }"> -->
+                            <!-- <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo producto</v-btn> -->
+                        <!-- </template> -->
                         <v-card>
                             <v-card-text>
                                 <v-container>
@@ -91,18 +91,7 @@
             formatearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },
-            // aumentarCantidad(item, id) {
-            //     console.log(item);
-            //     this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) + 1 }).then((res) => {
-            //         item.totalUnidad++;
-            //     });
-            // },
-            // restarCantidad(item, id) {
-            //     console.log(id);
-            //     this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) - 1 }).then((res) => {
-            //         item.totalUnidad--;
-            //     });
-            // },
+       
             eliminarProducto(id) {
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
                     console.log(res.data);
