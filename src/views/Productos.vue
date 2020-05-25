@@ -1,5 +1,5 @@
 <template>
-    <article class="container productos" data-app>
+    <article class="container productos margin" data-app>
         <h1>Stock de productos</h1>
         <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
         <template>
@@ -153,7 +153,7 @@
     };
 </script>
 
-<style>
+<style lang="scss">
     .productos {
         margin-top: 3%;
     }
@@ -173,5 +173,11 @@
     .parteDos-formEditar {
         margin-left: 20px;
     }
+    .margin{
+        @media screen and (max-width: 990px){
+           margin-bottom: 40% !important; 
+        }
+    }
+
   
 </style>

@@ -1,7 +1,6 @@
 <template>
     <div class="container catalogo">
-        <!-- {{ carrito.length }} -->
-        <v-app>
+        <v-app class="margin">
             <v-row>
                 <v-card v-for="(item, index) in productos" :key="index" class="texto-card m-3"  max-width="300" max-height="350" :to="{ name: 'productoSlug', params: { slug: item.slug } }">
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
@@ -69,5 +68,10 @@
     }
     .texto-card:hover {
         border: 1px solid rgb(199, 195, 195) !important;
+    }
+    .margin{
+        @media screen and (max-width: 990px) {
+        margin-bottom: 40% !important;
+    }
     }
 </style>

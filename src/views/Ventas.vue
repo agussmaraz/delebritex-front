@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container margin">
         <h1>Ventas del día</h1>
         <br />
         <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1"> </v-data-table>
@@ -133,7 +133,12 @@
     };
 </script>
 
-<style>
+<style lang="scss">
+    .margin{
+        @media screen and (max-width: 990px) {
+        margin-bottom: 40% !important;
+    }
+    }
     .crud-ventas {
         width: 80%;
         margin: 0 auto;
