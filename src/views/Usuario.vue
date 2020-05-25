@@ -41,9 +41,6 @@
             this.accederCarrito();
         },
         computed: {
-            // ...mapState({
-            //     carrito: (state) => state.carrito,
-            // }),
             accederNumeroCompra() {
                 const carritos = this.separarProductosPorCarrito();
                 const lista = this.carritoAListaDeProductos(carritos);
@@ -52,10 +49,6 @@
             },
         },
         methods: {
-            // ...mapActions({
-            //     removeFromCart: 'removeFromCart',
-            //     removeItemFromCart: 'removeItemFromCart',
-            // }),
             separarProductosPorCarrito() {
                 const objeto = {};
                 console.log(this.carrito);
