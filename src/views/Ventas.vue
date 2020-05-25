@@ -4,7 +4,7 @@
         <br />
         <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1"> </v-data-table>
         <br />
-        <v-container max-width="200">
+        <v-container max-width="400">
             <v-row class="" justify="center" no-gutters>
                 <v-col lg="2">
                     <v-card class="mx-auto" outlined tile>

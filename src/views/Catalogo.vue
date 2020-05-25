@@ -5,11 +5,11 @@
             <v-row>
                 <v-card v-for="(item, index) in productos" :key="index" class="texto-card m-3"  max-width="300" max-height="350" :to="{ name: 'productoSlug', params: { slug: item.slug } }">
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
-                    <v-card-title>{{ item.nombre }}</v-card-title>
+                    <v-card-title  class="text-capitalize">{{ item.nombre }}</v-card-title>
                     <v-card-text class="text--primary">
-                        <div>{{ item.precio }}</div>
                         <div>Whitsunday Island, Whitsunday Islands</div>
-                        <div>{{ item.totalUnidad }}</div>
+                        <div>${{ item.precioUnidad }}</div>
+                        <!-- <div>{{ item.totalUnidad }}</div> -->
                     </v-card-text>
                 </v-card>
             </v-row>
