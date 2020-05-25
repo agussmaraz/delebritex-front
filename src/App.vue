@@ -42,7 +42,6 @@
         
         <v-footer
         class="grey darken-4"
-        padless
         absolute
         >
         <v-card
