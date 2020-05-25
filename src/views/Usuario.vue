@@ -6,16 +6,16 @@
         <br />
         <v-card class="mx-auto mb-4" max-width="700" outlined v-for="(carrito, index) in accederNumeroCompra" :key="index">
             <div class="p-usuario">Fecha: {{ carrito.fecha }}</div>
-                <v-list-item three-line v-for="(item, index) in carrito.productos" :key="index">
-                    <v-list-item-content>
-                        <v-list-item-title class=" mb-1">{{ item.producto }}</v-list-item-title>
-                        <div class="d-flex">
-                            <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
-                            <v-list-item-subtitle>Precio: {{ item.precioTotal }}</v-list-item-subtitle>
-                        </div>
-                    </v-list-item-content>
-                    <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
-                </v-list-item>
+            <v-list-item three-line v-for="(item, index) in carrito.productos" :key="index">
+                <v-list-item-content>
+                    <v-list-item-title class=" mb-1">{{ item.producto }}</v-list-item-title>
+                    <div class="d-flex">
+                        <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>Precio: {{ item.precioTotal }}</v-list-item-subtitle>
+                    </div>
+                </v-list-item-content>
+                <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
+            </v-list-item>
             <br />
             <div class="p-usuario">
                 <p>Total: {{ carrito.total }}</p>
@@ -26,6 +26,8 @@
     </div>
 </template>
 <script>
+    import { mapState, mapActions } from 'vuex';
+
     export default {
         data() {
             return {
@@ -39,6 +41,9 @@
             this.accederCarrito();
         },
         computed: {
+            // ...mapState({
+            //     carrito: (state) => state.carrito,
+            // }),
             accederNumeroCompra() {
                 const carritos = this.separarProductosPorCarrito();
                 const lista = this.carritoAListaDeProductos(carritos);
@@ -47,8 +52,13 @@
             },
         },
         methods: {
+            // ...mapActions({
+            //     removeFromCart: 'removeFromCart',
+            //     removeItemFromCart: 'removeItemFromCart',
+            // }),
             separarProductosPorCarrito() {
                 const objeto = {};
+                console.log(this.carrito);
                 for (let index = 0; index < this.carrito.length; index++) {
                     const element = this.carrito[index];
                     if (!objeto.hasOwnProperty(element.numeroCompra)) {
@@ -83,7 +93,7 @@
                 carrito_final.estado = this.calcularEstadoDeCarrito(productos);
 
                 carrito_final.productos = productos;
-                console.log(carrito_final);
+                // console.log(carrito_final);
                 return carrito_final;
             },
             calcularTotalCarrito(carrito) {

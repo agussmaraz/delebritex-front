@@ -1,5 +1,6 @@
 <template>
     <div class="checkout-box">
+        <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
         <ul v-for="(item, index) in carrito" :key="index" class="checkout-list">
             <li class="checkout-product">
                 <img :src="item.imagen" alt="" class="product-image" />
@@ -54,6 +55,9 @@
                 info: [],
                 bodyInfo: [],
                 ticket: [],
+                dismissSecs: 5,
+                dismissCountDown: 0,
+                mensaje: { color: '', texto: '' },
             };
         },
         computed: {
@@ -79,11 +83,11 @@
                     return element;
                 });
                 this.info.forEach((element) => {
-                    const new_info =  [element.nombre, element.totalUnidad, '$' + element.precioUnidad];
+                    const new_info = [element.nombre, element.totalUnidad, '$' + element.precioUnidad];
                     this.ticket.push(new_info);
                 });
-                    const total = ['Total: ' + this.calcularTotal() ];
-                    this.ticket.push(total);
+                const total = ['Total: ' + this.calcularTotal()];
+                this.ticket.push(total);
 
                 doc.autoTable({
                     theme: 'striped',
@@ -91,12 +95,13 @@
                     head: [['Producto', 'Unidades', 'Precio']],
                     body: this.ticket,
                 });
-                doc.save('ticket.pdf');
+                // doc.save('ticket.pdf');
             },
             guardarCarrito() {
                 const storage = localStorage.getItem('usertoken');
                 const usuario = JSON.parse(storage);
                 const id = usuario['id'];
+                console.log(this.carrito);
                 const payload = this.carrito.map((producto) => {
                     const info = {
                         nombre: producto.nombre,
@@ -107,13 +112,24 @@
                     };
                     return info;
                 });
-                this.exportPDF();
+                this.axios.post('/nuevo-carrito', payload).then((res) => {
+                    this.mensaje.color = 'success';
+                    this.mensaje.texto = 'La compra fue realizada con exito!';
+                    this.showAlert();
+                });
+                    this.exportPDF();
             },
             calcularPrecio(item) {
                 return item.precioUnidad * item.totalUnidad;
             },
             calcularTotal() {
                 return this.info.reduce((total, item) => total + Number(item.precioUnidad), 0);
+            },
+            countDownChanged(dismissCountDown) {
+                this.dismissCountDown = dismissCountDown;
+            },
+            showAlert() {
+                this.dismissCountDown = this.dismissSecs;
             },
         },
     };
