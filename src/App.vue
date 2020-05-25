@@ -40,7 +40,7 @@
             </b-navbar>
             <router-view />
 
-            <v-footer class="grey darken-4" padless absolute>
+            <!-- <v-footer class="grey darken-4" padless absolute>
                 <v-card flat tile class="grey darken-4 white--text center">
                     <v-card-text>
                         <v-btn v-for="(icon, index) in icons" :key="index" class="mx-4 white--text" icon>
@@ -52,7 +52,7 @@
 
                     <v-card-text class="white--text"> {{ new Date().getFullYear() }} — <strong>Delebritex</strong> </v-card-text>
                 </v-card>
-            </v-footer>
+            </v-footer> -->
         </v-app>
     </div>
 </template>

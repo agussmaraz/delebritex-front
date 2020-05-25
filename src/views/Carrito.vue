@@ -29,7 +29,7 @@
                                 <div>x{{ item.totalUnidad }}</div>
                             </v-list-item>
                             <v-list-item>
-                                <div>{{ item.precioUnidad }}</div>
+                                <div>${{ calcularPrecio(item) }}</div>
                             </v-list-item>
                         </v-list-item>
                     </v-list>
@@ -63,7 +63,6 @@
             sumaPrecio() {
                 return this.carrito.reduce((total, item) => total + Number(item.precioUnidad * item.totalUnidad), 0);
             },
-           
         },
         methods: {
             closeOverlay() {
@@ -80,16 +79,19 @@
                     return element;
                 });
                 this.info.forEach((element) => {
-                    const new_info = [element.nombre, element.precioUnidad];
+                    const new_info =  [element.nombre, element.totalUnidad, '$' + element.precioUnidad];
                     this.ticket.push(new_info);
                 });
+                    const total = ['Total: ' + this.calcularTotal() ];
+                    this.ticket.push(total);
+
                 doc.autoTable({
                     theme: 'striped',
                     margin: { top: 60 },
-                    head: [['Producto', 'Precio']],
+                    head: [['Producto', 'Unidades', 'Precio']],
                     body: this.ticket,
                 });
-                // doc.save('ticket.pdf');
+                doc.save('ticket.pdf');
             },
             guardarCarrito() {
                 const storage = localStorage.getItem('usertoken');
@@ -101,17 +103,18 @@
                         totalUnidad: producto.totalUnidad,
                         precioUnidad: producto.precioUnidad,
                         usuarioId: id,
-                        imagen: producto.imagen
+                        imagen: producto.imagen,
                     };
                     return info;
                 });
-                this.axios.post('/nuevo-carrito', payload).then((res) => {
-                    console.log(res);
-                });
+                this.exportPDF();
             },
-             calcularPrecio(item){
+            calcularPrecio(item) {
                 return item.precioUnidad * item.totalUnidad;
-            }
+            },
+            calcularTotal() {
+                return this.info.reduce((total, item) => total + Number(item.precioUnidad), 0);
+            },
         },
     };
 </script>

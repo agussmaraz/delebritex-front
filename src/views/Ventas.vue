@@ -4,15 +4,15 @@
         <br />
         <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1"> </v-data-table>
         <br />
-        <v-container class="grey lighten-5">
-            <v-row class="mb-6" justify="center" no-gutters>
+        <v-container max-width="200">
+            <v-row class="" justify="center" no-gutters>
                 <v-col lg="2">
-                    <v-card class="pa-2" outlined tile>
+                    <v-card class="mx-auto" outlined tile>
                        Total ventas: {{totalVentas}}
                     </v-card>
                 </v-col>
                 <v-col lg="2">
-                    <v-card class="pa-2" outlined tile>
+                    <v-card class="mx-auto" outlined tile>
                         Total ganancias: {{totalGanancias}}
                     </v-card>
                 </v-col>
