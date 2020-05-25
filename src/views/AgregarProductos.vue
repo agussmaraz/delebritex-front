@@ -2,7 +2,7 @@
     <div class="agregarProductos">
         <h1>Agregar nuevos productos</h1>
 
-        <template>
+        <template class="container">
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
             <v-form @submit.prevent="nuevoProducto()" enctype="multipart/form-data" data-app>
                 <v-container>
@@ -79,7 +79,7 @@
                             </p>
                         </v-col>
                     </v-row>
-                    <button type="submit">Enviar</button>
+                    <v-btn color="secondary" type="submit">Enviar</v-btn>
                 </v-container>
             </v-form>
         </template>

@@ -4,7 +4,8 @@
             <li class="checkout-product">
                 <img :src="item.imagen" alt="" class="product-image" />
                 <h3 class="product-name">{{ item.nombre }}</h3>
-                <span class="product-price">${{ item.precioUnidad }}</span>
+                <span class="product-price">x{{ item.totalUnidad }}</span>
+                <span class="product-price">${{ calcularPrecio(item) }}</span>
                 <button class="product-remove" @click="removeItemFromCart(item)">X</button>
             </li>
         </ul>
@@ -24,13 +25,16 @@
                             <v-list-item>
                                 <div>{{ item.nombre }}</div>
                             </v-list-item>
-
                             <v-list-item>
-                                <div>{{ item.precioUnidad }}</div>
+                                <div>x{{ item.totalUnidad }}</div>
+                            </v-list-item>
+                            <v-list-item>
+                                <div>${{ calcularPrecio(item) }}</div>
                             </v-list-item>
                         </v-list-item>
                     </v-list>
-                    <v-btn @click="exportPDF()">Obtener ticket</v-btn>
+                    <!-- <v-btn @click="exportPDF()" >Obtener ticket</v-btn> -->
+                    <v-btn @click="guardarCarrito()"> Comprar </v-btn>
                     <v-btn @click="closeOverlay()">Cerrar</v-btn>
                 </v-card>
             </v-overlay>
@@ -57,7 +61,7 @@
                 carrito: (state) => state.carrito,
             }),
             sumaPrecio() {
-                return this.carrito.reduce((total, item) => total + Number(item.precioUnidad), 0);
+                return this.carrito.reduce((total, item) => total + Number(item.precioUnidad * item.totalUnidad), 0);
             },
         },
         methods: {
@@ -75,16 +79,41 @@
                     return element;
                 });
                 this.info.forEach((element) => {
-                    const new_info = [element.nombre, element.precioUnidad];
+                    const new_info =  [element.nombre, element.totalUnidad, '$' + element.precioUnidad];
                     this.ticket.push(new_info);
                 });
+                    const total = ['Total: ' + this.calcularTotal() ];
+                    this.ticket.push(total);
+
                 doc.autoTable({
                     theme: 'striped',
                     margin: { top: 60 },
-                    head: [['Producto', 'Precio']],
+                    head: [['Producto', 'Unidades', 'Precio']],
                     body: this.ticket,
                 });
                 doc.save('ticket.pdf');
+            },
+            guardarCarrito() {
+                const storage = localStorage.getItem('usertoken');
+                const usuario = JSON.parse(storage);
+                const id = usuario['id'];
+                const payload = this.carrito.map((producto) => {
+                    const info = {
+                        nombre: producto.nombre,
+                        totalUnidad: producto.totalUnidad,
+                        precioUnidad: producto.precioUnidad,
+                        usuarioId: id,
+                        imagen: producto.imagen,
+                    };
+                    return info;
+                });
+                this.exportPDF();
+            },
+            calcularPrecio(item) {
+                return item.precioUnidad * item.totalUnidad;
+            },
+            calcularTotal() {
+                return this.info.reduce((total, item) => total + Number(item.precioUnidad), 0);
             },
         },
     };
@@ -102,7 +131,7 @@
     }
 
     .checkout-list {
-        padding: 0;
+        padding: 0 !important;
     }
 
     .checkout-product {

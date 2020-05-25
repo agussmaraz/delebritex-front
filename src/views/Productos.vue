@@ -1,15 +1,14 @@
 <template>
     <article class="container productos" data-app>
-        <h1>Productos</h1>
+        <h1>Stock de productos</h1>
         <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-
+        <template>
+            <v-btn color="secondary" class="mb-5 d-flex justify-content-start" max-width="200" to="/agregarProductos"> + Nuevo producto</v-btn>
+        </template>
         <template>
             <v-data-table :headers="headers" :items="obtenerProductos" :items-per-page="5" class="elevation-1">
                 <template v-slot:top>
                     <v-dialog v-model="dialog" width="500">
-                        <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo producto</v-btn>
-                        </template>
                         <v-card>
                             <v-card-text>
                                 <v-container>
@@ -91,18 +90,7 @@
             formatearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },
-            aumentarCantidad(item, id) {
-                console.log(item);
-                this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) + 1 }).then((res) => {
-                    item.totalUnidad++;
-                });
-            },
-            restarCantidad(item, id) {
-                console.log(id);
-                this.axios.put(`/editarProducto/${id}`, { totalUnidad: Number(item.totalUnidad) - 1 }).then((res) => {
-                    item.totalUnidad--;
-                });
-            },
+
             eliminarProducto(id) {
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
                     console.log(res.data);
@@ -132,6 +120,8 @@
                     this.producto[index].cantidadPaquetes = this.productoEditar.cantidadPaquetes;
                     this.producto[index].totalUnidad = this.productoEditar.totalUnidad;
                     this.producto[index].pesoUnidad = this.productoEditar.pesoUnidad;
+                    this.producto[index].precioUnidad = this.productoEditar.precioUnidad;
+                    this.producto[index].precioBulto = this.productoEditar.precioBulto;
                     this.productoEditar = {};
                     this.dialog = false;
                 });
@@ -183,4 +173,5 @@
     .parteDos-formEditar {
         margin-left: 20px;
     }
+  
 </style>
