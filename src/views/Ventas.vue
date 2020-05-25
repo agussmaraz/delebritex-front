@@ -1,20 +1,21 @@
 <template>
-    <div class="container margin">
+    <div class="container" data-app>
         <h1>Ventas del día</h1>
+        <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas">
+            
+        </v-data-table>
+       
+
         <br />
         <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1"> </v-data-table>
         <br />
         <v-container max-width="400">
             <v-row class="" justify="center" no-gutters>
                 <v-col lg="2">
-                    <v-card class="mx-auto" outlined tile>
-                       Total ventas: {{totalVentas}}
-                    </v-card>
+                    <v-card class="mx-auto" outlined tile> Total ventas: {{ totalVentas }} </v-card>
                 </v-col>
                 <v-col lg="2">
-                    <v-card class="mx-auto" outlined tile>
-                        Total ganancias: {{totalGanancias}}
-                    </v-card>
+                    <v-card class="mx-auto" outlined tile> Total ganancias: {{ totalGanancias }} </v-card>
                 </v-col>
             </v-row>
         </v-container>
@@ -35,16 +36,22 @@
                     PrecioVenta: 'Precio',
                     PrecioCompra: 'PrecioCompra',
                     Ganancia: 'Ganancia',
-                    // TotalVentas: 'TotalVentas',
-                    // TotalGanancias: 'TotalGanancias'
                 },
                 json_data: [],
                 movimientos: [],
+                reservas: [],
                 tab: 'resta',
                 printObj: {
                     id: 'printMe',
                     popTitle: 'good print',
                 },
+                headersReservas: [
+                    { text: 'Fecha', value: 'fecha' },
+                    { text: 'Usuario', value: 'usuario' },
+                    { text: 'Contacto', value: 'email' },
+                    { text: 'Estado', value: 'estado' },
+                    { text: 'Accion', value: 'actions' },
+                ],
                 headers: [
                     { text: 'Fecha', value: 'fecha' },
                     { text: 'Producto', value: 'producto.nombre' },
@@ -57,6 +64,7 @@
         },
         created() {
             this.listarMovimientos();
+            this.accederReservas();
         },
         methods: {
             listarMovimientos() {
@@ -75,13 +83,11 @@
                             movimientosExcel.Precio = precioUnidad;
                             movimientosExcel.PrecioCompra = precioCompra;
                             movimientosExcel.Ganancia = this.diferencia(movimiento.producto);
-                            // movimientosExcel.TotalVentas = this.totalVentas;
-                            // movimientosExcel.TotalGanancias = this.totalGanancias;
-                            // console.log(movimientosExcel);
+
                             this.json_data.push(movimientosExcel);
                         }
                     });
-                    console.log(this.json_data);
+                    // console.log(this.json_data);
                 });
             },
             resetearFecha(fecha) {
@@ -95,6 +101,77 @@
                 const precioCompra = producto.precioDistribuidoraUnidad;
                 const diferencia = Number(precioVenta) - Number(precioCompra);
                 return diferencia;
+            },
+            generarObjetoDeCarrito(productos) {
+                const reserva_final = {
+                    estado: '',
+                    fecha: '',
+                    productos: [],
+                    usuario: '',
+                    email: '',
+                };
+                reserva_final.email = this.sacarEmail(productos);
+                reserva_final.usuario = this.sacarUsuario(productos);
+                reserva_final.fecha = this.sacarFechaCarrito(productos);
+                reserva_final.estado = this.calcularEstadoDeCarrito(productos);
+
+                reserva_final.productos = productos;
+                // console.log(reserva_final);
+                return reserva_final;
+            },
+            sacarEmail(carrito) {
+                for (let index = 0; index < carrito.length; index++) {
+                    const element = carrito[index];
+                    const email = element.usuario['email'];
+                    return email;
+                }
+            },
+            sacarUsuario(carrito) {
+                for (let index = 0; index < carrito.length; index++) {
+                    const element = carrito[index];
+                    const usuario = element.usuario['nombre'];
+                    return usuario;
+                }
+            },
+            calcularEstadoDeCarrito(carrito) {
+                return 'hola';
+            },
+            sacarFechaCarrito(carrito) {
+                for (let index = 0; index < carrito.length; index++) {
+                    const element = carrito[index];
+                    const fecha = this.resetearFecha(element.createdAt);
+                    return fecha;
+                }
+            },
+            arrayPorNumeroCompra() {
+                const objeto = {};
+                for (let index = 0; index < this.reservas.length; index++) {
+                    const element = this.reservas[index];
+                    if (!objeto.hasOwnProperty(element.numeroCompra)) {
+                        objeto[element.numeroCompra] = [];
+                    }
+                    objeto[element.numeroCompra].push(element);
+                }
+
+                // console.log(objeto);
+                return objeto;
+            },
+            carritoAListaDeProductos(reservas) {
+                const lista_de_productos = [];
+                for (const key in reservas) {
+                    if (reservas.hasOwnProperty(key)) {
+                        const productos = reservas[key];
+                        const reserva_final = this.generarObjetoDeCarrito(productos);
+                        lista_de_productos.push(reserva_final);
+                    }
+                }
+                return lista_de_productos;
+            },
+            accederReservas() {
+                this.axios.get('/carrito').then((res) => {
+                    console.log(res.data);
+                    this.reservas = res.data;
+                });
             },
         },
         computed: {
@@ -128,6 +205,11 @@
                         movimiento.producto.diferencia = this.diferencia(movimiento.producto);
                         return movimiento;
                     });
+            },
+            accederNumeroCompra() {
+                const reservas = this.arrayPorNumeroCompra();
+                const lista = this.carritoAListaDeProductos(reservas);
+                return lista;
             },
         },
     };
@@ -170,5 +252,9 @@
     }
     .btn-impr {
         margin-left: 6%;
+    }
+    .tabla-reservas {
+        width: 50% !important;
+        margin: 0 auto;
     }
 </style>

@@ -1,46 +1,51 @@
 <template>
-    <div class="checkout-box">
-        <ul v-for="(item, index) in carrito" :key="index" class="checkout-list">
-            <li class="checkout-product">
-                <img :src="item.imagen" alt="" class="product-image" />
-                <h3 class="product-name">{{ item.nombre }}</h3>
-                <span class="product-price">x{{ item.totalUnidad }}</span>
-                <span class="product-price">${{ calcularPrecio(item) }}</span>
-                <button class="product-remove" @click="removeItemFromCart(item)">X</button>
-            </li>
-        </ul>
-        <div class="checkout-message">
-            <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
-            <v-btn to="/catalogo" class="boton">Seguir comprando</v-btn>
-            <v-btn v-if="carrito.length >= 1" @click="removeFromCart()">Vaciar el carrito</v-btn>
-            <v-btn v-if="carrito.length >= 1" @click="openTicket = !openTicket">Continuar</v-btn>
-            <v-overlay v-if="openTicket">
-                <v-card>
-                    <v-list class="ticket" :light="true">
-                        <v-list-item v-for="(item, index) in carrito" :key="index">
-                            <v-list-item-avatar>
-                                <v-img :src="item.imagen"></v-img>
-                            </v-list-item-avatar>
+    <v-app>
+        <div class="checkout-box">
+            <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
+            <ul v-for="(item, index) in carrito" :key="index" class="checkout-list">
+                <li class="checkout-product">
+                    <img :src="item.imagen" alt="" class="product-image" />
+                    <h3 class="product-name">{{ item.nombre }}</h3>
+                    <span class="product-price">x{{ item.totalUnidad }}</span>
+                    <span class="product-price">${{ calcularPrecio(item) }}</span>
+                    <button class="product-remove" @click="removeItemFromCart(item)">X</button>
+                </li>
+            </ul>
+            <div class="checkout-message">
+                <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
+                <div class="d-flex justify-content-around">
+                    <v-btn to="/catalogo" class="boton">Seguir comprando</v-btn>
+                    <v-btn v-if="carrito.length >= 1" @click="removeFromCart()">Vaciar el carrito</v-btn>
+                    <v-btn v-if="carrito.length >= 1" @click="openTicket = !openTicket">Continuar</v-btn>
+                </div>
+                <v-overlay v-if="openTicket">
+                    <v-card>
+                        <v-list class="ticket" :light="true">
+                            <v-list-item v-for="(item, index) in carrito" :key="index">
+                                <v-list-item-avatar>
+                                    <v-img :src="item.imagen"></v-img>
+                                </v-list-item-avatar>
 
-                            <v-list-item>
-                                <div>{{ item.nombre }}</div>
+                                <v-list-item>
+                                    <div>{{ item.nombre }}</div>
+                                </v-list-item>
+                                <v-list-item>
+                                    <div>x{{ item.totalUnidad }}</div>
+                                </v-list-item>
+                                <v-list-item>
+                                    <div>${{ calcularPrecio(item) }}</div>
+                                </v-list-item>
                             </v-list-item>
-                            <v-list-item>
-                                <div>x{{ item.totalUnidad }}</div>
-                            </v-list-item>
-                            <v-list-item>
-                                <div>${{ calcularPrecio(item) }}</div>
-                            </v-list-item>
-                        </v-list-item>
-                    </v-list>
-                    <!-- <v-btn @click="exportPDF()" >Obtener ticket</v-btn> -->
-                    <v-btn @click="guardarCarrito()"> Comprar </v-btn>
-                    <v-btn @click="closeOverlay()">Cerrar</v-btn>
-                </v-card>
-            </v-overlay>
+                        </v-list>
+                        <!-- <v-btn @click="exportPDF()" >Obtener ticket</v-btn> -->
+                        <v-btn @click="guardarCarrito()"> Comprar </v-btn>
+                        <v-btn @click="closeOverlay()">Cerrar</v-btn>
+                    </v-card>
+                </v-overlay>
+            </div>
+            <h3 class="total">Total: ${{ sumaPrecio }}</h3>
         </div>
-        <h3 class="total">Total: ${{ sumaPrecio }}</h3>
-    </div>
+    </v-app>
 </template>
 
 <script>
@@ -54,6 +59,9 @@
                 info: [],
                 bodyInfo: [],
                 ticket: [],
+                dismissSecs: 5,
+                dismissCountDown: 0,
+                mensaje: { color: '', texto: '' },
             };
         },
         computed: {
@@ -79,11 +87,11 @@
                     return element;
                 });
                 this.info.forEach((element) => {
-                    const new_info =  [element.nombre, element.totalUnidad, '$' + element.precioUnidad];
+                    const new_info = [element.nombre, element.totalUnidad, '$' + element.precioUnidad];
                     this.ticket.push(new_info);
                 });
-                    const total = ['Total: ' + this.calcularTotal() ];
-                    this.ticket.push(total);
+                const total = ['Total: ' + this.calcularTotal()];
+                this.ticket.push(total);
 
                 doc.autoTable({
                     theme: 'striped',
@@ -91,12 +99,13 @@
                     head: [['Producto', 'Unidades', 'Precio']],
                     body: this.ticket,
                 });
-                doc.save('ticket.pdf');
+                // doc.save('ticket.pdf');
             },
             guardarCarrito() {
                 const storage = localStorage.getItem('usertoken');
                 const usuario = JSON.parse(storage);
                 const id = usuario['id'];
+                console.log(this.carrito);
                 const payload = this.carrito.map((producto) => {
                     const info = {
                         nombre: producto.nombre,
@@ -107,6 +116,11 @@
                     };
                     return info;
                 });
+                this.axios.post('/nuevo-carrito', payload).then((res) => {
+                    this.mensaje.color = 'success';
+                    this.mensaje.texto = 'La compra fue realizada con exito!';
+                    this.showAlert();
+                });
                 this.exportPDF();
             },
             calcularPrecio(item) {
@@ -114,6 +128,12 @@
             },
             calcularTotal() {
                 return this.info.reduce((total, item) => total + Number(item.precioUnidad), 0);
+            },
+            countDownChanged(dismissCountDown) {
+                this.dismissCountDown = dismissCountDown;
+            },
+            showAlert() {
+                this.dismissCountDown = this.dismissSecs;
             },
         },
     };
