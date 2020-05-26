@@ -251,7 +251,7 @@
 
 <style lang="scss">
     .margin{
-        @media screen and (max-width: 990px) {
+        @media screen and (max-height: 1904px) and (max-width: 990px) {
         margin-bottom: 40% !important;
     }
     }
@@ -259,6 +259,7 @@
         width: 80%;
         margin: 0 auto;
         border: 1px solid#dee2e6;
+         
     }
     .lista-ventas {
         display: flex;
