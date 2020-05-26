@@ -1,7 +1,8 @@
 <template>
-    <div class="container" data-app>
+    <div class="container margin" data-app>
         <h1>Ventas del día</h1>
-        <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas">
+        <v-btn color="secondary" @click="reservasCaja = !reservasCaja">Compras</v-btn>
+        <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas mt-5" v-show="reservasCaja">
             <template v-slot:top>
                 <v-dialog v-model="dialog" width="500">
                     <v-card class="mx-auto" outlined>
@@ -26,7 +27,7 @@
         </v-data-table>
 
         <br />
-        <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1"> </v-data-table>
+        <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1 mt-5"> </v-data-table>
         <br />
         <v-container max-width="400">
             <v-row class="" justify="center" no-gutters>
@@ -80,6 +81,7 @@
                 ],
                 reserva: [],
                 dialog: false,
+                reservasCaja: false,
             };
         },
         created() {
@@ -87,6 +89,9 @@
             this.accederReservas();
         },
         methods: {
+            // abrirReservas(){
+            //     this.reservasCaja = true;
+            // },
             // Es una funcion para traer lo que se vendio de la db y convertirlo en un excel
             listarMovimientos() {
                 this.axios.get('/movimientos').then((res) => {
@@ -114,7 +119,7 @@
             resetearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },
-           // Sacar la ganancia de las ventas
+            // Sacar la ganancia de las ventas
             diferencia(producto) {
                 const precioVenta = producto.precioUnidad;
                 const precioCompra = producto.precioDistribuidoraUnidad;
@@ -215,7 +220,7 @@
                     })
                     .reduce((total, item) => total + Number(item.producto.precioUnidad), 0);
             },
-            // Sacar el total de ganancias del dia 
+            // Sacar el total de ganancias del dia
             totalGanancias() {
                 return this.movimientos
                     .filter((movimiento) => {
@@ -251,49 +256,47 @@
 
 <style lang="scss">
     .margin{
-        @media screen and (max-width: 990px) {
-        margin-bottom: 40% !important;
-    }
-        @media screen and (max-height: 1903px) {
-            margin-bottom: 40% !important;
-        }
-    }
-    
-    .crud-ventas {
-        width: 80%;
-        margin: 0 auto;
-        border: 1px solid#dee2e6;
-         
-    }
-    .lista-ventas {
-        display: flex;
-    }
-    .nuevo-venta {
-        margin-left: 10px;
-        border: 2px solid #dee2e6;
-        border-bottom: none;
-        padding: 12px 12px 2px 12px;
-        border-top-right-radius: 5px;
-        border-top-left-radius: 5px;
-        font-size: 20px;
-    }
-    .li-venta {
-        border: 2px solid #dee2e6;
-        border-bottom: none;
-        padding: 12px 12px 2px 12px;
-        border-top-right-radius: 5px;
-        border-top-left-radius: 5px;
-        font-size: 20px;
-    }
-    ul {
-        margin-bottom: 0 !important;
-        margin-left: 10%;
-    }
-    .btn-impr {
-        margin-left: 6%;
-    }
-    .tabla-reservas {
-        width: 50% !important;
-        margin: 0 auto;
-    }
+          @media screen and (max-width: 990px) {
+          margin-bottom: 40% !important;
+      }
+          @media screen and (max-height: 1903px) {
+              margin-bottom: 20% !important;
+          }
+      }
+      .crud-ventas {
+          width: 80%;
+          margin: 0 auto;
+          border: 1px solid #dee2e6;
+      }
+      .lista-ventas {
+          display: flex;
+      }
+      .nuevo-venta {
+          margin-left: 10px;
+          border: 2px solid #dee2e6;
+          border-bottom: none;
+          padding: 12px 12px 2px 12px;
+          border-top-right-radius: 5px;
+          border-top-left-radius: 5px;
+          font-size: 20px;
+      }
+      .li-venta {
+          border: 2px solid #dee2e6;
+          border-bottom: none;
+          padding: 12px 12px 2px 12px;
+          border-top-right-radius: 5px;
+          border-top-left-radius: 5px;
+          font-size: 20px;
+      }
+      ul {
+          margin-bottom: 0 !important;
+          margin-left: 10%;
+      }
+      .btn-impr {
+          margin-left: 6%;
+      }
+      .tabla-reservas {
+          width: 50% !important;
+          margin: 0 auto;
+      }
 </style>

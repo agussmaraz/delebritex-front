@@ -30,7 +30,7 @@
                 publicPath: process.env.BASE_URL,
                 color: 'grey lighten-2',
                 cantidades: 0,
-                productoSeleccinado: ''
+                productoSeleccinado: '',
             };
         },
         computed: {
@@ -61,12 +61,16 @@
             },
             restarCantidad() {
                 this.cantidades--;
+                if (this.cantidades <= 0) {
+                    this.cantidades = 0;
+                }
             },
-            productoSeleccionado(producto){
-                producto.totalUnidad = this.cantidades;
-                this.addToCart(producto);
-            }
-          
+            productoSeleccionado(producto) {
+                if (this.cantidades > 0) {
+                    producto.totalUnidad = this.cantidades;
+                    this.addToCart(producto);
+                }
+            },
         },
     };
 </script>
