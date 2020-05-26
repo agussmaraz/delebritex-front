@@ -49,6 +49,7 @@
             },
         },
         methods: {
+            // Separar las reservas en objetos segun el numero de compra
             separarProductosPorCarrito() {
                 const objeto = {};
                 console.log(this.carrito);
@@ -62,6 +63,7 @@
 
                 return objeto;
             },
+            // Tranformar las reservas en un array gigante para podes acceder a ellas por un for y tambien generando un objeto con data basica de cada carrito
             carritoAListaDeProductos(carrito) {
                 const lista_de_productos = [];
                 for (const key in carrito) {
@@ -73,6 +75,7 @@
                 }
                 return lista_de_productos;
             },
+            // Objeto para guardar en el array de Reservas con data basica de cada carrito
             generarObjetoDeCarrito(productos) {
                 const carrito_final = {
                     total: 0,
@@ -86,15 +89,17 @@
                 carrito_final.estado = this.calcularEstadoDeCarrito(productos);
 
                 carrito_final.productos = productos;
-                // console.log(carrito_final);
                 return carrito_final;
             },
+            // Sacar el total de cada carrito para guardar en el objeto
             calcularTotalCarrito(carrito) {
                 return carrito.reduce((total, item) => total + Number(item.precioTotal), 0);
             },
+            // Sacar el estado de cada carrito para guardar en el objeto
             calcularEstadoDeCarrito(carrito) {
                 return 'hola';
             },
+            // Sacar la fecha de cada carrito para guardar en el objeto
             sacarFechaCarrito(carrito) {
                 for (let index = 0; index < carrito.length; index++) {
                     const element = carrito[index];
@@ -102,6 +107,7 @@
                     return fecha;
                 }
             },
+            // Traer al ussuario de la db segun el id que guardamos en localStorage.
             listarUsuario() {
                 const usuarios = localStorage.getItem('usertoken');
                 const objeto = JSON.parse(usuarios);
@@ -110,6 +116,7 @@
                     this.usuario = res.data;
                 });
             },
+            // Buscar el carrito del usuario en la db segun el id que esta en localStorage
             accederCarrito() {
                 const storage = localStorage.getItem('usertoken');
                 const usuario = JSON.parse(storage);
@@ -118,6 +125,7 @@
                     this.carrito = res.data;
                 });
             },
+            // Tranformar la fecha en DD-MM-YYYY
             resetearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },

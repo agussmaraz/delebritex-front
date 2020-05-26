@@ -82,15 +82,17 @@
             this.listarProducto();
         },
         methods: {
+            //Traer productos de la base de datos
             listarProducto() {
                 this.axios.get('/producto').then((res) => {
                     this.producto = res.data;
                 });
             },
+            // Transformar la fecha en DD-MM-YYYY
             formatearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },
-
+            // Funcion para eliminar el producto
             eliminarProducto(id) {
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
                     console.log(res.data);
@@ -101,19 +103,20 @@
                     this.showAlert();
                 });
             },
+            // Trar el producto segun el id y guardarlo en un dato
             editarProductoId(item) {
                 const id = item.id;
                 this.dialog = true;
                 this.axios.get(`/producto/${id}`).then((res) => {
-                    // console.log(res.data);
                     this.productoEditar = res.data;
                 });
             },
+            // Para cerrar ventanita de edicion
             cancelarEdicion(id) {
                 this.dialog = false;
             },
+            // Editar el producto
             editarProducto(item) {
-                console.log(item);
                 this.axios.put(`/editarProducto/${item.id}`, item).then((res) => {
                     const index = this.producto.findIndex((index) => index.id === this.productoEditar.id);
                     this.producto[index].nombre = this.productoEditar.nombre;
@@ -126,6 +129,7 @@
                     this.dialog = false;
                 });
             },
+            // Calcular la cantidad de paquetes
             cantidadPaquetes(item) {
                 if (item.empaqueId == '1') {
                     const paquetes = item.totalUnidad / item.unidadPorEmpaque;
@@ -135,6 +139,7 @@
                     return Math.ceil(paquetePorUnidad);
                 }
             },
+            // Funciones para el alert de bootstap
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown;
             },
@@ -143,6 +148,7 @@
             },
         },
         computed: {
+            // Transformar los productos en un array para acceder a los datos y transformarlo en un crud.
             obtenerProductos() {
                 return this.producto.map((producto) => {
                     producto.createdAt = this.formatearFecha(producto.createdAt);
@@ -173,5 +179,4 @@
     .parteDos-formEditar {
         margin-left: 20px;
     }
-  
 </style>

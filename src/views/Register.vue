@@ -6,7 +6,7 @@
                 <v-container>
                     <v-row>
                         <v-col cols="12" md="4" class="mx-auto">
-                        <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
+                            <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
                             <v-text-field v-model="usuario.nombre" label="Nombre" required></v-text-field>
                             <p v-if="error" class="error-register">{{ this.error.nombre }}</p>
 
@@ -45,7 +45,8 @@
             };
         },
         methods: {
-            registrarUsuario() {
+            // Validaciones de registro 
+            validarRegistro() {
                 this.error = {};
                 if (!this.usuario.nombre) {
                     const nombre = 'El nombre es obligatorio';
@@ -66,6 +67,10 @@
                 if (!this.error) {
                     return true;
                 }
+            },
+            // Registrar al usuario llamando las validaciones y giardar el token en localStorage
+            registrarUsuario() {
+                this.validarRegistro();
                 this.axios
                     .post('/register', this.usuario)
                     .then((res) => {
