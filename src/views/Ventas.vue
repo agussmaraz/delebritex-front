@@ -1,7 +1,8 @@
 <template>
     <div class="container" data-app>
         <h1>Ventas del día</h1>
-        <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas">
+        <v-btn color="secondary" @click="reservasCaja = !reservasCaja">Compras</v-btn>
+        <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas mt-5" v-show="reservasCaja">
             <template v-slot:top>
                 <v-dialog v-model="dialog" width="500">
                     <v-card class="mx-auto" outlined>
@@ -26,7 +27,7 @@
         </v-data-table>
 
         <br />
-        <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1"> </v-data-table>
+        <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1 mt-5"> </v-data-table>
         <br />
         <v-container max-width="400">
             <v-row class="" justify="center" no-gutters>
@@ -80,6 +81,7 @@
                 ],
                 reserva: [],
                 dialog: false,
+                reservasCaja: false
             };
         },
         created() {
@@ -87,6 +89,9 @@
             this.accederReservas();
         },
         methods: {
+            // abrirReservas(){
+            //     this.reservasCaja = true;
+            // },
             // Es una funcion para traer lo que se vendio de la db y convertirlo en un excel
             listarMovimientos() {
                 this.axios.get('/movimientos').then((res) => {
