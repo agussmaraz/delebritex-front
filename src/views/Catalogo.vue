@@ -2,13 +2,12 @@
     <div class="container catalogo">
         <v-app class="margin">
             <v-row>
-                <v-card v-for="(item, index) in productos" :key="index" class="texto-card m-3"  max-width="300" max-height="350" :to="{ name: 'productoSlug', params: { slug: item.slug } }">
+                <v-card v-for="(item, index) in productos" :key="index" class="texto-card m-3" max-width="300" max-height="350" :to="{ name: 'productoSlug', params: { slug: item.slug } }">
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
-                    <v-card-title  class="text-capitalize">{{ item.nombre }}</v-card-title>
+                    <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
                     <v-card-text class="text--primary">
                         <div>Whitsunday Island, Whitsunday Islands</div>
                         <div>${{ item.precioUnidad }}</div>
-                        <!-- <div>{{ item.totalUnidad }}</div> -->
                     </v-card-text>
                 </v-card>
             </v-row>
@@ -37,6 +36,7 @@
         },
     };
 </script>
+
 <style lang="scss">
     .card {
         width: 250px;
@@ -63,15 +63,18 @@
     .center {
         text-align: center !important;
     }
-    .texto-card{
+    .texto-card {
         text-decoration: none !important;
     }
     .texto-card:hover {
         border: 1px solid rgb(199, 195, 195) !important;
     }
-    .margin{
+    .margin {
         @media screen and (max-width: 990px) {
-        margin-bottom: 40% !important;
-    }
+            margin-bottom: 40% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 40% !important;
+        }
     }
 </style>

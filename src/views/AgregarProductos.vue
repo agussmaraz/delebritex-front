@@ -1,11 +1,10 @@
 <template>
-    <div class="agregarProductos">
+    <div class="agregarProductos margin">
         <h1>Agregar nuevos productos</h1>
-
-        <template class="container">
+        <template >
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-            <v-form @submit.prevent="nuevoProducto()" enctype="multipart/form-data" data-app>
-                <v-container>
+            <v-form @submit.prevent="nuevoProducto()" enctype="multipart/form-data" class="formProducto" data-app>
+                <template>
                     <v-row>
                         <v-col cols="5" md="6">
                             <v-text-field v-model="producto.nombre" label="Nombre del producto" required></v-text-field>
@@ -80,7 +79,7 @@
                         </v-col>
                     </v-row>
                     <v-btn color="secondary" type="submit">Enviar</v-btn>
-                </v-container>
+                </template>
             </v-form>
         </template>
     </div>
@@ -253,11 +252,23 @@
     };
 </script>
 
-<style>
+<style lang="scss">
+    .margin {
+        @media screen and (max-width: 990px) {
+            margin-bottom: 40% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 40% !important;
+        }
+    }
     .agregarProductos {
         margin: 20px;
     }
 
+    .formProducto {
+        width: 60%;
+        margin: 0 auto;
+    }
     .input-form {
         width: 250px;
         margin: 0 auto;
@@ -278,8 +289,8 @@
     .p-error {
         color: red;
     }
-    .row {
+    /* .row {
         width: 50%;
         margin: 0 auto !important;
-    }
+    } */
 </style>
