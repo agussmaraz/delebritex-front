@@ -147,7 +147,7 @@
 <style>
     .checkout-box {
         width: 100%;
-        max-width: 900px;
+        max-width: 1200px;
         display: flex;
         flex-direction: column;
         margin: 50px auto;
@@ -161,14 +161,14 @@
 
     .checkout-product {
         display: grid;
-        grid-template-columns: 1fr 3fr 2fr 0.5fr;
+        grid-template-columns: 1fr 3fr 2fr 1fr 0.5fr;
         background-color: #fff;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;
         list-style: none;
         box-sizing: border-box;
         padding: 0.8em;
-        margin: 1em 0;
+        margin: 1rem 0;
     }
 
     .checkout-product * {
@@ -177,6 +177,7 @@
     .product-image {
         grid-column: 1/2;
         width: 50%;
+        border-radius: 50%;
     }
 
     .product-name {

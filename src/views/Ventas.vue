@@ -254,7 +254,12 @@
     };
 </script>
 
-<style>
+<style lang="scss">
+    .margin{
+        @media screen and (max-width: 990px) {
+        margin-bottom: 40% !important;
+    }
+    }
     .crud-ventas {
         width: 80%;
         margin: 0 auto;

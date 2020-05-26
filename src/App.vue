@@ -22,10 +22,6 @@
 
                         <div class="nav-login" v-if="isLogged == true">
                             <b-nav-item to="/carrito"><b-icon icon="bag"></b-icon></b-nav-item>
-                            <b-nav-form>
-                                <b-form-input size="sm" class="mr-sm-2" placeholder="¿Qué estas buscando?"></b-form-input>
-                                <b-button size="sm" class="my-2 my-sm-0" type="submit">Buscar</b-button>
-                            </b-nav-form>
                             <b-nav-item-dropdown right>
                                 <!-- Using 'button-content' slot -->
                                 <template v-slot:button-content>
@@ -39,20 +35,33 @@
                 </b-collapse>
             </b-navbar>
             <router-view />
+        <v-footer
+        class="grey darken-4 footer"
+        padless
+        absolute
+        >
+        <v-card
+      flat
+      tile
+      class="grey darken-4 white--text center"
+        >
+      <v-card-text>
+        <v-btn
+          v-for="icon in icons"
+          :key="icon"
+          class="mx-4 white--text"
+          icon
+        >
+         <a :href="'http://' + icon.redirectTo" class="white--text"><v-icon size="24px" >{{ icon.iconName }}</v-icon></a>
+        </v-btn>
+      </v-card-text>
 
-            <!-- <v-footer class="grey darken-4" padless absolute>
-                <v-card flat tile class="grey darken-4 white--text center">
-                    <v-card-text>
-                        <v-btn v-for="(icon, index) in icons" :key="index" class="mx-4 white--text" icon>
-                            <a :href="'http://' + icon.redirectTo" class="white--text"
-                                ><v-icon size="24px">{{ icon.iconName }}</v-icon></a
-                            >
-                        </v-btn>
-                    </v-card-text>
-
-                    <v-card-text class="white--text"> {{ new Date().getFullYear() }} — <strong>Delebritex</strong> </v-card-text>
-                </v-card>
-            </v-footer> -->
+      <v-card-text class="white--text">
+        {{ new Date().getFullYear() }} — <strong>Delebritex</strong>
+      </v-card-text>
+      
+    </v-card>
+  </v-footer>
         </v-app>
     </div>
 </template>
@@ -124,4 +133,8 @@
     .center {
         margin: auto !important;
     }
+    .footer{
+     bottom: 0 !important;
+    }
+    
 </style>
