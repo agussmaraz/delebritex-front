@@ -144,60 +144,30 @@
             this.listarCategoria();
         },
         methods: {
+            // Conseguir la data de la imagen
             imagenSeleccionada(e) {
                 const files = e[0];
                 this.producto.imagen = files;
             },
-            nuevoProducto() {
+            // Validar le formulario, recorriendo con un for todas las posicion para saber si estan vacias.
+            validacionProducto() {
                 this.error = {};
-                if (!this.producto.nombre) {
-                    const nombre = 'El nombre es obligatorio';
-                    this.error.nombre = nombre;
-                }
-                if (!this.producto.empaqueId) {
-                    const empaque = 'El empaque es obligatorio';
-                    this.error.empaqueId = empaque;
-                }
-                if (!this.producto.pesoUnidad) {
-                    const peso = 'El peso es obligatorio';
-                    this.error.pesoUnidad = peso;
-                }
-                if (this.producto.empaqueId == 'caja' && !this.producto.cantidadPaquetes) {
-                    const cantidadPaquetes = 'La cantidad de paquetes es obligatorio';
-                    this.error.cantidadPaquetes = cantidadPaquetes;
-                }
-                if (!this.producto.unidadPorEmpaque) {
-                    const unidades = 'Las unidades es obligatorio';
-                    this.error.unidadPorEmpaque = unidades;
-                }
-                if (!this.producto.categoriaId) {
-                    const categoria = 'La categoria es obligatoria.';
-                    this.error.categoriaId = categoria;
-                }
-                if (!this.producto.imagen) {
-                    const imagen = 'La imagen es obligatoria.';
-                    this.error.imagen = imagen;
-                }
-                if (!this.producto.precioUnidad) {
-                    const precioUnidad = 'El precio de la unidad es obligatorio.';
-                    this.error.precioUnidad = precioUnidad;
-                }
-                if (!this.producto.precioBulto) {
-                    const precioBulto = 'El precio por bulto es obligatorio.';
-                    this.error.precioBulto = precioBulto;
-                }
-                if (!this.producto.precioDistribuidoraUnidad) {
-                    const precioDistribuidoraUnidad = 'El precio de la distribuidora es obligatorio.';
-                    this.error.precioDistribuidoraUnidad = precioDistribuidoraUnidad;
-                }
-                if (!this.producto.precioDistribuidoraBulto) {
-                    const precioDistribuidoraBulto = 'El precio de la distribuidora es obligatorio.';
-                    this.error.precioDistribuidoraBulto = precioDistribuidoraBulto;
+                const productos = Object.entries(this.producto);
+                for (let index = 0; index < productos.length; index++) {
+                    const element = productos[index];
+                    if (!element[1]) {
+                        const posicion = element[0];
+                        const mensaje = 'El ' + posicion + ' no puede estar vacio';
+                        this.error[posicion] = mensaje;
+                    }
                 }
                 if (!this.error) {
                     return true;
                 }
-
+            },
+            // Crear un objeto con los datos del formulario y mandarselo a la base de datos
+            nuevoProducto() {
+                this.validacionProducto();
                 if (this.totalUnidadesPorPaquete) {
                     this.producto.totalUnidad = this.totalUnidadesPorPaquete;
                 } else if (!this.totalUnidadesPorPaquete) {
@@ -205,8 +175,6 @@
                 }
                 this.producto.slug = this.producto.nombre;
                 const formulario = new FormData();
-                formulario.set('nombre', this.producto.nombre);
-                formulario.set('totalUnidad', this.producto.totalUnidad);
                 if (this.producto.medidaId == 'kg') {
                     formulario.set('medidaId', 2);
                 } else {
@@ -224,6 +192,8 @@
                 } else {
                     formulario.set('categoriaId', 3);
                 }
+                formulario.set('nombre', this.producto.nombre);
+                formulario.set('totalUnidad', this.producto.totalUnidad);
                 formulario.set('slug', this.producto.slug);
                 formulario.set('imagen', this.producto.imagen);
                 formulario.set('precioUnidad', this.producto.precioUnidad);
@@ -248,6 +218,7 @@
                     this.showAlert();
                 });
             },
+            // buscar las medidas de la db y encerrarlo en un dato (para el select del form)
             listarMedida() {
                 this.axios.get('/buscarMedida').then((res) => {
                     this.medida = res.data.map((medida) => {
@@ -255,6 +226,7 @@
                     });
                 });
             },
+            // buscar los empaques de la db py encerrarlo en un dato (para el select del form)
             listarEmpaque() {
                 this.axios.get('/empaqueBuscar').then((res) => {
                     this.empaque = res.data.map((empaque) => {
@@ -262,6 +234,7 @@
                     });
                 });
             },
+            // buscar las categorias de la db py encerrarlo en un dato (para el select del form)
             listarCategoria() {
                 this.axios.get('categoriaBuscar').then((res) => {
                     this.categoria = res.data.map((categoria) => {
@@ -269,6 +242,7 @@
                     });
                 });
             },
+            // funciones de alert de bootstrap
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown;
             },

@@ -73,6 +73,7 @@
             },
         },
         methods: {
+            // Funcion para cerrar el ticket
             closeOverlay() {
                 this.openTicket = false;
             },
@@ -80,6 +81,7 @@
                 removeFromCart: 'removeFromCart',
                 removeItemFromCart: 'removeItemFromCart',
             }),
+            // Funcion para modificar como es que queremos que se vea el pdf a la hora de exportarlo y con que data.
             exportPDF() {
                 var doc = new jsPDF('p', 'pt');
                 doc.text('Delebritex', 40, 40);
@@ -92,7 +94,6 @@
                 });
                 const total = ['Total: ' + this.calcularTotal()];
                 this.ticket.push(total);
-
                 doc.autoTable({
                     theme: 'striped',
                     margin: { top: 60 },
@@ -101,6 +102,7 @@
                 });
                 // doc.save('ticket.pdf');
             },
+            // Guardar el carrito en la base de datos transformandolo en el objeto que nos parece mas conveniente
             guardarCarrito() {
                 const storage = localStorage.getItem('usertoken');
                 const usuario = JSON.parse(storage);
@@ -123,12 +125,15 @@
                 });
                 this.exportPDF();
             },
+            // Sacar el precio de las unidades que eligio 
             calcularPrecio(item) {
                 return item.precioUnidad * item.totalUnidad;
             },
+            // Sacar el precio total a pagar
             calcularTotal() {
                 return this.info.reduce((total, item) => total + Number(item.precioUnidad), 0);
             },
+            // Funciones para el alert de bootstrap
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown;
             },

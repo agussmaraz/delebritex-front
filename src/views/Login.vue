@@ -51,7 +51,8 @@
             ...mapActions({
                 setUser: 'setUser',
             }),
-            loguearUsuario() {
+            // funcion para validar los datos del form 
+            validacionesLogin() {
                 this.error = {};
                 if (!this.usuario.email) {
                     const email = 'El email es obligatorio';
@@ -61,10 +62,14 @@
                     const contraseña = 'El contraseña es obligatorio';
                     this.error.contraseña = contraseña;
                 }
+                // console.log(this.error);
                 if (!this.error) {
                     return true;
                 }
-
+            },
+            // Loguear al usuario y gardar en el localStorage el token y el id del usuario
+            loguearUsuario() {
+                this.validacionesLogin();
                 this.axios
                     .post('/login', this.usuario)
                     .then((res) => {
@@ -79,12 +84,12 @@
                         this.$router.push({ name: 'Home' });
                     })
                     .catch((e) => {
-                        // console.log(e.response.data.mensaje);
                         this.mensaje.color = 'danger';
                         this.mensaje.texto = e.response.data.mensaje;
                         this.showAlert();
                     });
             },
+            //Funciones para el alert de bootstrap
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown;
             },

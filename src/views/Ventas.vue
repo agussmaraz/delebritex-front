@@ -2,9 +2,28 @@
     <div class="container" data-app>
         <h1>Ventas del día</h1>
         <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas">
-            
+            <template v-slot:top>
+                <v-dialog v-model="dialog" width="500">
+                    <v-card class="mx-auto" outlined>
+                        <v-list-item v-for="(item, index) in reserva" :key="index" three-line>
+                            <v-list-item-content>
+                                <v-list-item-title class="text-capitalize mb-1"> {{ item.producto }} </v-list-item-title>
+                                <div class="d-flex">
+                                    <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
+                                    <v-list-item-subtitle>Precio: ${{ item.precioUnidad }}</v-list-item-subtitle>
+                                </div>
+                            </v-list-item-content>
+                            <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
+                        </v-list-item>
+                    </v-card>
+                </v-dialog>
+            </template>
+            <template v-slot:item.actions="{ item }">
+                <v-icon small class="mr-2" @click="mostrarReserva(item)">
+                    mdi-eye
+                </v-icon>
+            </template>
         </v-data-table>
-       
 
         <br />
         <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1"> </v-data-table>
@@ -40,7 +59,6 @@
                 json_data: [],
                 movimientos: [],
                 reservas: [],
-                tab: 'resta',
                 printObj: {
                     id: 'printMe',
                     popTitle: 'good print',
@@ -60,6 +78,8 @@
                     { text: 'Diferencia', value: 'producto.diferencia' },
                     { text: 'Accion', value: 'accion' },
                 ],
+                reserva: [],
+                dialog: false,
             };
         },
         created() {
@@ -67,6 +87,7 @@
             this.accederReservas();
         },
         methods: {
+            // Es una funcion para traer lo que se vendio de la db y convertirlo en un excel
             listarMovimientos() {
                 this.axios.get('/movimientos').then((res) => {
                     this.movimientos = res.data;
@@ -87,21 +108,20 @@
                             this.json_data.push(movimientosExcel);
                         }
                     });
-                    // console.log(this.json_data);
                 });
             },
+            // Convertir la fecha en DD-MM-YYYY
             resetearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
             },
-            returnData(nombre) {
-                this.tab = nombre;
-            },
+           // Sacar la ganancia de las ventas
             diferencia(producto) {
                 const precioVenta = producto.precioUnidad;
                 const precioCompra = producto.precioDistribuidoraUnidad;
                 const diferencia = Number(precioVenta) - Number(precioCompra);
                 return diferencia;
             },
+            // Un objeto con info basica del carrito para tenerla siempre a mano
             generarObjetoDeCarrito(productos) {
                 const reserva_final = {
                     estado: '',
@@ -116,9 +136,9 @@
                 reserva_final.estado = this.calcularEstadoDeCarrito(productos);
 
                 reserva_final.productos = productos;
-                // console.log(reserva_final);
                 return reserva_final;
             },
+            // Sacar el email del usuario para el objeto del carrito
             sacarEmail(carrito) {
                 for (let index = 0; index < carrito.length; index++) {
                     const element = carrito[index];
@@ -126,6 +146,7 @@
                     return email;
                 }
             },
+            // Sacar el usuario del carrito para el objeto del carrito
             sacarUsuario(carrito) {
                 for (let index = 0; index < carrito.length; index++) {
                     const element = carrito[index];
@@ -133,9 +154,11 @@
                     return usuario;
                 }
             },
+            // Proximamente para saber en que estado esta la reserva
             calcularEstadoDeCarrito(carrito) {
                 return 'hola';
             },
+            // Para el objeto del carrito y ver en fecha se hizo la compra
             sacarFechaCarrito(carrito) {
                 for (let index = 0; index < carrito.length; index++) {
                     const element = carrito[index];
@@ -143,6 +166,7 @@
                     return fecha;
                 }
             },
+            // Separar en objetos por numero de compra
             arrayPorNumeroCompra() {
                 const objeto = {};
                 for (let index = 0; index < this.reservas.length; index++) {
@@ -153,9 +177,9 @@
                     objeto[element.numeroCompra].push(element);
                 }
 
-                // console.log(objeto);
                 return objeto;
             },
+            // Encerrar en un array todo los carritos
             carritoAListaDeProductos(reservas) {
                 const lista_de_productos = [];
                 for (const key in reservas) {
@@ -167,14 +191,21 @@
                 }
                 return lista_de_productos;
             },
+            // traer de la base de datos las reservas (carrito)
             accederReservas() {
                 this.axios.get('/carrito').then((res) => {
-                    console.log(res.data);
                     this.reservas = res.data;
                 });
             },
+            // Ventanita que se abre con la info de cada reserca
+            mostrarReserva(item) {
+                this.dialog = true;
+                const productos = item.productos;
+                this.reserva = item.productos;
+            },
         },
         computed: {
+            // Calcular el total de ventas que se hizo en el dia
             totalVentas() {
                 return this.movimientos
                     .filter((movimiento) => {
@@ -184,6 +215,7 @@
                     })
                     .reduce((total, item) => total + Number(item.producto.precioUnidad), 0);
             },
+            // Sacar el total de ganancias del dia 
             totalGanancias() {
                 return this.movimientos
                     .filter((movimiento) => {
@@ -193,6 +225,7 @@
                     })
                     .reduce((total, item) => total + Number(item.producto.diferencia), 0);
             },
+            // Tranformar los movimientos en un array para el crud
             obtenerMovimientos() {
                 return this.movimientos
                     .filter((movimiento) => {
@@ -206,6 +239,7 @@
                         return movimiento;
                     });
             },
+            // Todas las reservas transformas en array y separadas por objetos segun numero de compra, listo para usar en el crud y obtener datos.
             accederNumeroCompra() {
                 const reservas = this.arrayPorNumeroCompra();
                 const lista = this.carritoAListaDeProductos(reservas);
