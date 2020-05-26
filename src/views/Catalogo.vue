@@ -74,7 +74,7 @@
         margin-bottom: 40% !important;
     }
         @media screen and (max-height: 1903px) {
-            margin-bottom: 20% !important;
+            margin-bottom: 40% !important;
         }
     }
 </style>

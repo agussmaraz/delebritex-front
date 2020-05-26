@@ -1,8 +1,8 @@
 <template>
-    <div class="agregarProductos">
+    <div class="agregarProductos margin">
         <h1>Agregar nuevos productos</h1>
 
-        <template class="container">
+        <template class="container ">
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
             <v-form @submit.prevent="nuevoProducto()" enctype="multipart/form-data" data-app>
                 <v-container>
@@ -253,7 +253,7 @@
     };
 </script>
 
-<style>
+<style lang="scss">
     .agregarProductos {
         margin: 20px;
     }
@@ -281,5 +281,13 @@
     .row {
         width: 50%;
         margin: 0 auto !important;
+    }
+    .margin{
+        @media screen and (max-width: 990px) {
+        margin-bottom: 40% !important;
+    }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 40% !important;
+        }
     }
 </style>
