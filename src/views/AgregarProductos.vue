@@ -253,8 +253,6 @@
 </script>
 
 <style lang="scss">
-<<<<<<< HEAD
-=======
     .margin {
         @media screen and (max-width: 990px) {
             margin-bottom: 40% !important;
@@ -263,7 +261,6 @@
             margin-bottom: 40% !important;
         }
     }
->>>>>>> fa0aa0c5ade229ada902c9d2853cda22503f94d7
     .agregarProductos {
         margin: 20px;
     }
