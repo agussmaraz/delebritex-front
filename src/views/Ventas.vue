@@ -1,7 +1,7 @@
 <template>
     <div class="container margin" data-app>
         <h1>Ventas del día</h1>
-        <v-btn color="secondary" @click="reservasCaja = !reservasCaja">Compras</v-btn>
+        <v-btn color="secondary" @click="reservasCaja = !reservasCaja">Reservas</v-btn>
         <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas mt-5" v-show="reservasCaja">
             <template v-slot:top>
                 <v-dialog v-model="dialog" width="500">

@@ -2,7 +2,7 @@
     <div class="container catalogo">
         <v-app class="margin">
             <v-row>
-                <v-card v-for="(item, index) in productos" :key="index" class="texto-card m-3" max-width="300" max-height="350" :to="{ name: 'productoSlug', params: { slug: item.slug } }">
+                <v-card v-for="(item, index) in productos" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                     <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
                     <v-card-text class="text--primary">
@@ -11,6 +11,32 @@
                     </v-card-text>
                 </v-card>
             </v-row>
+
+            <v-dialog v-model="dialog" max-width="650">
+                <v-card class="mx-auto" height="400" outlined>
+                    <v-list-item three-line>
+                        <v-img :src="this.productoId.imagen" width="70" height="280" class="m-3"> </v-img>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline mb-1">{{ this.productoId.nombre }}</v-list-item-title>
+                            <div class="d-flex justify-content-around">
+                                <h4>Precio: ${{ this.productoId.precioUnidad }}</h4>
+                                <h4>Stock: {{ this.productoId.totalUnidad }}</h4>
+                            </div>
+                        </v-list-item-content>
+                    </v-list-item>
+
+                    <v-card-actions class="justify-content-center">
+                        <v-btn class="text-center button" to="#" @click="agregarAlCarrito()">
+                            Añadir al carrito
+                        </v-btn>
+                        <div class="ml-7">
+                            <v-btn @click="aumentarCantidad()">+ </v-btn>
+                            {{ cantidades }}
+                            <v-btn @click="restarCantidad()"> -</v-btn>
+                        </div>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-app>
     </div>
 </template>
@@ -18,6 +44,13 @@
     import { mapState, mapGetters, mapActions } from 'vuex';
 
     export default {
+        data() {
+            return {
+                productoId: '',
+                dialog: false,
+                cantidades: 0,
+            };
+        },
         computed: {
             ...mapState({
                 productos: (state) => state.productos,
@@ -30,6 +63,37 @@
                 addToCart: 'addToCart',
                 removeFromCart: 'removeFromCart',
             }),
+            // buscar el producto que selecciono el usuario en vuex
+            conseguirProducto(item) {
+                this.dialog = true;
+                const id = item.id;
+                for (let index = 0; index < this.productos.length; index++) {
+                    const element = this.productos[index];
+                    if (element.id == id) {
+                        this.productoId = element;
+                    }
+                }
+            },
+            // agregar al carrito el producto que fue seleccionado con las cantidades elegidas.
+            agregarAlCarrito() {
+                if (this.cantidades > 0) {
+                    this.productoId.cantidadElegida = this.cantidades;
+                    this.addToCart(this.productoId);
+                    this.dialog = false;
+                    this.cantidades = 0;
+                }
+            },
+            // suma las cantidades que quiere el usuario
+            aumentarCantidad() {
+                this.cantidades++;
+            },
+            // resta las cantidades que quiere el usuario
+            restarCantidad() {
+                this.cantidades--;
+                if (this.cantidades <= 0) {
+                    this.cantidades = 0;
+                }
+            },
         },
         beforeMount() {
             this.getProducts();

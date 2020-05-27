@@ -6,7 +6,7 @@
                 <li class="checkout-product">
                     <img :src="item.imagen" alt="" class="product-image" />
                     <h3 class="product-name">{{ item.nombre }}</h3>
-                    <span class="product-price">x{{ item.totalUnidad }}</span>
+                    <span class="product-price">x{{ item.cantidadElegida }}</span>
                     <span class="product-price">${{ calcularPrecio(item) }}</span>
                     <button class="product-remove" @click="removeItemFromCart(item)">X</button>
                 </li>
@@ -30,7 +30,7 @@
                                     <div>{{ item.nombre }}</div>
                                 </v-list-item>
                                 <v-list-item>
-                                    <div>x{{ item.totalUnidad }}</div>
+                                    <div>x{{ item.cantidadElegida }}</div>
                                 </v-list-item>
                                 <v-list-item>
                                     <div>${{ calcularPrecio(item) }}</div>
@@ -69,7 +69,7 @@
                 carrito: (state) => state.carrito,
             }),
             sumaPrecio() {
-                return this.carrito.reduce((total, item) => total + Number(item.precioUnidad * item.totalUnidad), 0);
+                return this.carrito.reduce((total, item) => total + Number(item.precioUnidad * item.cantidadElegida), 0);
             },
         },
         methods: {
@@ -89,7 +89,7 @@
                     return element;
                 });
                 this.info.forEach((element) => {
-                    const new_info = [element.nombre, element.totalUnidad, '$' + element.precioUnidad];
+                    const new_info = [element.nombre, element.cantidadElegida, '$' + element.precioUnidad];
                     this.ticket.push(new_info);
                 });
                 const total = ['Total: ' + this.calcularTotal()];
@@ -107,11 +107,10 @@
                 const storage = localStorage.getItem('usertoken');
                 const usuario = JSON.parse(storage);
                 const id = usuario['id'];
-                console.log(this.carrito);
                 const payload = this.carrito.map((producto) => {
                     const info = {
                         nombre: producto.nombre,
-                        totalUnidad: producto.totalUnidad,
+                        totalUnidad: producto.cantidadElegida,
                         precioUnidad: producto.precioUnidad,
                         usuarioId: id,
                         imagen: producto.imagen,
@@ -123,11 +122,12 @@
                     this.mensaje.texto = 'La compra fue realizada con exito!';
                     this.showAlert();
                 });
+                this.openTicket = false;
                 this.exportPDF();
             },
-            // Sacar el precio de las unidades que eligio 
+            // Sacar el precio de las unidades que eligio
             calcularPrecio(item) {
-                return item.precioUnidad * item.totalUnidad;
+                return item.precioUnidad * item.cantidadElegida;
             },
             // Sacar el precio total a pagar
             calcularTotal() {
@@ -177,6 +177,7 @@
     .product-image {
         grid-column: 1/2;
         width: 50%;
+        height: 160%;
         border-radius: 50%;
     }
 
