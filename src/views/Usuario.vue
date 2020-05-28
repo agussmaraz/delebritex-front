@@ -1,10 +1,10 @@
 <template>
-    <div class="usuario">
+    <div class="usuario margin">
         <!-- <v-app> -->
         <h1>Hola {{ usuario.nombre }}</h1>
         <h5>Estas son las compras que hiciste ultimamente</h5>
         <br />
-        <v-card class="mx-auto mb-4" max-width="700" outlined v-for="(carrito, index) in accederNumeroCompra" :key="index">
+        <v-card class="mx-auto mb-4 " max-width="700" outlined v-for="(carrito, index) in accederNumeroCompra" :key="index">
             <div class="p-usuario">Fecha: {{ carrito.fecha }}</div>
             <v-list-item three-line v-for="(item, index) in carrito.productos" :key="index">
                 <v-list-item-content>
@@ -133,7 +133,15 @@
     };
 </script>
 
-<style>
+<style lang="scss">
+    .margin {
+        @media screen and (max-width: 990px) {
+            margin-bottom: 40% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 40% !important;
+        }
+    }
     .usuario {
         margin: 2%;
     }
