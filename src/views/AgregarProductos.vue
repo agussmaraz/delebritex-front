@@ -1,7 +1,7 @@
 <template>
     <div class="agregarProductos margin">
         <h1>Agregar nuevos productos</h1>
-        <template >
+        <template>
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
             <v-form @submit.prevent="nuevoProducto()" enctype="multipart/form-data" class="formProducto" data-app>
                 <template>
@@ -289,20 +289,4 @@
     .p-error {
         color: red;
     }
-    /* .row {
-        width: 50%;
-        margin: 0 auto !important;
-<<<<<<< HEAD
-    }
-    .margin{
-        @media screen and (max-width: 990px) {
-        margin-bottom: 40% !important;
-    }
-        @media screen and (max-height: 1903px) {
-            margin-bottom: 40% !important;
-        }
-    }
-=======
-    } */
->>>>>>> fa0aa0c5ade229ada902c9d2853cda22503f94d7
 </style>

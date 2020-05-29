@@ -11,6 +11,10 @@ const store = new Vuex.Store({
         productos: [],
         // carrito vacio
         carrito: [],
+        // estado para guardar los productos filtrados
+        filtro: {
+            productos: [],
+        }
     },
     getters: {
         isLogged: (state) => !!state.user,
@@ -37,29 +41,37 @@ const store = new Vuex.Store({
         //traigo los datos de la bd
         getProducts({ commit }) {
             axios.get('/producto').then((res) => {
-                //y los guardo en una constante 
+                //y los guardo en una constante
                 const productos = res.data;
                 // se los mando a una mutacion llamada set_products
                 commit('SET_PRODUCTS', productos);
+                commit('SET_FILTER', productos)
             });
         },
         // una funcion con el producto que mande a traves del boton "añadir al carrito"
         addToCart({ commit }, producto) {
-            // si en el carrito no existe este producto 
+            // si en el carrito no existe este producto
             if (!this.state.carrito.find((e) => e.slug == producto.slug)) {
                 // llevemoslo a hacer una mutacion
                 commit('ADD_TO_CART', producto);
-            } 
-            
+            }
         },
-        removeFromCart({commit}){
-            commit('REMOVE_FROM_CART')
+        removeFromCart({ commit }) {
+            commit('REMOVE_FROM_CART');
         },
-        removeItemFromCart({commit}, producto){
-        if (this.state.carrito.find((e) => e.id == producto.id)) {
-            commit('REMOVE_ITEM_FROM_CART', producto)
-        } 
-        }
+        removeItemFromCart({ commit }, producto) {
+            if (this.state.carrito.find((e) => e.id == producto.id)) {
+                commit('REMOVE_ITEM_FROM_CART', producto);
+            }
+        },
+        findProduct({ commit }, producto) {
+                const resultados = this.state.productos.filter((elemento) => {
+                    if (elemento.nombre.toLowerCase().includes(producto)) {
+                        return elemento
+                    }
+                });
+                commit('SET_FILTER', resultados);
+        },
     },
     mutations: {
         SET_USER(state, user) {
@@ -82,12 +94,16 @@ const store = new Vuex.Store({
             // en el estado, la posicion carrito le vamos a agregar este producto
             state.carrito.push(producto);
         },
-        REMOVE_FROM_CART(state){
-            state.carrito = []
+        REMOVE_FROM_CART(state) {
+            state.carrito = [];
         },
-        REMOVE_ITEM_FROM_CART(state, producto){
+        REMOVE_ITEM_FROM_CART(state, producto) {
             state.carrito.pop(producto);
-        }
+        },
+        // guardamos en el estado todos los productos
+        SET_FILTER(state, resultados) {
+            state.filtro.productos = resultados;
+        },
     },
 });
 

@@ -2,7 +2,13 @@
     <div class="container catalogo">
         <v-app class="margin">
             <v-row>
-                <v-card v-for="(item, index) in productos" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
+                <div class="d-flex">
+                    <v-text-field v-model="producto" @keyup.enter="buscarProducto()" label="Buscar"> </v-text-field>
+                    <v-btn slot="activator" @click="buscarProducto()" icon> <v-icon class="fas fa-search"></v-icon> </v-btn>
+                </div>
+            </v-row>
+            <v-row>
+                <v-card v-for="(item, index) in filtro" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                     <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
                     <v-card-text class="text--primary">
@@ -11,6 +17,14 @@
                     </v-card-text>
                 </v-card>
             </v-row>
+
+            <!-- <paginate name="lista" :list="this.productos" :per="2">
+                <li v-for="(item, index) in paginated('lista')" :key="index">
+                    {{ item }}
+                </li>
+            </paginate>
+
+            <paginate-links for="lista"></paginate-links> -->
 
             <v-dialog v-model="dialog" max-width="650">
                 <v-card class="mx-auto" height="400" outlined>
@@ -49,12 +63,15 @@
                 productoId: '',
                 dialog: false,
                 cantidades: 0,
+                producto: '',
+                paginate: ['lista'],
             };
         },
         computed: {
             ...mapState({
                 productos: (state) => state.productos,
                 carrito: (state) => state.carrito,
+                filtro: (state) => state.filtro.productos,
             }),
         },
         methods: {
@@ -62,6 +79,7 @@
                 getProducts: 'getProducts',
                 addToCart: 'addToCart',
                 removeFromCart: 'removeFromCart',
+                findProduct: 'findProduct',
             }),
             // buscar el producto que selecciono el usuario en vuex
             conseguirProducto(item) {
@@ -92,6 +110,13 @@
                 this.cantidades--;
                 if (this.cantidades <= 0) {
                     this.cantidades = 0;
+                }
+            },
+            buscarProducto() {
+                if (!this.producto) {
+                    this.getProducts();
+                } else {
+                    this.findProduct(this.producto);
                 }
             },
         },

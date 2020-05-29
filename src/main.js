@@ -8,7 +8,10 @@ import Slug from 'slug';
 import Print from 'vue-print-nb'
 import JsonExcel from 'vue-json-excel'
 import jsPDF from 'jspdf';
+import VuePaginate from 'vue-paginate'
 
+
+Vue.use(VuePaginate)
 Vue.use(jsPDF);
 
 Vue.component('downloadExcel', JsonExcel)

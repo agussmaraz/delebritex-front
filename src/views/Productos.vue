@@ -179,11 +179,12 @@
     .parteDos-formEditar {
         margin-left: 20px;
     }
-    .margin{
-        @media screen and (max-width: 990px){
-           margin-bottom: 40% !important; 
+    .margin {
+        @media screen and (max-width: 990px) {
+            margin-bottom: 40% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 20% !important;
         }
     }
-
-  
 </style>
