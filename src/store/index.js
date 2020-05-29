@@ -14,7 +14,7 @@ const store = new Vuex.Store({
         // estado para guardar los productos filtrados
         filtro: {
             productos: [],
-        }
+        },
     },
     getters: {
         isLogged: (state) => !!state.user,
@@ -45,7 +45,7 @@ const store = new Vuex.Store({
                 const productos = res.data;
                 // se los mando a una mutacion llamada set_products
                 commit('SET_PRODUCTS', productos);
-                commit('SET_FILTER', productos)
+                commit('SET_FILTER', productos);
             });
         },
         // una funcion con el producto que mande a traves del boton "añadir al carrito"
@@ -67,7 +67,7 @@ const store = new Vuex.Store({
         findProduct({ commit }, producto) {
                 const resultados = this.state.productos.filter((elemento) => {
                     if (elemento.nombre.toLowerCase().includes(producto)) {
-                        return elemento
+                        return elemento;
                     }
                 });
                 commit('SET_FILTER', resultados);

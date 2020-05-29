@@ -3,8 +3,7 @@
         <v-app class="margin">
             <v-row>
                 <div class="d-flex">
-                    <v-text-field v-model="producto" @keyup.enter="buscarProducto()" label="Buscar"> </v-text-field>
-                    <v-btn slot="activator" @click="buscarProducto()" icon> <v-icon class="fas fa-search"></v-icon> </v-btn>
+                    <v-text-field v-model="producto" @keyup="buscarProducto()" @keyup.delete="getProducts()" label="Buscar"> </v-text-field>
                 </div>
             </v-row>
             <v-row>
@@ -17,14 +16,25 @@
                     </v-card-text>
                 </v-card>
             </v-row>
-
-            <!-- <paginate name="lista" :list="this.productos" :per="2">
-                <li v-for="(item, index) in paginated('lista')" :key="index">
-                    {{ item }}
-                </li>
-            </paginate>
-
-            <paginate-links for="lista"></paginate-links> -->
+            <template>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <paginate ref="paginator" name="comida" :list="comida" :per="5">
+                                <p v-for="string in paginated('comida')" :key="string.id">{{ string }}</p>
+                            </paginate>
+                            <!-- <paginate-links
+                                for="arrayStrings"
+                                :show-step-links="true"
+                                :simple="{
+                                    prev: 'Anterior',
+                                    next: 'Siguiente',
+                                }"
+                            ></paginate-links> -->
+                        </div>
+                    </div>
+                </div>
+            </template>
 
             <v-dialog v-model="dialog" max-width="650">
                 <v-card class="mx-auto" height="400" outlined>
@@ -64,7 +74,8 @@
                 dialog: false,
                 cantidades: 0,
                 producto: '',
-                paginate: ['lista'],
+                comida: ['milanesa', 'hambuerguesa', 'pizza'],
+                paginate: ['comida'],
             };
         },
         computed: {
@@ -113,11 +124,7 @@
                 }
             },
             buscarProducto() {
-                if (!this.producto) {
-                    this.getProducts();
-                } else {
-                    this.findProduct(this.producto);
-                }
+                this.findProduct(this.producto);
             },
         },
         beforeMount() {
