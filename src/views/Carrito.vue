@@ -123,6 +123,7 @@
                     this.mensaje.color = 'success';
                     this.mensaje.texto = 'La compra fue realizada con exito!';
                     this.showAlert();
+                    this.removeFromCart();
                 });
                 this.openTicket = false;
                 this.exportPDF();

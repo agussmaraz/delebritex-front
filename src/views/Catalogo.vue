@@ -2,7 +2,12 @@
     <div class="container catalogo">
         <v-app class="margin">
             <v-row>
-                <v-card v-for="(item, index) in productos" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
+                <div class="d-flex">
+                    <v-text-field v-model="producto" @keyup="buscarProducto()" @keyup.delete="getProducts()" label="Buscar"> </v-text-field>
+                </div>
+            </v-row>
+            <v-row>
+                <v-card v-for="(item, index) in filtro" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
                     <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                     <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
                     <v-card-text class="text--primary">
@@ -11,6 +16,25 @@
                     </v-card-text>
                 </v-card>
             </v-row>
+            <template>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <paginate ref="paginator" name="comida" :list="comida" :per="5">
+                                <p v-for="string in paginated('comida')" :key="string.id">{{ string }}</p>
+                            </paginate>
+                            <!-- <paginate-links
+                                for="arrayStrings"
+                                :show-step-links="true"
+                                :simple="{
+                                    prev: 'Anterior',
+                                    next: 'Siguiente',
+                                }"
+                            ></paginate-links> -->
+                        </div>
+                    </div>
+                </div>
+            </template>
 
             <v-dialog v-model="dialog" max-width="650">
                 <v-card class="mx-auto" height="400" outlined>
@@ -49,12 +73,16 @@
                 productoId: '',
                 dialog: false,
                 cantidades: 0,
+                producto: '',
+                comida: ['milanesa', 'hambuerguesa', 'pizza'],
+                paginate: ['comida'],
             };
         },
         computed: {
             ...mapState({
                 productos: (state) => state.productos,
                 carrito: (state) => state.carrito,
+                filtro: (state) => state.filtro.productos,
             }),
         },
         methods: {
@@ -62,6 +90,7 @@
                 getProducts: 'getProducts',
                 addToCart: 'addToCart',
                 removeFromCart: 'removeFromCart',
+                findProduct: 'findProduct',
             }),
             // buscar el producto que selecciono el usuario en vuex
             conseguirProducto(item) {
@@ -93,6 +122,9 @@
                 if (this.cantidades <= 0) {
                     this.cantidades = 0;
                 }
+            },
+            buscarProducto() {
+                this.findProduct(this.producto);
             },
         },
         beforeMount() {

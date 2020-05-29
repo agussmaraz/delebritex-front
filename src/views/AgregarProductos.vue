@@ -1,7 +1,7 @@
 <template>
     <div class="agregarProductos margin">
         <h1>Agregar nuevos productos</h1>
-        <template >
+        <template>
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
             <v-form @submit.prevent="nuevoProducto()" enctype="multipart/form-data" class="formProducto" data-app>
                 <template>
@@ -289,8 +289,4 @@
     .p-error {
         color: red;
     }
-    /* .row {
-        width: 50%;
-        margin: 0 auto !important;
-    } */
 </style>
