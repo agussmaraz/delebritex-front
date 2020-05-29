@@ -21,7 +21,7 @@
                             <b-nav-item to="/carrito"><b-icon icon="bag"></b-icon></b-nav-item>
                             <b-nav-item-dropdown right>
                                 <template v-slot:button-content>
-                                    <em>{{ user.nombre }}</em>
+                                    <em> {{ user.nombre }} </em>
                                 </template>
                                 <b-dropdown-item to="/usuario"> Compras</b-dropdown-item>
                                 <b-dropdown-item @click="logout">Cerrar sesión</b-dropdown-item>
