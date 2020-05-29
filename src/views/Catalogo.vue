@@ -1,40 +1,33 @@
 <template>
     <div class="container catalogo">
-        <v-app class="margin">
+        <v-app class="margin" ref="layout">
             <v-row>
                 <div class="d-flex">
                     <v-text-field v-model="producto" @keyup="buscarProducto()" @keyup.delete="getProducts()" label="Buscar"> </v-text-field>
                 </div>
             </v-row>
-            <v-row>
-                <v-card v-for="(item, index) in filtro" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
-                    <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
-                    <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
-                    <v-card-text class="text--primary">
-                        <div>Whitsunday Island, Whitsunday Islands</div>
-                        <div>${{ item.precioUnidad }}</div>
-                    </v-card-text>
-                </v-card>
-            </v-row>
-            <template>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <paginate ref="paginator" name="comida" :list="comida" :per="5">
-                                <p v-for="string in paginated('comida')" :key="string.id">{{ string }}</p>
-                            </paginate>
-                            <!-- <paginate-links
-                                for="arrayStrings"
-                                :show-step-links="true"
-                                :simple="{
-                                    prev: 'Anterior',
-                                    next: 'Siguiente',
-                                }"
-                            ></paginate-links> -->
-                        </div>
-                    </div>
-                </div>
-            </template>
+            <paginate name="prod_filtered" :list="filtro" :per="6" :container="this">
+                <v-row>
+                    <v-card v-for="(item, index) in paginated('prod_filtered')" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
+                        <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
+                        <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
+                        <v-card-text class="text--primary">
+                            <div>Whitsunday Island, Whitsunday Islands</div>
+                            <div>${{ item.precioUnidad }}</div>
+                        </v-card-text>
+                    </v-card>
+                </v-row>
+            </paginate>
+            <!-- <p v-for="(item, index) in paginated('prod_filtered')" :key="index">{{ item }}</p> -->
+            <paginate-links
+                for="prod_filtered"
+                :container="{
+                    state: paginate.prod_filtered,
+                    el: $refs.layout,
+                }"
+            ></paginate-links>
+
+            <!-- <paginate-links for="comida"></paginate-links> -->
 
             <v-dialog v-model="dialog" max-width="650">
                 <v-card class="mx-auto" height="400" outlined>
@@ -66,7 +59,7 @@
 </template>
 <script>
     import { mapState, mapGetters, mapActions } from 'vuex';
-
+    // import Paginate from 'vuejs-paginate';
     export default {
         data() {
             return {
@@ -74,8 +67,8 @@
                 dialog: false,
                 cantidades: 0,
                 producto: '',
-                comida: ['milanesa', 'hambuerguesa', 'pizza'],
-                paginate: ['comida'],
+                // comida: ['milanesa', 'hamburguesa', 'pizza', 'sopa', 'ensalada'],
+                paginate: ['prod_filtered'],
             };
         },
         computed: {
@@ -172,5 +165,22 @@
         @media screen and (max-height: 1903px) {
             margin-bottom: 40% !important;
         }
+    }
+    .paginate-links {
+        width: 100%;
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+    .paginate-links li{
+        margin-left: 2%;
+        background-color: rgba(228, 228, 236, 0.788);
+        padding: 10px;
+        border-radius: 8px;
+        color: white;
+    }
+    .v-application a{
+        color: black;
     }
 </style>

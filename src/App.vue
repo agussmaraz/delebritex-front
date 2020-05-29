@@ -118,4 +118,7 @@
     .footer {
         bottom: 0 !important;
     }
+    .v-application a{
+        color: black;
+    }
 </style>
