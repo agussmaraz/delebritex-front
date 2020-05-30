@@ -116,6 +116,12 @@
         margin: auto !important;
     }
     .footer {
-        bottom: 0 !important;
+        bottom: 0 !important;   
+        @media screen and (max-width: 990px) {
+            margin-top: 100% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-top: 100% !important;
+        }
     }
 </style>
