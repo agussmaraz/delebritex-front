@@ -7,16 +7,21 @@
                     <img :src="item.imagen" alt="" class="product-image" />
                     <h3 class="product-name">{{ item.nombre }}</h3>
                     <span class="product-price">x{{ item.cantidadElegida }}</span>
+                    <span class="product-price">C/U ${{item.precioUnidad}}</span>
                     <span class="product-price">${{ calcularPrecio(item) }}</span>
+                    
                     <button class="product-remove" @click="removeItemFromCart(item)">X</button>
                 </li>
             </ul>
             <div class="checkout-message">
                 <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
+                </div>
+                    <h3 class="total" v-if="carrito.length >= 1">Total: ${{ sumaPrecio }}</h3>
+                </div>
                 <div class="d-flex justify-content-around">
-                    <v-btn to="/catalogo" class="boton">Seguir comprando</v-btn>
-                    <v-btn v-if="carrito.length >= 1" @click="removeFromCart()">Vaciar el carrito</v-btn>
-                    <v-btn v-if="carrito.length >= 1" @click="openTicket = !openTicket">Continuar</v-btn>
+                    <v-btn fab  to="/catalogo" class="boton"><v-icon class="fas fa-angle-left"></v-icon></v-btn>
+                    <v-btn fab  v-if="carrito.length >= 1" @click="removeFromCart()"><v-icon class="fas fa-trash"></v-icon></v-btn>
+                    <v-btn fab  v-if="carrito.length >= 1" @click="openTicket = !openTicket"><v-icon class="fas fa-angle-right"></v-icon></v-btn>
                 </div>
                 <v-overlay v-if="openTicket">
                     <v-card>
@@ -42,9 +47,6 @@
                         <v-btn @click="closeOverlay()">Cerrar</v-btn>
                     </v-card>
                 </v-overlay>
-            </div>
-            <h3 class="total">Total: ${{ sumaPrecio }}</h3>
-        </div>
     </v-app>
 </template>
 
@@ -162,7 +164,7 @@
 
     .checkout-product {
         display: grid;
-        grid-template-columns: 1fr 3fr 2fr 1fr 0.5fr;
+        grid-template-columns: 2fr 4fr 2fr 2fr 2fr 0.5fr;
         background-color: #fff;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;
@@ -178,8 +180,7 @@
     .product-image {
         grid-column: 1/2;
         width: 50%;
-        height: 160%;
-        border-radius: 50%;
+        height: 100%;
     }
 
     .product-name {
