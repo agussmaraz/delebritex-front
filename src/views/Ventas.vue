@@ -11,17 +11,28 @@
                                 <v-list-item-title class="text-capitalize mb-1"> {{ item.producto }} </v-list-item-title>
                                 <div class="d-flex">
                                     <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
+
                                     <v-list-item-subtitle>Precio: ${{ item.precioUnidad }}</v-list-item-subtitle>
                                 </div>
                             </v-list-item-content>
                             <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
                         </v-list-item>
+                        <!-- <div class="pb-3">
+                            <v-btn class="ml-3"> Aceptar </v-btn>
+                            <v-btn class="ml-3"> Rechazar </v-btn>
+                        </div> -->
                     </v-card>
                 </v-dialog>
             </template>
             <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="mostrarReserva(item)">
+                <v-icon small color=" blue darken-2"  class="mr-2" @click="mostrarReserva(item)">
                     mdi-eye
+                </v-icon>
+                <v-icon small color="green darken-2" class="mr-2" @click="aceptarReserva(item)" >
+                    mdi-checkbox-marked-circle
+                </v-icon>
+                <v-icon small color="red darken-2" class="mr-2">
+                    mdi-cancel
                 </v-icon>
             </template>
         </v-data-table>
@@ -66,6 +77,7 @@
                 },
                 headersReservas: [
                     { text: 'Fecha', value: 'fecha' },
+                    { text: 'Numero', value: 'numeroCompra' },
                     { text: 'Usuario', value: 'usuario' },
                     { text: 'Contacto', value: 'email' },
                     { text: 'Estado', value: 'estado' },
@@ -134,11 +146,13 @@
                     productos: [],
                     usuario: '',
                     email: '',
+                    numeroCompra: ''
                 };
                 reserva_final.email = this.sacarEmail(productos);
                 reserva_final.usuario = this.sacarUsuario(productos);
                 reserva_final.fecha = this.sacarFechaCarrito(productos);
                 reserva_final.estado = this.calcularEstadoDeCarrito(productos);
+                reserva_final.numeroCompra = this.sacarNumeroCompra(productos);
 
                 reserva_final.productos = productos;
                 return reserva_final;
@@ -151,6 +165,13 @@
                     return email;
                 }
             },
+            sacarNumeroCompra(carrito){
+                for (let index = 0; index < carrito.length; index++) {
+                    const element = carrito[index];
+                    const numeroCompra = element.numeroCompra;
+                    return numeroCompra;
+                }
+            },
             // Sacar el usuario del carrito para el objeto del carrito
             sacarUsuario(carrito) {
                 for (let index = 0; index < carrito.length; index++) {
@@ -161,7 +182,7 @@
             },
             // Proximamente para saber en que estado esta la reserva
             calcularEstadoDeCarrito(carrito) {
-                return 'hola';
+                return 'chau';
             },
             // Para el objeto del carrito y ver en fecha se hizo la compra
             sacarFechaCarrito(carrito) {
@@ -187,6 +208,7 @@
             // Encerrar en un array todo los carritos
             carritoAListaDeProductos(reservas) {
                 const lista_de_productos = [];
+                // console.log(Object.keys(reservas));
                 for (const key in reservas) {
                     if (reservas.hasOwnProperty(key)) {
                         const productos = reservas[key];
@@ -208,6 +230,12 @@
                 const productos = item.productos;
                 this.reserva = item.productos;
             },
+            aceptarReserva(item){
+                const id = item.id;
+                this.axios.put(`/carrito/${id}`,).then(res => {
+                    console.log('Exito');
+                })
+            }
         },
         computed: {
             // Calcular el total de ventas que se hizo en el dia
@@ -255,48 +283,49 @@
 </script>
 
 <style lang="scss">
-    .margin{
-          @media screen and (max-width: 990px) {
-          margin-bottom: 40% !important;
-      }
-          @media screen and (max-height: 1903px) {
-              margin-bottom: 20% !important;
-          }
-      }
-      .crud-ventas {
-          width: 80%;
-          margin: 0 auto;
-          border: 1px solid #dee2e6;
-      }
-      .lista-ventas {
-          display: flex;
-      }
-      .nuevo-venta {
-          margin-left: 10px;
-          border: 2px solid #dee2e6;
-          border-bottom: none;
-          padding: 12px 12px 2px 12px;
-          border-top-right-radius: 5px;
-          border-top-left-radius: 5px;
-          font-size: 20px;
-      }
-      .li-venta {
-          border: 2px solid #dee2e6;
-          border-bottom: none;
-          padding: 12px 12px 2px 12px;
-          border-top-right-radius: 5px;
-          border-top-left-radius: 5px;
-          font-size: 20px;
-      }
-      ul {
-          margin-bottom: 0 !important;
-          margin-left: 10%;
-      }
-      .btn-impr {
-          margin-left: 6%;
-      }
-      .tabla-reservas {
-          width: 50% !important;
-          margin: 0 auto;
-      }
+    .margin {
+        @media screen and (max-width: 990px) {
+            margin-bottom: 40% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 20% !important;
+        }
+    }
+    .crud-ventas {
+        width: 80%;
+        margin: 0 auto;
+        border: 1px solid #dee2e6;
+    }
+    .lista-ventas {
+        display: flex;
+    }
+    .nuevo-venta {
+        margin-left: 10px;
+        border: 2px solid #dee2e6;
+        border-bottom: none;
+        padding: 12px 12px 2px 12px;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        font-size: 20px;
+    }
+    .li-venta {
+        border: 2px solid #dee2e6;
+        border-bottom: none;
+        padding: 12px 12px 2px 12px;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        font-size: 20px;
+    }
+    ul {
+        margin-bottom: 0 !important;
+        margin-left: 10%;
+    }
+    .btn-impr {
+        margin-left: 6%;
+    }
+    .tabla-reservas {
+        width: 50% !important;
+        margin: 0 auto;
+    }
+    
 </style>
