@@ -9,9 +9,7 @@
                         <b-nav-item to="/">Inicio</b-nav-item>
                         <b-nav-item to="/contacto" v-if="isAdmin == 1">Contacto</b-nav-item>
                         <b-nav-item to="/catalogo">Catalogo</b-nav-item>
-                        <!-- <b-nav-item to="/agregarProductos" v-if="isAdmin == 2">Nuevo Producto</b-nav-item> -->
                         <b-nav-item to="/quienesSomos">Quienes somos</b-nav-item>
-                        <!-- <b-nav-item to="/producto" v-if="isAdmin == 2">Producto</b-nav-item> -->
                         <b-nav-item to="/productos" v-if="isAdmin == 2">Listado</b-nav-item>
                         <b-nav-item to="/ventas" v-if="isAdmin == 2">Ventas</b-nav-item>
                         <b-nav-item to="/login" v-if="isLogged == false">Iniciar Sesion</b-nav-item>
@@ -19,6 +17,7 @@
 
                         <div class="nav-login" v-if="isLogged == true">
                             <b-nav-item to="/carrito"><b-icon icon="bag"></b-icon></b-nav-item>
+                            <p class="cantidad-carrito">{{ this.carrito.length }}</p>
                             <b-nav-item-dropdown right>
                                 <template v-slot:button-content>
                                     <em>{{ user.nombre }}</em>
@@ -71,6 +70,7 @@
         computed: {
             ...mapState({
                 user: (state) => state.user,
+                carrito: (state) => state.carrito,
             }),
             ...mapGetters({
                 isLogged: 'isLogged',
@@ -118,7 +118,15 @@
     .footer {
         bottom: 0 !important;
     }
-    .v-application a{
+    .v-application a {
         color: black;
+    }
+    .cantidad-carrito {
+        background-color: red;
+        color: white;
+        height: 19px;
+        width: 18px;
+        border-radius: 10px;
+        font-size: 12px;
     }
 </style>
