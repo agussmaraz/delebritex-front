@@ -143,6 +143,7 @@
   </v-app>
 </template>
 <script>
+<<<<<<< HEAD
 import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -193,6 +194,20 @@ export default {
                     this.productoId = element;
                 }
             }
+=======
+    import { mapState, mapGetters, mapActions } from 'vuex';
+    // import Paginate from 'vuejs-paginate';
+    export default {
+        data() {
+            return {
+                productoId: '',
+                dialog: false,
+                cantidades: 0,
+                producto: '',
+                // comida: ['milanesa', 'hamburguesa', 'pizza', 'sopa', 'ensalada'],
+                paginate: ['prod_filtered'],
+            };
+>>>>>>> 0ab5bb8d7cab92934c0e071a33f5396825f76eba
         },
         // agregar al carrito el producto que fue seleccionado con las cantidades elegidas.
         agregarAlCarrito() {
@@ -225,6 +240,7 @@ export default {
 </script>
 
 <style lang="scss">
+<<<<<<< HEAD
 .card {
   width: 250px;
 }
@@ -267,4 +283,62 @@ export default {
 .ml {
   margin-left: 0 auto !important;
 }
+=======
+    .card {
+        width: 250px;
+    }
+    .row {
+        width: 100% !important;
+        justify-content: center;
+    }
+    .catalogo {
+        margin-top: 2%;
+    }
+    .card-position {
+        margin: 1.5%;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.19) !important;
+        max-width: 20rem;
+        @media screen and (max-width: 680px) {
+            margin: 6%;
+        }
+    }
+    .contenedor {
+        max-width: 1455px !important;
+        margin: 0 auto;
+    }
+    .center {
+        text-align: center !important;
+    }
+    .texto-card {
+        text-decoration: none !important;
+    }
+    .texto-card:hover {
+        border: 1px solid rgb(199, 195, 195) !important;
+    }
+    .margin {
+        @media screen and (max-width: 990px) {
+            margin-bottom: 40% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 40% !important;
+        }
+    }
+    .paginate-links {
+        width: 100%;
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+    .paginate-links li{
+        margin-left: 2%;
+        background-color: rgba(228, 228, 236, 0.788);
+        padding: 10px;
+        border-radius: 8px;
+        color: white;
+    }
+    .v-application a{
+        color: black;
+    }
+>>>>>>> 0ab5bb8d7cab92934c0e071a33f5396825f76eba
 </style>

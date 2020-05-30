@@ -124,4 +124,7 @@
             margin-top: 100% !important;
         }
     }
+    .v-application a{
+        color: black;
+    }
 </style>
