@@ -25,10 +25,10 @@
                 </v-dialog>
             </template>
             <template v-slot:item.actions="{ item }">
-                <v-icon small color=" blue darken-2"  class="mr-2" @click="mostrarReserva(item)">
+                <v-icon small color=" blue darken-2" class="mr-2" @click="mostrarReserva(item)">
                     mdi-eye
                 </v-icon>
-                <v-icon small color="green darken-2" class="mr-2" @click="aceptarReserva(item)" >
+                <v-icon small color="green darken-2" class="mr-2" @click="aceptarReserva(item)">
                     mdi-checkbox-marked-circle
                 </v-icon>
                 <v-icon small color="red darken-2" class="mr-2">
@@ -146,7 +146,7 @@
                     productos: [],
                     usuario: '',
                     email: '',
-                    numeroCompra: ''
+                    numeroCompra: '',
                 };
                 reserva_final.email = this.sacarEmail(productos);
                 reserva_final.usuario = this.sacarUsuario(productos);
@@ -165,7 +165,7 @@
                     return email;
                 }
             },
-            sacarNumeroCompra(carrito){
+            sacarNumeroCompra(carrito) {
                 for (let index = 0; index < carrito.length; index++) {
                     const element = carrito[index];
                     const numeroCompra = element.numeroCompra;
@@ -182,7 +182,11 @@
             },
             // Proximamente para saber en que estado esta la reserva
             calcularEstadoDeCarrito(carrito) {
-                return 'chau';
+                for (let index = 0; index < carrito.length; index++) {
+                    const element = carrito[index];
+                    const estado = element.estado;
+                    return estado;
+                }
             },
             // Para el objeto del carrito y ver en fecha se hizo la compra
             sacarFechaCarrito(carrito) {
@@ -230,12 +234,12 @@
                 const productos = item.productos;
                 this.reserva = item.productos;
             },
-            aceptarReserva(item){
-                const id = item.id;
-                this.axios.put(`/carrito/${id}`,).then(res => {
-                    console.log('Exito');
-                })
-            }
+            aceptarReserva(item) {
+                const numeroCompra = item.numeroCompra;
+                this.axios.put(`/carrito/${numeroCompra}`, { estado: '5' }).then((res) => {
+                    console.log(res.data);
+                });
+            },
         },
         computed: {
             // Calcular el total de ventas que se hizo en el dia
@@ -327,5 +331,4 @@
         width: 50% !important;
         margin: 0 auto;
     }
-    
 </style>

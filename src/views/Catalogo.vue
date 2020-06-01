@@ -67,7 +67,6 @@
                 dialog: false,
                 cantidades: 0,
                 producto: '',
-                // comida: ['milanesa', 'hamburguesa', 'pizza', 'sopa', 'ensalada'],
                 paginate: ['prod_filtered'],
             };
         },
