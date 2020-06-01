@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app ref="layout">
     <div class="container catalogo margin">
       <v-app-bar color="grey darken-3 white--text">
         <v-app-bar-nav-icon
@@ -23,49 +23,26 @@
                 >
                 Toggle -->
       <!-- </v-btn> -->
-      <v-row>
-        <v-card
-          v-for="(item, index) in filtro"
-          :key="index"
-          class="texto-card m-3"
-          max-width="300"
-          max-height="350"
-          @click="conseguirProducto(item)"
-        >
-          <v-img
-            class="white--text align-end"
-            height="200px"
-            :src="item.imagen"
-          >
-          </v-img>
-          <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
-          <v-card-text class="text--primary">
-            <div>Whitsunday Island, Whitsunday Islands</div>
-            <div>${{ item.precioUnidad }}</div>
-          </v-card-text>
-        </v-card>
-      </v-row>
-      <template>
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12 text-center">
-              <paginate ref="paginator" name="comida" :list="comida" :per="5">
-                <p v-for="string in paginated('comida')" :key="string.id">
-                  {{ string }}
-                </p>
-              </paginate>
-              <!-- <paginate-links
-                                for="arrayStrings"
-                                :show-step-links="true"
-                                :simple="{
-                                    prev: 'Anterior',
-                                    next: 'Siguiente',
-                                }"
-                            ></paginate-links> -->
-            </div>
-          </div>
-        </div>
-      </template>
+      <paginate name="prod_filtered" :list="filtro" :per="6" :container="this">
+                <v-row>
+                    <v-card v-for="(item, index) in paginated('prod_filtered')" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
+                        <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
+                        <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
+                        <v-card-text class="text--primary">
+                            <div>Whitsunday Island, Whitsunday Islands</div>
+                            <div>${{ item.precioUnidad }}</div>
+                        </v-card-text>
+                    </v-card>
+                </v-row>
+            </paginate>
+            <!-- <p v-for="(item, index) in paginated('prod_filtered')" :key="index">{{ item }}</p> -->
+            <paginate-links
+                for="prod_filtered"
+                :container="{
+                    state: paginate.prod_filtered,
+                    el: $refs.layout,
+                }"
+            ></paginate-links>
 
       <v-dialog v-model="dialog" max-width="650">
         <v-card class="mx-auto" height="400" outlined>
@@ -143,13 +120,12 @@
   </v-app>
 </template>
 <script>
-<<<<<<< HEAD
 import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
     data() {
         return {
-            
+            paginate: ['prod_filtered'],
             drawer: null,
             productoId: '',
             dialog: false,
@@ -194,20 +170,6 @@ export default {
                     this.productoId = element;
                 }
             }
-=======
-    import { mapState, mapGetters, mapActions } from 'vuex';
-    // import Paginate from 'vuejs-paginate';
-    export default {
-        data() {
-            return {
-                productoId: '',
-                dialog: false,
-                cantidades: 0,
-                producto: '',
-                // comida: ['milanesa', 'hamburguesa', 'pizza', 'sopa', 'ensalada'],
-                paginate: ['prod_filtered'],
-            };
->>>>>>> 0ab5bb8d7cab92934c0e071a33f5396825f76eba
         },
         // agregar al carrito el producto que fue seleccionado con las cantidades elegidas.
         agregarAlCarrito() {
@@ -240,7 +202,6 @@ export default {
 </script>
 
 <style lang="scss">
-<<<<<<< HEAD
 .card {
   width: 250px;
 }
@@ -283,62 +244,4 @@ export default {
 .ml {
   margin-left: 0 auto !important;
 }
-=======
-    .card {
-        width: 250px;
-    }
-    .row {
-        width: 100% !important;
-        justify-content: center;
-    }
-    .catalogo {
-        margin-top: 2%;
-    }
-    .card-position {
-        margin: 1.5%;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.19) !important;
-        max-width: 20rem;
-        @media screen and (max-width: 680px) {
-            margin: 6%;
-        }
-    }
-    .contenedor {
-        max-width: 1455px !important;
-        margin: 0 auto;
-    }
-    .center {
-        text-align: center !important;
-    }
-    .texto-card {
-        text-decoration: none !important;
-    }
-    .texto-card:hover {
-        border: 1px solid rgb(199, 195, 195) !important;
-    }
-    .margin {
-        @media screen and (max-width: 990px) {
-            margin-bottom: 40% !important;
-        }
-        @media screen and (max-height: 1903px) {
-            margin-bottom: 40% !important;
-        }
-    }
-    .paginate-links {
-        width: 100%;
-        list-style: none;
-        display: flex;
-        justify-content: center;
-        text-align: center;
-    }
-    .paginate-links li{
-        margin-left: 2%;
-        background-color: rgba(228, 228, 236, 0.788);
-        padding: 10px;
-        border-radius: 8px;
-        color: white;
-    }
-    .v-application a{
-        color: black;
-    }
->>>>>>> 0ab5bb8d7cab92934c0e071a33f5396825f76eba
 </style>
