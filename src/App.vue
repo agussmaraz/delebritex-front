@@ -21,7 +21,7 @@
                             <b-nav-item to="/carrito"><b-icon icon="bag"></b-icon></b-nav-item>
                             <b-nav-item-dropdown right>
                                 <template v-slot:button-content>
-                                    <em> {{ user.nombre }} </em>
+                                    <em>{{ user.nombre }}</em>
                                 </template>
                                 <b-dropdown-item to="/usuario"> Compras</b-dropdown-item>
                                 <b-dropdown-item @click="logout">Cerrar sesión</b-dropdown-item>
@@ -116,15 +116,15 @@
         margin: auto !important;
     }
     .footer {
-        bottom: 0 !important;   
-        @media screen and (max-width: 990px) {
-            margin-top: 100% !important;
-        }
-        @media screen and (max-height: 1903px) {
-            margin-top: 100% !important;
-        }
+        bottom: 0 !important;
     }
     .v-application a{
         color: black;
     }
+   .v-application ul{
+       padding-top: 2px;
+       padding-bottom: 2px;
+       padding-left: 0;
+       padding-right: 0;
+   }
 </style>
