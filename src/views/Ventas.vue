@@ -17,10 +17,9 @@
                             </v-list-item-content>
                             <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
                         </v-list-item>
-                        <!-- <div class="pb-3">
-                            <v-btn class="ml-3"> Aceptar </v-btn>
-                            <v-btn class="ml-3"> Rechazar </v-btn>
-                        </div> -->
+                        <div class="pb-3">
+                            <v-btn small class="ml-3" @click="entregarReserva()"> Entregado</v-btn>
+                        </div>
                     </v-card>
                 </v-dialog>
             </template>
@@ -28,30 +27,14 @@
                 <v-icon small color=" blue darken-2" class="mr-2" @click="mostrarReserva(item)">
                     mdi-eye
                 </v-icon>
-                <v-icon small color="green darken-2" class="mr-2" @click="aceptarReserva(item)">
+                <v-icon v-if="item.estado == 'Nuevo'" small color="green darken-2" class="mr-2" @click="aceptarReserva(item)">
                     mdi-checkbox-marked-circle
                 </v-icon>
-                <v-icon small color="red darken-2" class="mr-2">
+                <v-icon v-if="item.estado == 'Nuevo'" small color="red darken-2" class="mr-2" @click="rechazarReserva(item)">
                     mdi-cancel
                 </v-icon>
             </template>
         </v-data-table>
-
-        <br />
-        <v-data-table :headers="headers" :items="obtenerMovimientos" :items-per-page="5" class="elevation-1 mt-5"> </v-data-table>
-        <br />
-        <v-container max-width="400">
-            <v-row class="" justify="center" no-gutters>
-                <v-col lg="2">
-                    <v-card class="mx-auto" outlined tile> Total ventas: {{ totalVentas }} </v-card>
-                </v-col>
-                <v-col lg="2">
-                    <v-card class="mx-auto" outlined tile> Total ganancias: {{ totalGanancias }} </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
-        <br />
-        <download-excel :data="json_data" name="excel.xls" class="btn btn-dark">Guardar excel</download-excel>
     </div>
 </template>
 
@@ -94,6 +77,7 @@
                 reserva: [],
                 dialog: false,
                 reservasCaja: false,
+                reservaEntrega: {},
             };
         },
         created() {
@@ -101,13 +85,11 @@
             this.accederReservas();
         },
         methods: {
-            // abrirReservas(){
-            //     this.reservasCaja = true;
-            // },
             // Es una funcion para traer lo que se vendio de la db y convertirlo en un excel
             listarMovimientos() {
                 this.axios.get('/movimientos').then((res) => {
                     this.movimientos = res.data;
+                    console.log(this.movimientos);
                     this.movimientos.forEach((movimiento) => {
                         let movimientosExcel = {};
                         if (movimiento.accion == 'vendido') {
@@ -153,7 +135,6 @@
                 reserva_final.fecha = this.sacarFechaCarrito(productos);
                 reserva_final.estado = this.calcularEstadoDeCarrito(productos);
                 reserva_final.numeroCompra = this.sacarNumeroCompra(productos);
-
                 reserva_final.productos = productos;
                 return reserva_final;
             },
@@ -185,7 +166,13 @@
                 for (let index = 0; index < carrito.length; index++) {
                     const element = carrito[index];
                     const estado = element.estado;
-                    return estado;
+                    if (estado == 1) {
+                        return 'Nuevo';
+                    } else if (estado == 5) {
+                        return 'Preparando';
+                    } else {
+                        return 'Rechazado';
+                    }
                 }
             },
             // Para el objeto del carrito y ver en fecha se hizo la compra
@@ -206,13 +193,11 @@
                     }
                     objeto[element.numeroCompra].push(element);
                 }
-
                 return objeto;
             },
             // Encerrar en un array todo los carritos
             carritoAListaDeProductos(reservas) {
                 const lista_de_productos = [];
-                // console.log(Object.keys(reservas));
                 for (const key in reservas) {
                     if (reservas.hasOwnProperty(key)) {
                         const productos = reservas[key];
@@ -228,20 +213,49 @@
                     this.reservas = res.data;
                 });
             },
-            // Ventanita que se abre con la info de cada reserca
+            // Ventanita que se abre con la info de cada reserva
             mostrarReserva(item) {
                 this.dialog = true;
-                const productos = item.productos;
+                console.log(item);
+                this.reservaEntrega = item;
                 this.reserva = item.productos;
             },
             aceptarReserva(item) {
                 const numeroCompra = item.numeroCompra;
                 this.axios.put(`/carrito/${numeroCompra}`, { estado: '5' }).then((res) => {
-                    console.log(res.data);
+                    for (let index = 0; index < res.data.length; index++) {
+                        const element = res.data[index];
+                        const estado = element.estado;
+                        return (item.estado = 'Preparando');
+                    }
+                });
+            },
+            rechazarReserva(item) {
+                const numeroCompra = item.numeroCompra;
+                this.axios.put(`/carrito/${numeroCompra}`, { estado: '3' }).then((res) => {
+                    for (let index = 0; index < res.data.length; index++) {
+                        const element = res.data[index];
+                        const estado = element.estado;
+                        return (item.estado = 'Rechazado');
+                    }
+                });
+            },
+            entregarReserva() {
+                const productos = this.reservaEntrega.productos;
+                this.axios.post('/movimiento', this.reservaEntrega).then((res) => {
+                    this.eliminarCarrito(this.reservaEntrega.numeroCompra);
+                });
+                this.dialog = false;
+            },
+            eliminarCarrito(numero) {
+                this.axios.delete(`/carrito/${numero}`).then((res) => {
+                const index = this.accederNumeroCompra.findIndex((item) => Number(item.numeroCompra) == Number(numero));
+                this.accederNumeroCompra.splice(index, 1);
                 });
             },
         },
         computed: {
+            
             // Calcular el total de ventas que se hizo en el dia
             totalVentas() {
                 return this.movimientos
@@ -328,7 +342,7 @@
         margin-left: 6%;
     }
     .tabla-reservas {
-        width: 50% !important;
+        width: 60% !important;
         margin: 0 auto;
     }
 </style>

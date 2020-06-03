@@ -52,7 +52,6 @@
             // Separar las reservas en objetos segun el numero de compra
             separarProductosPorCarrito() {
                 const objeto = {};
-                console.log(this.carrito);
                 for (let index = 0; index < this.carrito.length; index++) {
                     const element = this.carrito[index];
                     if (!objeto.hasOwnProperty(element.numeroCompra)) {
@@ -97,7 +96,11 @@
             },
             // Sacar el estado de cada carrito para guardar en el objeto
             calcularEstadoDeCarrito(carrito) {
-                return 'hola';
+                for (let index = 0; index < carrito.length; index++) {
+                    const element = carrito[index];
+                    const estado = element.estado;
+                    return estado;
+                }
             },
             // Sacar la fecha de cada carrito para guardar en el objeto
             sacarFechaCarrito(carrito) {
