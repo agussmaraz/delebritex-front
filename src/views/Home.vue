@@ -26,6 +26,7 @@
       :src="item.imagen"
       reverse-transition="fade-transition"
       transition="fade-transition"
+      to="/catalogo"
     ></v-carousel-item>
   </v-carousel>
  </v-app>
@@ -52,14 +53,14 @@ export default {
           'Fourth',
           'Fifth',
         ],
+        array: [],
     }),
     beforeMount() {
       this.getProducts();
     },
-    created () {
-      this.limitProduct()
-    },
-
+    // created(){
+    //   this.limitProduct()
+    // },
     computed: {
             ...mapState({
                 productos: (state) => state.productos,
@@ -75,6 +76,20 @@ export default {
             removeFromCart: 'removeFromCart',
             findProduct: 'findProduct',
         }),
+        
+        limitProduct() {
+                // const idx = Math.floor(Math.random() * this.productos.length)
+                // const idx2 = this.productos[idx]
+                const leng = this.productos.length - 5;
+                console.log(leng);
+                const array = [];
+                for (let index = leng; index < this.productos.length; index++) {
+                    const element = this.productos[index];
+                    console.log(element);
+                    array.push(element);
+                }
+                return array;
+            },
        
         changePaginate(){
           if (window.screen.width >= 420) {
@@ -84,19 +99,6 @@ export default {
           }
         },
         
-        limitProduct(){
-          // const idx = Math.floor(Math.random() * this.productos.length)
-          // const idx2 = this.productos[idx]
-          const leng = this.productos.length - 5;
-            console.log(leng)
-          const array = [];
-          for (let index = leng ; index < this.productos.length; index++) {
-            const element = this.productos[index];
-            console.log(element)
-            array.push(element)
-          }
-          return array;
-        },
 
          // buscar el producto que selecciono el usuario en vuex
         conseguirProducto(item) {
