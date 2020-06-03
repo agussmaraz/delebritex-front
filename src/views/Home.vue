@@ -27,6 +27,8 @@
       reverse-transition="fade-transition"
       transition="fade-transition"
       to="/catalogo"
+      show-arrows-on-hover
+      cycle
     ></v-carousel-item>
   </v-carousel>
  </v-app>
