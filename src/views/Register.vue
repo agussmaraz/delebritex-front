@@ -28,6 +28,7 @@
 </template>
 
 <script>
+    import { mapState, mapGetters, mapActions } from 'vuex';
     import router from '../router';
     export default {
         data() {
@@ -45,7 +46,7 @@
             };
         },
         methods: {
-            // Validaciones de registro 
+            // Validaciones de registro
             validarRegistro() {
                 this.error = {};
                 if (!this.usuario.nombre) {
@@ -80,6 +81,8 @@
                             estado: res.data.estado,
                         };
                         localStorage.setItem('usertoken', JSON.stringify(payload));
+                        this.setUser(res.data)
+
                         this.usuario.nombre = '';
                         this.usuario.apellido = '';
                         this.usuario.email = '';
@@ -99,6 +102,18 @@
             showAlert() {
                 this.dismissCountDown = this.dismissSecs;
             },
+            ...mapActions({
+                setUser: 'setUser',
+            }),
+        },
+        computed: {
+            ...mapState({
+                user: (state) => state.user,
+            }),
+            ...mapGetters({
+                isLogged: 'isLogged',
+                isAdmin: 'isAdmin',
+            }),
         },
     };
 </script>
