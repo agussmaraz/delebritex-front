@@ -1,8 +1,7 @@
 <template>
     <div class="container margin" data-app>
-        <h1>Ventas del día</h1>
-        <v-btn color="secondary" @click="reservasCaja = !reservasCaja">Reservas</v-btn>
-        <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas mt-5" v-show="reservasCaja">
+        <h1>Ventas Online</h1>
+        <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas mt-5">
             <template v-slot:top>
                 <v-dialog v-model="dialog" width="500">
                     <v-card class="mx-auto" outlined>
@@ -35,6 +34,7 @@
                 </v-icon>
             </template>
         </v-data-table>
+        <v-btn color="secondary" class="mb-5 mt-5" max-width="120" to="/historial">Historial</v-btn>
     </div>
 </template>
 
@@ -76,7 +76,6 @@
                 ],
                 reserva: [],
                 dialog: false,
-                reservasCaja: false,
                 reservaEntrega: {},
             };
         },
@@ -249,13 +248,12 @@
             },
             eliminarCarrito(numero) {
                 this.axios.delete(`/carrito/${numero}`).then((res) => {
-                const index = this.accederNumeroCompra.findIndex((item) => Number(item.numeroCompra) == Number(numero));
-                this.accederNumeroCompra.splice(index, 1);
+                    const index = this.accederNumeroCompra.findIndex((item) => Number(item.numeroCompra) == Number(numero));
+                    this.accederNumeroCompra.splice(index, 1);
                 });
             },
         },
         computed: {
-            
             // Calcular el total de ventas que se hizo en el dia
             totalVentas() {
                 return this.movimientos
