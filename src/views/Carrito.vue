@@ -43,7 +43,7 @@
                     </v-card>
                 </v-overlay>
             </div>
-            <h3 class="total">Total: ${{ sumaPrecio }}</h3>
+            <h3 v-if="carrito.length >= 1" class="total">Total: ${{ sumaPrecio }}</h3>
         </div>
     </v-app>
 </template>

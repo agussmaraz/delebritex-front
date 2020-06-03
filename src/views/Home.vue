@@ -100,26 +100,48 @@ export default {
         },
         
 
-         // buscar el producto que selecciono el usuario en vuex
-        conseguirProducto(item) {
-            this.dialog = true;
-            const id = item.id;
-            for (let index = 0; index < this.productos.length; index++) {
-                const element = this.productos[index];
-                if (element.id == id) {
-                    this.productoId = element;
+            changePaginate() {
+                if (window.screen.width >= 420) {
+                    return 5;
+                } else {
+                    return 3;
                 }
-            }
-        },
-        // agregar al carrito el producto que fue seleccionado con las cantidades elegidas.
-        agregarAlCarrito() {
-            if (this.cantidades > 0) {
-                this.productoId.cantidadElegida = this.cantidades;
-                this.addToCart(this.productoId);
-                this.dialog = false;
-                this.cantidades = 0;
-            }
-        },
+            },
+
+            limitProduct() {
+                // const idx = Math.floor(Math.random() * this.productos.length)
+                // const idx2 = this.productos[idx]
+                const leng = this.productos.length - 5;
+                console.log(leng);
+                const array = [];
+                for (let index = leng; index < this.productos.length; index++) {
+                    const element = this.productos[index];
+                    console.log(element);
+                    array.push(element);
+                }
+                return array;
+            },
+
+            // buscar el producto que selecciono el usuario en vuex
+            conseguirProducto(item) {
+                this.dialog = true;
+                const id = item.id;
+                for (let index = 0; index < this.productos.length; index++) {
+                    const element = this.productos[index];
+                    if (element.id == id) {
+                        this.productoId = element;
+                    }
+                }
+            },
+            // agregar al carrito el producto que fue seleccionado con las cantidades elegidas.
+            agregarAlCarrito() {
+                if (this.cantidades > 0) {
+                    this.productoId.cantidadElegida = this.cantidades;
+                    this.addToCart(this.productoId);
+                    this.dialog = false;
+                    this.cantidades = 0;
+                }
+            },
             // suma las cantidades que quiere el usuario
             aumentarCantidad() {
                 this.cantidades++;
@@ -135,14 +157,13 @@ export default {
                 this.findProduct(this.producto);
             },
         },
-    }
+    };
 </script>
 <style lang="scss">
-.space{
-  margin-bottom: 20%;
-}
-.spaceCard{
-  margin-bottom: 1%;
-}
-
+    .space {
+        margin-bottom: 20%;
+    }
+    .spaceCard {
+        margin-bottom: 1%;
+    }
 </style>
