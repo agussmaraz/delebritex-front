@@ -111,14 +111,10 @@ export default {
             },
 
             limitProduct() {
-                // const idx = Math.floor(Math.random() * this.productos.length)
-                // const idx2 = this.productos[idx]
                 const leng = this.productos.length - 5;
-                console.log(leng);
                 const array = [];
                 for (let index = leng; index < this.productos.length; index++) {
                     const element = this.productos[index];
-                    console.log(element);
                     array.push(element);
                 }
                 return array;

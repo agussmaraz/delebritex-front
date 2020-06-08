@@ -7,6 +7,7 @@
                 <div class="font-weight-bold font">{{ producto.nombre }}</div>
                 <div class="font-weight-bold font2">${{ producto.precioUnidad }}</div>
                 <div>{{ producto.totalUnidad > 0 ? 'En stock: ' + producto.totalUnidad : 'Sin stock.' }}</div>
+
             </v-card-text>
             <v-card-actions class="justify-content-center">
                 <v-btn class="text-center button" to="#" @click="productoSeleccionado(producto)">

@@ -3,11 +3,8 @@
         <div class="container catalogo">
             <v-app-bar color="grey darken-3 white--text">
                 <v-app-bar-nav-icon color="white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-
                 <v-spacer></v-spacer>
-
                 <v-toolbar-title>Nuestros productos</v-toolbar-title>
-
                 <v-spacer></v-spacer>
             </v-app-bar>
             <paginate name="prod_filtered" :list="filtro" :per="9" :container="this">
@@ -55,33 +52,48 @@
                     <v-treeview selectable selected-color="green" activatable shaped rounded open-on-click :items="items"> </v-treeview>
                 </v-list>
             </v-navigation-drawer>
-
-            <!-- <paginate-links for="comida"></paginate-links> -->
-
             <v-dialog v-model="dialog" max-width="650" class="mobile">
                 <v-card class="mx-auto" height="450" outlined>
                     <v-list-item three-line>
                         <v-img :src="this.productoId.imagen" width="70" height="280" class="m-3"> </v-img>
                         <v-list-item-content>
-                            <v-list-item-title class="headline mb-1">{{ this.productoId.nombre }}</v-list-item-title>
-                            <div class="d-flex justify-content-around flex-column sm-1">
-                                <h4>Precio: ${{ this.productoId.precioUnidad }}</h4>
-                                <h4>Stock: {{ this.productoId.totalUnidad }}</h4>
+                            <v-list-item-title class="headline">{{ this.productoId.nombre }}</v-list-item-title>
+                            <div class=" sm-1">
+                                <h5>Precio por unidad: ${{ this.productoId.precioUnidad }}</h5>
+                                <h5>Precio paquetes: ${{ this.productoId.precioBulto }}</h5>
+                                <small> Unidades por paquetes: {{ this.productoId.unidadPorEmpaque }} </small>
+                                <div class="d-flex">
+                                    <small>Stock unidades: {{ this.productoId.totalUnidad }}</small>
+                                    <small class="ml-2">Paquetes en stock: {{ this.paquetes }}</small>
+                                </div>
                             </div>
                         </v-list-item-content>
                     </v-list-item>
 
-                    <v-card-actions class="justify-content-center d-flex flex-column sm-1">
-                        <div class=" sm-1 marginBtn">
-                            <v-btn @click="aumentarCantidad()">+ </v-btn>
-                            {{ cantidades }}
-                            <v-btn @click="restarCantidad()"> -</v-btn>
+                    <v-card-actions class="d-flex justify-content-around sm-1 mb-1">
+                        <div class="d-flex sm-1 marginBtn">
+                            <div>
+                                Unidades
+                                <div>
+                                    <v-btn @click="aumentarCantidad()">+ </v-btn>
+                                    {{ cantidades }}
+                                    <v-btn @click="restarCantidad()"> -</v-btn>
+                                </div>
+                            </div>
+                            <div>
+                                Paquetes
+                                <div>
+                                    <v-btn class="ml-5" @click="aumentarCantidadPaquete()">+ </v-btn>
+                                    {{ cantidadPaquete }}
+                                    <v-btn @click="restarCantidadPaquete()"> -</v-btn>
+                                </div>
+                            </div>
                             <v-divider></v-divider>
-                            <v-btn class="text-center button" to="#" @click="agregarAlCarrito()">
-                                Añadir al carrito
-                            </v-btn>
                         </div>
                     </v-card-actions>
+                    <v-btn class="text-center button" @click="agregarAlCarrito()">
+                        Añadir al carrito
+                    </v-btn>
                 </v-card>
             </v-dialog>
         </div>
@@ -98,6 +110,8 @@
                 productoId: '',
                 dialog: false,
                 cantidades: 0,
+                cantidadPaquete: 0,
+                paquetes: '',
                 producto: '',
                 items: [
                     {
@@ -126,7 +140,10 @@
                 removeFromCart: 'removeFromCart',
                 findProduct: 'findProduct',
             }),
-
+            calcularPaquetes(element) {
+                const empaques = Number(element.totalUnidad) / Number(element.unidadPorEmpaque);
+                this.paquetes = empaques;
+            },
             changePaginate() {
                 if (window.screen.width >= 420) {
                     return 5;
@@ -142,21 +159,31 @@
                     const element = this.productos[index];
                     if (element.id == id) {
                         this.productoId = element;
+                        this.calcularPaquetes(element);
                     }
                 }
             },
             // agregar al carrito el producto que fue seleccionado con las cantidades elegidas.
             agregarAlCarrito() {
-                if (this.cantidades > 0) {
+                if (this.cantidades > 0 || this.cantidadPaquete > 0) {
                     this.productoId.cantidadElegida = this.cantidades;
+                    this.productoId.paquetesElegidos = this.cantidadPaquete;
+                    console.log(this.productoId);
                     this.addToCart(this.productoId);
                     this.dialog = false;
                     this.cantidades = 0;
+                    this.cantidadPaquete = 0;
                 }
             },
             // suma las cantidades que quiere el usuario
             aumentarCantidad() {
                 this.cantidades++;
+            },
+            aumentarCantidadPaquete() {
+                this.cantidadPaquete++;
+            },
+            restarCantidadPaquete() {
+                this.cantidadPaquete--;
             },
             // resta las cantidades que quiere el usuario
             restarCantidad() {
@@ -181,7 +208,6 @@
     }
 
     .row {
-        width: 100% !important;
         justify-content: center;
     }
 

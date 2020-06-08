@@ -11,14 +11,15 @@
                     <v-list-item-title class=" mb-1">{{ item.producto }}</v-list-item-title>
                     <div class="d-flex">
                         <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
-                        <v-list-item-subtitle>Precio: {{ item.precioTotal }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>Empaques: {{ item.empaques }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>Precio: ${{ item.precioTotal }}</v-list-item-subtitle>
                     </div>
                 </v-list-item-content>
                 <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
             </v-list-item>
             <br />
             <div class="p-usuario">
-                <p>Total: {{ carrito.total }}</p>
+                <p>Total: $ {{ carrito.total }}</p>
                 <p>Estado: {{ carrito.estado }}</p>
             </div>
         </v-card>
@@ -99,7 +100,15 @@
                 for (let index = 0; index < carrito.length; index++) {
                     const element = carrito[index];
                     const estado = element.estado;
-                    return estado;
+                    if (estado == 10) {
+                        return 'Entregado';
+                    } else if (estado == 1) {
+                        return 'Esperando que acepte';
+                    } else if (estado == 3) {
+                        return 'Rechazado';
+                    } else if (estado == 5) {
+                        return 'Aceptado';
+                    }
                 }
             },
             // Sacar la fecha de cada carrito para guardar en el objeto
