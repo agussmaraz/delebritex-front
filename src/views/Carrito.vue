@@ -7,6 +7,7 @@
                     <img :src="item.imagen" alt="" class="product-image" />
                     <h3 class="product-name">{{ item.nombre }}</h3>
                     <span class="product-price">x{{ item.cantidadElegida }}</span>
+                    <span class="product-price">C/U: ${{item.precioUnidad}} </span>
                     <span class="product-price">${{ calcularPrecio(item) }}</span>
                     <button class="product-remove" @click="removeItemFromCart(item)">X</button>
                 </li>
@@ -14,9 +15,9 @@
             <div class="checkout-message">
                 <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
                 <div class="d-flex justify-content-around">
-                    <v-btn to="/catalogo" class="boton">Seguir comprando</v-btn>
-                    <v-btn v-if="carrito.length >= 1" @click="removeFromCart()">Vaciar el carrito</v-btn>
-                    <v-btn v-if="carrito.length >= 1" @click="openTicket = !openTicket">Continuar</v-btn>
+                    <v-btn icon smallto="/catalogo" class="boton"><v-icon class="fas fa-angle-left"></v-icon ></v-btn>
+                    <v-btn icon small v-if="carrito.length >= 1" @click="removeFromCart()"><v-icon class="fas fa-trash"></v-icon></v-btn>
+                    <v-btn icon small v-if="carrito.length >= 1" @click="openTicket = !openTicket"><v-icon  class="fas fa-angle-right"></v-icon></v-btn>
                 </div>
                 <v-overlay v-if="openTicket">
                     <v-card>
@@ -64,6 +65,10 @@
                 mensaje: { color: '', texto: '' },
             };
         },
+
+        created(){
+            this.calcularPrecioMay()
+        },
         computed: {
             ...mapState({
                 carrito: (state) => state.carrito,
@@ -71,6 +76,12 @@
             sumaPrecio() {
                 return this.carrito.reduce((total, item) => total + Number(item.precioUnidad * item.cantidadElegida), 0);
             },
+            calcularPrecioMay(){
+                
+                    const calculo = (Number(this.sumaPrecio) * 20) / 100;
+                this.carrito.cantidadElegida >= 100
+                    const calculo2 = (Number(this.sumaPrecio) * 30) / 100;     
+            },  
         },
         methods: {
             // Funcion para cerrar el ticket
@@ -100,7 +111,7 @@
                     head: [['Producto', 'Unidades', 'Precio']],
                     body: this.ticket,
                 });
-                // doc.save('ticket.pdf');
+                 doc.save('ticket.pdf');
             },
             // Guardar el carrito en la base de datos transformandolo en el objeto que nos parece mas conveniente
             guardarCarrito() {
@@ -162,7 +173,7 @@
 
     .checkout-product {
         display: grid;
-        grid-template-columns: 1fr 3fr 2fr 1fr 0.5fr;
+        grid-template-columns: 1fr 3fr 1fr 2fr 0.5fr 1fr;
         background-color: #fff;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;
@@ -178,7 +189,7 @@
     .product-image {
         grid-column: 1/2;
         width: 50%;
-        height: 160%;
+        height: 100%;
         border-radius: 50%;
     }
 
