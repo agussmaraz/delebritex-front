@@ -63,7 +63,7 @@
                 headers: [
                     { text: 'Fecha', value: 'createdAt' },
                     { text: 'Producto', value: 'nombre' },
-                    { text: 'Medida', value: 'medidaId' },
+                    { text: 'Medida', value: 'medida.medida' },
                     { text: 'Total Unidades', value: 'totalUnidad' },
                     { text: 'Paquetes', value: 'empaqueId' },
                     { text: 'Precio Unidad', value: 'precioUnidad' },
@@ -95,7 +95,6 @@
             // Funcion para eliminar el producto
             eliminarProducto(id) {
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
-                    console.log(res.data);
                     const index = this.producto.findIndex((item) => Number(item.id) == Number(res.data));
                     this.producto.splice(index, 1);
                     this.mensaje.texto = 'El producto fue eliminado correctamente';

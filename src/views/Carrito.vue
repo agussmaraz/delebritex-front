@@ -6,7 +6,9 @@
                 <li class="checkout-product">
                     <img :src="item.imagen" alt="" class="product-image" />
                     <h3 class="product-name">{{ item.nombre }}</h3>
-                    <span class="product-price">x{{ item.cantidadElegida }}</span>
+                    <span class="product-price">{{ item.paquetesElegidos }}</span>
+                    <span class="product-price">{{ cantidad(item) }} unidades</span>
+
                     <span class="product-price">${{ calcularPrecio(item) }}</span>
                     <button class="product-remove" @click="removeItemFromCart(item)">X</button>
                 </li>
@@ -30,7 +32,11 @@
                                     <div>{{ item.nombre }}</div>
                                 </v-list-item>
                                 <v-list-item>
-                                    <div>x{{ item.cantidadElegida }}</div>
+                                    <div>{{ item.paquetesElegidos }}</div>
+                                </v-list-item>
+                                  
+                                <v-list-item>
+                                    <div>x{{ cantidad(item) }}</div>
                                 </v-list-item>
                                 <v-list-item>
                                     <div>${{ calcularPrecio(item) }}</div>
@@ -43,7 +49,8 @@
                     </v-card>
                 </v-overlay>
             </div>
-            <h3 v-if="carrito.length >= 1" class="total">Total: ${{ sumaPrecio }}</h3>
+            <h3 v-if="carrito.length >= 1" class="total">Total: ${{ sumaPrecio(this.carrito) }}</h3>
+            <h3>{{ sacarPorcentaje }}</h3>
         </div>
     </v-app>
 </template>
@@ -64,15 +71,30 @@
                 mensaje: { color: '', texto: '' },
             };
         },
+
         computed: {
             ...mapState({
                 carrito: (state) => state.carrito,
             }),
-            sumaPrecio() {
-                return this.carrito.reduce((total, item) => total + Number(item.precioUnidad * item.cantidadElegida), 0);
+            sacarPorcentaje() {
+                // if (this.cantidades >= 20) {
+                const porcentaje = (Number(this.sumaPrecio) * 20) / 100;
+                return '$' + porcentaje;
+                // }
+            },
+            cantidadesElegida() {
+                return this.carrito.reduce((total, item) => total + Number(item.cantidadElegida), 0);
             },
         },
         methods: {
+            sumaPrecio(item) {
+                return item.reduce((total, item) => total + Number(this.calcularPrecio(item)), 0);
+            },
+            cantidad(carrito) {
+                const totalUnidadesPaquete = Number(carrito.paquetesElegidos) * Number(carrito.unidadPorEmpaque);
+                const cantidadesTotal = Number(carrito.cantidadElegida) + Number(totalUnidadesPaquete);
+                return cantidadesTotal;
+            },
             // Funcion para cerrar el ticket
             closeOverlay() {
                 this.openTicket = false;
@@ -108,14 +130,20 @@
                 const usuario = JSON.parse(storage);
                 const id = usuario['id'];
                 const payload = this.carrito.map((producto) => {
+                    const total = this.calcularPrecio(producto);
                     const info = {
                         nombre: producto.nombre,
                         totalUnidad: producto.cantidadElegida,
                         precioUnidad: producto.precioUnidad,
+                        unidadPorEmpaque: producto.unidadPorEmpaque,
                         usuarioId: id,
                         imagen: producto.imagen,
+                        empaques: producto.paquetesElegidos,
+                        precioBulto: producto.precioBulto,
+                        precioTotal: total,
                     };
                     return info;
+                    console.log(info);
                 });
                 this.axios.post('/nuevo-carrito', payload).then((res) => {
                     this.mensaje.color = 'success';
@@ -128,7 +156,9 @@
             },
             // Sacar el precio de las unidades que eligio
             calcularPrecio(item) {
-                return item.precioUnidad * item.cantidadElegida;
+                const totalPaquetes = Number(item.paquetesElegidos) * Number(item.precioBulto);
+                const totalUnidades = Number(item.cantidadElegida) * Number(item.precioUnidad);
+                return Number(totalPaquetes) + Number(totalUnidades);
             },
             // Sacar el precio total a pagar
             calcularTotal() {
@@ -162,7 +192,7 @@
 
     .checkout-product {
         display: grid;
-        grid-template-columns: 1fr 3fr 2fr 1fr 0.5fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 0.5fr 1fr;
         background-color: #fff;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;

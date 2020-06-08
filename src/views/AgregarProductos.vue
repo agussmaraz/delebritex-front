@@ -48,25 +48,25 @@
                             </p>
                         </v-col>
                         <v-col cols="5" md="6">
-                            <v-text-field v-model="producto.precioUnidad" label="Precio unidad" required></v-text-field>
+                            <v-text-field v-model="producto.precioUnidad" label="Precio unidad para cliente" required></v-text-field>
                             <p v-if="error" class=" p-error">
                                 {{ this.error.precioUnidad }}
                             </p>
                         </v-col>
                         <v-col cols="5" md="6">
-                            <v-text-field v-model="producto.precioBulto" label="Precio bulto" required></v-text-field>
+                            <v-text-field v-model="producto.precioBulto" label="Precio bulto para cliente" required></v-text-field>
                             <p v-if="error" class=" p-error">
                                 {{ this.error.precioBulto }}
                             </p>
                         </v-col>
                         <v-col cols="5" md="6">
-                            <v-text-field v-model="producto.precioDistribuidoraUnidad" label="Precio unidad distribuidora" required></v-text-field>
+                            <v-text-field v-model="producto.precioDistribuidoraUnidad" label="Precio unidad compra" required></v-text-field>
                             <p v-if="error" class=" p-error">
                                 {{ this.error.precioDistribuidoraUnidad }}
                             </p>
                         </v-col>
                         <v-col cols="5" md="6">
-                            <v-text-field v-model="producto.precioDistribuidoraBulto" label="Precio bulto distribuidora" required></v-text-field>
+                            <v-text-field v-model="producto.precioDistribuidoraBulto" label="Precio bulto compra" required></v-text-field>
                             <p v-if="error" class=" p-error">
                                 {{ this.error.precioDistribuidoraBulto }}
                             </p>
@@ -177,7 +177,7 @@
                 if (this.producto.medidaId == 'kg') {
                     formulario.set('medidaId', 2);
                 } else {
-                    formulario.set('medidaId', 1);
+                    formulario.set('medidaId', 3);
                 }
                 if (this.producto.empaqueId == 'caja') {
                     formulario.set('empaqueId', 1);

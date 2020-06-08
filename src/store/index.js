@@ -98,7 +98,7 @@ const store = new Vuex.Store({
             state.carrito = [];
         },
         REMOVE_ITEM_FROM_CART(state, producto) {
-            state.carrito.pop(producto);
+            state.carrito = state.carrito.filter(e => e != producto)
         },
         // guardamos en el estado todos los productos
         SET_FILTER(state, resultados) {
