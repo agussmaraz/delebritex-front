@@ -191,6 +191,14 @@
                 this.dialog = true;
                 this.reservaEntrega = item;
                 this.reserva = item.productos;
+                for (let index = 0; index < this.reserva.length; index++) {
+                    const element = this.reserva[index];
+                    if (element.estado == 5) {
+                        this.entrega = true;
+                    } else {
+                        this.entrega = false;
+                    }
+                }
             },
             aceptarReserva(item) {
                 const numeroCompra = item.numeroCompra;
