@@ -44,7 +44,7 @@
                                 <v-list-item>
                                     <div>{{ item.paquetesElegidos }}</div>
                                 </v-list-item>
-                                  
+
                                 <v-list-item>
                                     <div>x{{ cantidad(item) }}</div>
                                 </v-list-item>
@@ -60,7 +60,7 @@
                 </v-overlay>
             </div>
             <h3 v-if="carrito.length >= 1" class="total">Total: ${{ sumaPrecio(this.carrito) }}</h3>
-            <h3>{{ sacarPorcentaje }}</h3>
+            <h3 class="total">{{ sacarPorcentaje }}</h3>
         </div>
     </v-app>
 </template>
@@ -81,26 +81,23 @@
                 mensaje: { color: '', texto: '' },
             };
         },
-
         computed: {
             ...mapState({
                 carrito: (state) => state.carrito,
             }),
             sacarPorcentaje() {
-                // if (this.cantidades >= 20) {
-                const porcentaje = (Number(this.sumaPrecio) * 20) / 100;
-                return '$' + porcentaje;
-                // }
+                if (this.paquetes >= 10) {
+                    const porcentaje = (Number(this.sumaPrecio(this.carrito)) * 20) / 100;
+                    const total = this.sumaPrecio(this.carrito) - Number(porcentaje);
+                    return '$' + total;
+                }
             },
             cantidadesElegida() {
                 return this.carrito.reduce((total, item) => total + Number(item.cantidadElegida), 0);
             },
-            calcularPrecioMay(){
-                
-                    const calculo = (Number(this.sumaPrecio) * 20) / 100;
-                this.carrito.cantidadElegida >= 100
-                    const calculo2 = (Number(this.sumaPrecio) * 30) / 100;     
-            },  
+            paquetes() {
+                return this.carrito.reduce((total, item) => total + Number(item.paquetesElegidos), 0);
+            },
         },
         methods: {
             sumaPrecio(item) {
