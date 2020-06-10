@@ -1,5 +1,15 @@
 <template>
     <v-app>
+        <div class="list-checkout">
+            <ul class="checkout-list">
+                <li class="checkout-product">
+                    <span class="product-price">asb</span>
+                    <span class="product-price">asd</span>
+                    <span class="product-price">asd</span>
+                    <span class="product-price">asd</span>
+                </li>
+            </ul>
+        </div>
         <div class="checkout-box">
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
             <ul v-for="(item, index) in carrito" :key="index" class="checkout-list">
@@ -8,7 +18,7 @@
                     <h3 class="product-name">{{ item.nombre }}</h3>
                     <span class="product-price">{{ item.paquetesElegidos }}</span>
                     <span class="product-price">{{ cantidad(item) }} unidades</span>
-
+                    <span class="product-price">{{item.precioUnidad}}</span>
                     <span class="product-price">${{ calcularPrecio(item) }}</span>
                     <button class="product-remove" @click="removeItemFromCart(item)">X</button>
                 </li>
@@ -192,13 +202,23 @@
         padding: 1em;
     }
 
+    .list-checkout {
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        box-sizing: border-box;
+        padding: 0;
+    }
+
     .checkout-list {
         padding: 0 !important;
     }
 
     .checkout-product {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 0.5fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr 1fr;
         background-color: #fff;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;
