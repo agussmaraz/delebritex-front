@@ -15,6 +15,7 @@ const store = new Vuex.Store({
         filtro: {
             productos: [],
         },
+        carritoAdmin: [],
     },
     getters: {
         isLogged: (state) => !!state.user,
@@ -65,12 +66,15 @@ const store = new Vuex.Store({
             }
         },
         findProduct({ commit }, producto) {
-                const resultados = this.state.productos.filter((elemento) => {
-                    if (elemento.nombre.toLowerCase().includes(producto)) {
-                        return elemento;
-                    }
-                });
-                commit('SET_FILTER', resultados);
+            const resultados = this.state.productos.filter((elemento) => {
+                if (elemento.nombre.toLowerCase().includes(producto)) {
+                    return elemento;
+                }
+            });
+            commit('SET_FILTER', resultados);
+        },
+        addCartAdmin({ commit }, producto) {
+            commit('ADD_CART_ADMIN', producto);
         },
     },
     mutations: {
@@ -98,11 +102,14 @@ const store = new Vuex.Store({
             state.carrito = [];
         },
         REMOVE_ITEM_FROM_CART(state, producto) {
-            state.carrito = state.carrito.filter(e => e != producto)
+            state.carrito = state.carrito.filter((e) => e != producto);
         },
         // guardamos en el estado todos los productos
         SET_FILTER(state, resultados) {
             state.filtro.productos = resultados;
+        },
+        ADD_CART_ADMIN(state, producto) {
+            state.carritoAdmin.push(producto);
         },
     },
 });

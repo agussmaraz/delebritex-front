@@ -9,14 +9,17 @@
                         <b-nav-item to="/">Inicio</b-nav-item>
                         <b-nav-item to="/contacto" v-if="isAdmin == 1">Contacto</b-nav-item>
                         <b-nav-item to="/catalogo">Catalogo</b-nav-item>
-                        <!-- <b-nav-item to="/agregarProductos" v-if="isAdmin == 2">Nuevo Producto</b-nav-item> -->
                         <b-nav-item to="/quienesSomos">Quienes somos</b-nav-item>
-                        <!-- <b-nav-item to="/producto" v-if="isAdmin == 2">Producto</b-nav-item> -->
                         <b-nav-item to="/productos" v-if="isAdmin == 2">Listado</b-nav-item>
-                        <b-nav-item to="/ventas" v-if="isAdmin == 2">Ventas</b-nav-item>
                         <b-nav-item to="/login" v-if="isLogged == false">Iniciar Sesion</b-nav-item>
                         <b-nav-item to="/register" v-if="isLogged == false">Registrarse</b-nav-item>
-
+                        <b-nav-item-dropdown v-if="isAdmin == 2" right>
+                            <template v-slot:button-content>
+                                <em>Ventas</em>
+                            </template>
+                            <b-dropdown-item to="/ventasOnline"> Ventas Online</b-dropdown-item>
+                            <b-dropdown-item to="/ventaPresencial">Venta Presencial</b-dropdown-item>
+                        </b-nav-item-dropdown>
                         <div class="nav-login" v-if="isLogged == true">
                             <b-nav-item to="/carrito"><b-icon icon="bag"></b-icon></b-nav-item>
                             <b-nav-item-dropdown right>
@@ -118,13 +121,13 @@
     .footer {
         bottom: 0 !important;
     }
-    .v-application a{
+    .v-application a {
         color: black;
     }
-   .v-application ul{
-       padding-top: 2px;
-       padding-bottom: 2px;
-       padding-left: 0;
-       padding-right: 0;
-   }
+    .v-application ul {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 0;
+        padding-right: 0;
+    }
 </style>

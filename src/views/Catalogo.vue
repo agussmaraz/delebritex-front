@@ -168,7 +168,6 @@
                 if (this.cantidades > 0 || this.cantidadPaquete > 0) {
                     this.productoId.cantidadElegida = this.cantidades;
                     this.productoId.paquetesElegidos = this.cantidadPaquete;
-                    console.log(this.productoId);
                     this.addToCart(this.productoId);
                     this.dialog = false;
                     this.cantidades = 0;
