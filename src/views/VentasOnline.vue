@@ -110,26 +110,14 @@
             },
             // Sacar el email del usuario para el objeto del carrito
             sacarEmail(carrito) {
-                for (let index = 0; index < carrito.length; index++) {
-                    const element = carrito[index];
-                    const email = element.usuario['email'];
-                    return email;
-                }
+                return carrito[0].usuario['email'];
             },
             sacarNumeroCompra(carrito) {
-                for (let index = 0; index < carrito.length; index++) {
-                    const element = carrito[index];
-                    const numeroCompra = element.numeroCompra;
-                    return numeroCompra;
-                }
+                return carrito[0].numeroCompra;
             },
             // Sacar el usuario del carrito para el objeto del carrito
             sacarUsuario(carrito) {
-                for (let index = 0; index < carrito.length; index++) {
-                    const element = carrito[index];
-                    const usuario = element.usuario['nombre'];
-                    return usuario;
-                }
+                return carrito[0].usuario['nombre'];
             },
             // Proximamente para saber en que estado esta la reserva
             calcularEstadoDeCarrito(carrito) {

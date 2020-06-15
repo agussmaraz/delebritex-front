@@ -65,7 +65,7 @@
                     { text: 'Producto', value: 'nombre' },
                     { text: 'Medida', value: 'medida.medida' },
                     { text: 'Total Unidades', value: 'totalUnidad' },
-                    { text: 'Paquetes', value: 'empaqueId' },
+                    { text: 'Paquetes', value: 'empaque.nombre' },
                     { text: 'Precio Unidad', value: 'precioUnidad' },
                     { text: 'Precio Bulto', value: 'precioBulto' },
                     { text: 'Acciones', value: 'actions', sortable: false },

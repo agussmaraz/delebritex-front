@@ -72,6 +72,7 @@
             listarMovimientos() {
                 this.axios.get('/movimientos').then((res) => {
                     this.movimientos = res.data;
+                    console.log(this.movimientos)
                     this.movimientos.forEach((movimiento) => {
                         let movimientosExcel = {};
                         const productos = movimiento.productos;

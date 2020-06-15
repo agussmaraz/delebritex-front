@@ -19,6 +19,8 @@
                             </template>
                             <b-dropdown-item to="/ventasOnline"> Ventas Online</b-dropdown-item>
                             <b-dropdown-item to="/ventaPresencial">Venta Presencial</b-dropdown-item>
+                            <b-dropdown-item to="/historial">Historial</b-dropdown-item>
+
                         </b-nav-item-dropdown>
                         <div class="nav-login" v-if="isLogged == true">
                             <b-nav-item to="/carrito"><b-icon icon="bag"></b-icon></b-nav-item>
@@ -127,7 +129,8 @@
     .v-application ul {
         padding-top: 2px;
         padding-bottom: 2px;
-        padding-left: 0;
+        padding-left: 0 !important;
         padding-right: 0;
     }
+  
 </style>

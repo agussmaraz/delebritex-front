@@ -146,8 +146,8 @@
                         precioTotal: total,
                     };
                     return info;
-                    console.log(info);
                 });
+                    console.log(payload);
                 this.axios.post('/nuevo-carrito', payload).then((res) => {
                     this.mensaje.color = 'success';
                     this.mensaje.texto = 'La compra fue realizada con exito!';

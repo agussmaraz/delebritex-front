@@ -76,6 +76,9 @@ const store = new Vuex.Store({
         addCartAdmin({ commit }, producto) {
             commit('ADD_CART_ADMIN', producto);
         },
+        removeCartAdmin({commit}){
+            commit('REMOVE_CART_ADMIN')
+        }
     },
     mutations: {
         SET_USER(state, user) {
@@ -111,6 +114,9 @@ const store = new Vuex.Store({
         ADD_CART_ADMIN(state, producto) {
             state.carritoAdmin.push(producto);
         },
+        REMOVE_CART_ADMIN(state){
+            state.carritoAdmin = [];
+        }
     },
 });
 
