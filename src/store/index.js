@@ -76,9 +76,15 @@ const store = new Vuex.Store({
         addCartAdmin({ commit }, producto) {
             commit('ADD_CART_ADMIN', producto);
         },
-        removeCartAdmin({commit}){
-            commit('REMOVE_CART_ADMIN')
-        }
+        removeCartAdmin({ commit }) {
+            commit('REMOVE_CART_ADMIN');
+        },
+        removeQuantity({ commit, state }, producto) {
+            let producto_de_estado = state.productos.find((e) => e.id == producto.id);
+            if (producto_de_estado) {
+                commit('REMOVE_QUANTITY', { producto: producto_de_estado, cantidad: producto });
+            }
+        },
     },
     mutations: {
         SET_USER(state, user) {
@@ -114,9 +120,23 @@ const store = new Vuex.Store({
         ADD_CART_ADMIN(state, producto) {
             state.carritoAdmin.push(producto);
         },
-        REMOVE_CART_ADMIN(state){
+        REMOVE_CART_ADMIN(state) {
             state.carritoAdmin = [];
-        }
+        },
+        REMOVE_QUANTITY(state, objeto) {
+            const estado = objeto['producto'];
+            const cantidad = objeto['cantidad'];
+            if (cantidad.empaques > 0 && cantidad.totalUnidad > 0) {
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.unidadPorEmpaque);
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.totalUnidad);
+            } else if (cantidad.empaques > 0) {
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.unidadPorEmpaque);
+            } else if (cantidad.totalUnidad > 0) {
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.totalUnidad);
+            } else if (cantidad.unidades > 0) {
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.unidades);
+            }
+        },
     },
 });
 

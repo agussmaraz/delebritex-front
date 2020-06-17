@@ -3,6 +3,9 @@
         <div class="container margin" data-app>
             <h1>Ventas Online</h1>
             <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas mt-5">
+                <template v-slot:item.estado="{ item }">
+                    <v-chip :color="getColor(item.estado)" dark>{{ item.estado }}</v-chip>
+                </template>
                 <template v-slot:top>
                     <v-dialog v-model="dialog" width="500">
                         <v-card class="mx-auto" outlined>
@@ -228,6 +231,11 @@
                 const totalPaquetes = Number(item.empaques) * Number(item.precioBulto);
                 const totalUnidades = Number(item.unidades) * Number(item.precioUnidad);
                 return Number(totalPaquetes) + Number(totalUnidades);
+            },
+            getColor(estado) {
+                if (estado == 'Preparando') return 'green';
+                else if (estado == 'Rechazado') return 'orange';
+                else return 'yellow';
             },
         },
         computed: {

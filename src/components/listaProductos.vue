@@ -18,7 +18,7 @@
                         <v-card-title class="headline text-capitalize">{{ this.productoElegido.nombre }}</v-card-title>
                         <v-card-text>
                             <v-list-item-subtitle> Unidades: {{ this.productoElegido.totalUnidad }}</v-list-item-subtitle>
-                            <v-list-item-subtitle> Bultos: {{empaques}} </v-list-item-subtitle>
+                            <v-list-item-subtitle> Bultos: {{ empaques }} </v-list-item-subtitle>
                             <span> Las unidades por bulto son: {{ this.productoElegido.unidadPorEmpaque }} </span>
                         </v-card-text>
                         <v-card-actions>
@@ -73,13 +73,13 @@
                 const storage = localStorage.getItem('usertoken');
                 const usuario = JSON.parse(storage);
                 const numero = Math.round(Math.random() * 100000);
-
                 const id = usuario['id'];
                 buffer.usuario = {
                     nombre: 'Admin',
                 };
+                buffer.id = this.productoElegido.id
                 buffer.numeroCompra = numero;
-                buffer.createdAt =  new Date();
+                buffer.createdAt = new Date();
                 buffer.producto = this.productoElegido.nombre;
                 buffer.unidades = this.unidades;
                 buffer.empaques = this.bultos;
@@ -112,6 +112,11 @@
             restarBulto() {
                 this.bultos--;
             },
+            getColor(estado) {
+                if (estado == 'Preparando') return 'green';
+                else if (estado > 'Rechazado') return 'orange';
+                else return 'yellow';
+            },
         },
         computed: {
             ...mapState({
@@ -119,11 +124,11 @@
                 filtro: (state) => state.filtro.productos,
                 carritoAdmin: (state) => state.carritoAdmin,
             }),
-            empaques(){
+            empaques() {
                 const unidadPorEmpaque = this.productoElegido.unidadPorEmpaque;
                 const unidades = this.productoElegido.totalUnidad;
-                return  Number(unidades) / Number(unidadPorEmpaque);
-            }
+                return Math.ceil(Number(unidades) / Number(unidadPorEmpaque));
+            },
         },
         beforeMount() {
             this.getProducts();

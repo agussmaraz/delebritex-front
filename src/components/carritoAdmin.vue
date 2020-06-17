@@ -75,6 +75,7 @@
                 findProduct: 'findProduct',
                 addCartAdmin: 'addCartAdmin',
                 removeCartAdmin: 'removeCartAdmin',
+                removeQuantity: 'removeQuantity'
             }),
             editarPrecio(item) {
                 this.dialog2 = true;
@@ -96,11 +97,23 @@
                     element.precioTotal = this.calcularPrecio(element);
                 }
                 let payload = {};
+                console.log(this.carritoAdmin)
                 payload.productos = this.carritoAdmin;
-               
+
                 this.axios.post('/movimiento', payload).then((res) => {
+                    this.sacarCantidadesDB();
                     this.removeCartAdmin();
                 });
+            },
+            sacarCantidadesDB(){
+                for (let index = 0; index < this.carritoAdmin.length; index++) {
+                    const element = this.carritoAdmin[index];
+                    this.removeQuantity(element)
+                    const id = element.id
+                    this.axios.put(`/stock/${id}`, this.carritoAdmin).then(res => {
+                        console.log(res.data)
+                    })
+                }
             },
             guardarCambios() {
                 this.dialog2 = false;

@@ -17,7 +17,7 @@
                                             <v-text-field v-model="productoEditar.nombre" label="Nombre"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="productoEditar.empaqueId" label="Paquetes"></v-text-field>
+                                            <v-text-field v-model="productoEditar.empaques" label="Paquetes"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
                                             <v-text-field v-model="productoEditar.totalUnidad" label="Total unidades"></v-text-field>
@@ -57,15 +57,16 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex';
     export default {
         data() {
             return {
                 headers: [
                     { text: 'Fecha', value: 'createdAt' },
+                    { text: 'Actualizacion', value: 'updatedAt' },
                     { text: 'Producto', value: 'nombre' },
-                    { text: 'Medida', value: 'medida.medida' },
                     { text: 'Total Unidades', value: 'totalUnidad' },
-                    { text: 'Paquetes', value: 'empaque.nombre' },
+                    { text: 'Paquetes', value: 'empaque' },
                     { text: 'Precio Unidad', value: 'precioUnidad' },
                     { text: 'Precio Bulto', value: 'precioBulto' },
                     { text: 'Acciones', value: 'actions', sortable: false },
@@ -73,21 +74,16 @@
                 producto: [],
                 productoEditar: [],
                 dialog: false,
+                dialog2: false,
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 mensaje: { color: '', texto: '' },
             };
         },
-        created() {
-            this.listarProducto();
-        },
         methods: {
-            //Traer productos de la base de datos
-            listarProducto() {
-                this.axios.get('/producto').then((res) => {
-                    this.producto = res.data;
-                });
-            },
+            ...mapActions({
+                getProducts: 'getProducts',
+            }),
             // Transformar la fecha en DD-MM-YYYY
             formatearFecha(fecha) {
                 return new Date(fecha).toLocaleDateString();
@@ -95,8 +91,8 @@
             // Funcion para eliminar el producto
             eliminarProducto(id) {
                 this.axios.delete(`/eliminarProducto/${id}`).then((res) => {
-                    const index = this.producto.findIndex((item) => Number(item.id) == Number(res.data));
-                    this.producto.splice(index, 1);
+                    const index = this.productos.findIndex((item) => Number(item.id) == Number(res.data));
+                    this.productos.splice(index, 1);
                     this.mensaje.texto = 'El producto fue eliminado correctamente';
                     this.mensaje.color = 'success';
                     this.showAlert();
@@ -106,9 +102,8 @@
             editarProductoId(item) {
                 const id = item.id;
                 this.dialog = true;
-                this.axios.get(`/producto/${id}`).then((res) => {
-                    this.productoEditar = res.data;
-                });
+                this.productoEditar = item;
+                this.productoEditar.empaques = Math.ceil(this.empaques(this.productoEditar));
             },
             // Para cerrar ventanita de edicion
             cancelarEdicion(id) {
@@ -117,16 +112,19 @@
             // Editar el producto
             editarProducto(item) {
                 this.axios.put(`/editarProducto/${item.id}`, item).then((res) => {
-                    const index = this.producto.findIndex((index) => index.id === this.productoEditar.id);
-                    this.producto[index].nombre = this.productoEditar.nombre;
-                    this.producto[index].cantidadPaquetes = this.productoEditar.cantidadPaquetes;
-                    this.producto[index].totalUnidad = this.productoEditar.totalUnidad;
-                    this.producto[index].pesoUnidad = this.productoEditar.pesoUnidad;
-                    this.producto[index].precioUnidad = this.productoEditar.precioUnidad;
-                    this.producto[index].precioBulto = this.productoEditar.precioBulto;
+                    const index = this.productos.findIndex((index) => index.id === this.productoEditar.id);
+                    this.productos[index].nombre = this.productoEditar.nombre;
+                    this.productos[index].cantidadPaquetes = this.productoEditar.cantidadPaquetes;
+                    this.productos[index].totalUnidad = this.productoEditar.totalUnidad;
+                    this.productos[index].pesoUnidad = this.productoEditar.pesoUnidad;
+                    this.productos[index].precioUnidad = this.productoEditar.precioUnidad;
+                    this.productos[index].precioBulto = this.productoEditar.precioBulto;
                     this.productoEditar = {};
                     this.dialog = false;
                 });
+            },
+            actualizarStock() {
+                this.dialog2 = true;
             },
             // Calcular la cantidad de paquetes
             cantidadPaquetes(item) {
@@ -138,6 +136,11 @@
                     return Math.ceil(paquetePorUnidad);
                 }
             },
+            empaques(item) {
+                const unidades = item.totalUnidad;
+                const unidadPorEmpaque = item.unidadPorEmpaque;
+                return Number(unidades) / Number(unidadPorEmpaque);
+            },
             // Funciones para el alert de bootstap
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown;
@@ -147,13 +150,25 @@
             },
         },
         computed: {
+            ...mapState({
+                productos: (state) => state.productos,
+            }),
             // Transformar los productos en un array para acceder a los datos y transformarlo en un crud.
             obtenerProductos() {
-                return this.producto.map((producto) => {
+                return this.productos.map((producto) => {
                     producto.createdAt = this.formatearFecha(producto.createdAt);
+                    producto.updatedAt = this.formatearFecha(producto.updatedAt);
+                    if (producto.empaque.nombre == 'caja') {
+                        producto.empaque = Math.ceil(this.empaques(producto)) + ' cajas';
+                    } else if (producto.empaque.nombre == 'unidad') {
+                        producto.empaque = producto.totalUnidad + ' unidades';
+                    }
                     return producto;
                 });
             },
+        },
+        beforeMount() {
+            this.getProducts();
         },
     };
 </script>

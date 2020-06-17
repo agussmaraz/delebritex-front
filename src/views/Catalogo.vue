@@ -142,7 +142,7 @@
             }),
             calcularPaquetes(element) {
                 const empaques = Number(element.totalUnidad) / Number(element.unidadPorEmpaque);
-                this.paquetes = empaques;
+                this.paquetes = Math.ceil(empaques);
             },
             changePaginate() {
                 if (window.screen.width >= 420) {
