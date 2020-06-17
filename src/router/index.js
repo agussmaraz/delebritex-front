@@ -1,5 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import recuperarCarrito from '../middlewares/recuperarCarrito'
+import carritoAdmin from '../middlewares/carritoAdmin'
+
 import store from '@/store';
 
 Vue.use(VueRouter);
@@ -122,6 +125,10 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 });
+
+router.beforeEach(recuperarCarrito);
+router.beforeEach(carritoAdmin);
+
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {

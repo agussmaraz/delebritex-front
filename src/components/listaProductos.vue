@@ -1,15 +1,19 @@
 <template>
     <div>
-        <v-card class="p-2" width="300" tile>
-            <h5>Productos</h5>
-            <v-text-field @keyup="buscarProducto()" @keyup.delete="getProducts()" v-model="busqueda" label="Buscar"> </v-text-field>
-            <v-list style="max-height: 300px" class="overflow-y-auto" rounded>
-                <v-list-item-group color="primary">
-                    <v-list-item v-for="(item, i) in filtro" :key="i" @click="elegirProducto(item)">
-                        <v-list-item-subtitle class="text-capitalize">{{ item.nombre }} </v-list-item-subtitle>
-                    </v-list-item>
-                </v-list-item-group>
-            </v-list>
+        <v-card class="listaProductos" width="300" tile>
+            <div class="cabecera">
+                <h5>Productos</h5>
+            </div>
+            <div class="p-2">
+                <v-text-field @keyup="buscarProducto()" @keyup.delete="getProducts()" v-model="busqueda" label="Buscar"> </v-text-field>
+                <v-list style="max-height: 300px" class="overflow-y-auto" rounded>
+                    <v-list-item-group color="primary">
+                        <v-list-item v-for="(item, i) in filtro" :key="i" @click="elegirProducto(item)">
+                            <v-list-item-subtitle class="text-capitalize">{{ item.nombre }} </v-list-item-subtitle>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
+            </div>
         </v-card>
         <div>
             <v-row justify="center">
@@ -77,7 +81,7 @@
                 buffer.usuario = {
                     nombre: 'Admin',
                 };
-                buffer.id = this.productoElegido.id
+                buffer.id = this.productoElegido.id;
                 buffer.numeroCompra = numero;
                 buffer.createdAt = new Date();
                 buffer.producto = this.productoElegido.nombre;
@@ -89,6 +93,7 @@
                 buffer.imagen = this.productoElegido.imagen;
                 buffer.estado = 10;
                 this.addCartAdmin(buffer);
+                localStorage.setItem('carritoAdmin', JSON.stringify(this.carritoAdmin));
                 this.dialog = false;
                 this.unidades = 0;
                 this.bultos = 0;
@@ -136,4 +141,13 @@
     };
 </script>
 
-<style></style>
+<style>
+    .listaProductos {
+        border-radius:4px;
+    }
+    .cabecera {
+        background-color: rgb(85, 83, 83);
+        color: white;
+        padding: 10px;
+    }
+</style>

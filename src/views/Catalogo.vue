@@ -19,7 +19,6 @@
                     </v-card>
                 </v-row>
             </paginate>
-            <!-- <p v-for="(item, index) in paginated('prod_filtered')" :key="index">{{ item }}</p> -->
             <paginate-links
                 for="prod_filtered"
                 :limit="changePaginate()"
@@ -75,9 +74,9 @@
                             <div>
                                 Unidades
                                 <div>
-                                    <v-btn @click="aumentarCantidad()">+ </v-btn>
+                                    <v-btn small @click="aumentarCantidad()">+ </v-btn>
                                     {{ cantidades }}
-                                    <v-btn @click="restarCantidad()"> -</v-btn>
+                                    <v-btn small @click="restarCantidad()"> -</v-btn>
                                 </div>
                             </div>
                             <div>
@@ -169,6 +168,7 @@
                     this.productoId.cantidadElegida = this.cantidades;
                     this.productoId.paquetesElegidos = this.cantidadPaquete;
                     this.addToCart(this.productoId);
+                    localStorage.setItem('carrito', JSON.stringify(this.carrito));
                     this.dialog = false;
                     this.cantidades = 0;
                     this.cantidadPaquete = 0;

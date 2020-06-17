@@ -51,16 +51,29 @@ const store = new Vuex.Store({
         },
         // una funcion con el producto que mande a traves del boton "añadir al carrito"
         addToCart({ commit }, producto) {
-            // si en el carrito no existe este producto
             if (!this.state.carrito.find((e) => e.slug == producto.slug)) {
                 // llevemoslo a hacer una mutacion
                 commit('ADD_TO_CART', producto);
             }
+            // si en el carrito no existe este producto
         },
         removeFromCart({ commit }) {
+            const data = [];
+            localStorage.setItem('carrito', data);
             commit('REMOVE_FROM_CART');
         },
         removeItemFromCart({ commit }, producto) {
+            const data = localStorage.getItem('carrito');
+            let carrito = JSON.parse(data);
+
+            for (let index = 0; index < carrito.length; index++) {
+                const element = carrito[index];
+                if (element.id == producto.id) {
+                    carrito = carrito.filter((e) => e != element);
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+                }
+            }
+
             if (this.state.carrito.find((e) => e.id == producto.id)) {
                 commit('REMOVE_ITEM_FROM_CART', producto);
             }
@@ -77,7 +90,25 @@ const store = new Vuex.Store({
             commit('ADD_CART_ADMIN', producto);
         },
         removeCartAdmin({ commit }) {
+            const data = [];
+            localStorage.setItem('carritoAdmin', data);
             commit('REMOVE_CART_ADMIN');
+        },
+        removeItemFromCartAdmin({ commit }, producto) {
+            const data = localStorage.getItem('carritoAdmin');
+            let carrito = JSON.parse(data);
+            
+            for (let index = 0; index < carrito.length; index++) {
+                const element = carrito[index];
+                if (element.id == producto.id) {
+                    carrito = carrito.filter((e) => e != element);
+                    localStorage.setItem('carritoAdmin', JSON.stringify(carrito));
+                }
+            }
+
+            if (this.state.carrito.find((e) => e.id == producto.id)) {
+                commit('REMOVE_ITEM_FROM_CART_ADMIN', producto);
+            }
         },
         removeQuantity({ commit, state }, producto) {
             let producto_de_estado = state.productos.find((e) => e.id == producto.id);
@@ -122,6 +153,9 @@ const store = new Vuex.Store({
         },
         REMOVE_CART_ADMIN(state) {
             state.carritoAdmin = [];
+        },
+        REMOVE_ITEM_FROM_CART_ADMIN(state, producto) {
+            state.carritoAdmin = state.carritoAdmin.filter((e) => e != producto);
         },
         REMOVE_QUANTITY(state, objeto) {
             const estado = objeto['producto'];
