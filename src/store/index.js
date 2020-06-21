@@ -97,7 +97,7 @@ const store = new Vuex.Store({
         removeItemFromCartAdmin({ commit }, producto) {
             const data = localStorage.getItem('carritoAdmin');
             let carrito = JSON.parse(data);
-            
+
             for (let index = 0; index < carrito.length; index++) {
                 const element = carrito[index];
                 if (element.id == producto.id) {
@@ -142,7 +142,7 @@ const store = new Vuex.Store({
             state.carrito = [];
         },
         REMOVE_ITEM_FROM_CART(state, producto) {
-            state.carrito = state.carrito.filter((e) => e != producto);
+            state.carrito = state.carrito.filter((e) => e.id != producto.id);
         },
         // guardamos en el estado todos los productos
         SET_FILTER(state, resultados) {
@@ -155,7 +155,7 @@ const store = new Vuex.Store({
             state.carritoAdmin = [];
         },
         REMOVE_ITEM_FROM_CART_ADMIN(state, producto) {
-            state.carritoAdmin = state.carritoAdmin.filter((e) => e != producto);
+            state.carritoAdmin = state.carritoAdmin.filter((e) => e.id != producto.id);
         },
         REMOVE_QUANTITY(state, objeto) {
             const estado = objeto['producto'];
