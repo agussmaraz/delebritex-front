@@ -119,7 +119,7 @@
             },
             getColor(estado) {
                 if (estado == 'Preparando') return 'green';
-                else if (estado > 'Rechazado') return 'orange';
+                else if (estado == 'Rechazado') return 'orange';
                 else return 'yellow';
             },
         },

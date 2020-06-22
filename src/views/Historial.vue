@@ -72,18 +72,20 @@
             listarMovimientos() {
                 this.axios.get('/movimientos').then((res) => {
                     this.movimientos = res.data;
-                    console.log(this.movimientos)
+                    const fechaHoy = new Date().toLocaleDateString();
+
                     this.movimientos.forEach((movimiento) => {
-                        let movimientosExcel = {};
-                        const productos = movimiento.productos;
-                        movimientosExcel.Producto = productos;
-                        movimientosExcel.Bultos = movimiento.empaques;
-                        movimientosExcel.Unidades = movimiento.unidades;
-                        movimientosExcel.Precio= '$' + movimiento.precioTotal
-                        movimientosExcel.Fecha = this.formatearFecha(movimiento.fecha);
-                        this.json_data.push(movimientosExcel);
+                        if (fechaHoy == this.formatearFecha(movimiento.fecha) || fechaHoy == this.formatearFecha(movimiento.createdAt)) {
+                            let movimientosExcel = {};
+                            const productos = movimiento.productos;
+                            movimientosExcel.Producto = productos;
+                            movimientosExcel.Bultos = movimiento.empaques;
+                            movimientosExcel.Unidades = movimiento.unidades;
+                            movimientosExcel.Precio = '$' + movimiento.precioTotal;
+                            movimientosExcel.Fecha = this.formatearFecha(movimiento.fecha);
+                            this.json_data.push(movimientosExcel);
+                        }
                     });
-                    // console.log(this.json_data);
                 });
             },
             arrayPorNumeroCompra() {

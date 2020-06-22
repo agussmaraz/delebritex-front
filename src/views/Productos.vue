@@ -111,10 +111,10 @@
             },
             // Editar el producto
             editarProducto(item) {
+                this.calcularEmpaques(this.productoEditar);
                 this.axios.put(`/editarProducto/${item.id}`, item).then((res) => {
                     const index = this.productos.findIndex((index) => index.id === this.productoEditar.id);
                     this.productos[index].nombre = this.productoEditar.nombre;
-                    this.productos[index].cantidadPaquetes = this.productoEditar.cantidadPaquetes;
                     this.productos[index].totalUnidad = this.productoEditar.totalUnidad;
                     this.productos[index].pesoUnidad = this.productoEditar.pesoUnidad;
                     this.productos[index].precioUnidad = this.productoEditar.precioUnidad;
@@ -126,15 +126,12 @@
             actualizarStock() {
                 this.dialog2 = true;
             },
-            // Calcular la cantidad de paquetes
-            cantidadPaquetes(item) {
-                if (item.empaqueId == '1') {
-                    const paquetes = item.totalUnidad / item.unidadPorEmpaque;
-                    return Math.ceil(paquetes);
-                } else if (item.empaqueId == '2') {
-                    const paquetePorUnidad = 0;
-                    return Math.ceil(paquetePorUnidad);
-                }
+            calcularEmpaques(item) {
+                const empaques = item.empaques;
+                const unidadPorEmpaque = item.unidadPorEmpaque;
+
+                item.totalUnidad = Number(empaques) * Number(unidadPorEmpaque);
+                item.empaque = empaques + ' cajas';
             },
             empaques(item) {
                 const unidades = item.totalUnidad;

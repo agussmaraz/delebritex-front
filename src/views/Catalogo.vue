@@ -19,19 +19,7 @@
                     </v-card>
                 </v-row>
             </paginate>
-            <paginate-links
-                for="prod_filtered"
-                :limit="changePaginate()"
-                :show-step-links="true"
-                :step-links="{
-                    next: '   ',
-                    prev: ' ',
-                }"
-                :container="{
-                    state: paginate.prod_filtered,
-                    el: $refs.layout,
-                }"
-            ></paginate-links>
+            <paginate-links for="prod_filtered" :limit="changePaginate()" :show-step-links="true" :step-links="{ next: '   ', prev: ' ' }" :container="{ state: paginate.prod_filtered, el: $refs.layout }"></paginate-links>
             <v-navigation-drawer v-model="drawer" absolute temporary>
                 <v-list-item>
                     <v-list-item-content>
@@ -48,7 +36,10 @@
                 <v-divider></v-divider>
 
                 <v-list>
-                    <v-treeview selectable selected-color="green" activatable shaped rounded open-on-click :items="items"> </v-treeview>
+                    <v-treeview v-model="selection" return-object selectable selected-color="green" activatable shaped rounded open-on-click :items="items"> </v-treeview>
+                    <p v-for="node in selection" :key="node.id">
+                        {{node.name}}
+                    </p>
                 </v-list>
             </v-navigation-drawer>
             <v-dialog v-model="dialog" max-width="650" class="mobile">
@@ -112,15 +103,14 @@
                 cantidadPaquete: 0,
                 paquetes: '',
                 producto: '',
+                categorias: '',
+                selection: [],
+                selectionType: 'leaf',
                 items: [
                     {
                         id: 1,
                         name: 'Categorias :',
-                        children: [
-                            { id: 2, name: 'Trapos' },
-                            { id: 3, name: 'Valerinas' },
-                            { id: 4, name: 'Escobillas' },
-                        ],
+                        children: [],
                     },
                 ],
             };
@@ -139,6 +129,20 @@
                 removeFromCart: 'removeFromCart',
                 findProduct: 'findProduct',
             }),
+            conseguirCategorias() {
+                this.axios.get('/categoriaBuscar').then((res) => {
+                    this.categorias = res.data.map((element) => {
+                        const payload = {
+                            name: element.nombre,
+                            id: element.id,
+                        };
+                        return payload;
+                    });
+
+                    this.items[0].children = this.categorias;
+                });
+            },
+
             calcularPaquetes(element) {
                 const empaques = Number(element.totalUnidad) / Number(element.unidadPorEmpaque);
                 this.paquetes = Math.ceil(empaques);
@@ -197,6 +201,7 @@
         },
         beforeMount() {
             this.getProducts();
+            this.conseguirCategorias();
         },
     };
 </script>
