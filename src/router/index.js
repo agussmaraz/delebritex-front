@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import recuperarCarrito from '../middlewares/recuperarCarrito'
-import carritoAdmin from '../middlewares/carritoAdmin'
+import recuperarCarrito from '../middlewares/recuperarCarrito';
+import carritoAdmin from '../middlewares/carritoAdmin';
 
 import store from '@/store';
 
@@ -118,6 +118,14 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Historial.vue'),
     },
+    {
+        path: '/online',
+        name: 'online',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/Online.vue'),
+    },
 ];
 
 const router = new VueRouter({
@@ -128,7 +136,6 @@ const router = new VueRouter({
 
 router.beforeEach(recuperarCarrito);
 router.beforeEach(carritoAdmin);
-
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {

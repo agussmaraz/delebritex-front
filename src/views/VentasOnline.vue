@@ -254,6 +254,7 @@
             // Todas las reservas transformas en array y separadas por objetos segun numero de compra, listo para usar en el crud y obtener datos.
             accederNumeroCompra() {
                 const reservas = this.arrayPorNumeroCompra();
+                console.log(reservas)
                 const lista = this.carritoAListaDeProductos(reservas);
                 return lista.filter((carritos) => {
                     if (carritos.estado !== 'Historial') {

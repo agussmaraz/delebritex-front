@@ -4,7 +4,13 @@ import { LayoutPlugin } from 'bootstrap-vue';
 import axios from 'axios';
 Vue.use(Vuex);
 
+import movimientos from './movimientos';
+import carritos from './carrito'
 const store = new Vuex.Store({
+    modules: {
+        movimientos,
+        carritos
+    },
     state: {
         user: null,
         //productos es un array vacio
