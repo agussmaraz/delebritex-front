@@ -27,11 +27,12 @@ const getters = {
             const buffer = {
                 numeroCompra: pedido[0],
                 usuario: pedido[1][0].usuario.nombre,
+                // email: pedido[1][0].usuario.email,
                 fecha: pedido[1][0].fecha,
                 estado: pedido[1][0].estado,
                 productos: pedido[1],
             };
-
+            console.log(buffer)
             resultado.push(buffer);
         }
 
