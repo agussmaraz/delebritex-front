@@ -1,5 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import recuperarCarrito from '../middlewares/recuperarCarrito';
+import carritoAdmin from '../middlewares/carritoAdmin';
+
 import store from '@/store';
 
 Vue.use(VueRouter);
@@ -76,20 +79,20 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/Catalogo.vue'),
     },
     {
-        path: '/ventas',
-        name: 'ventas',
+        path: '/ventasOnline',
+        name: 'ventasOnlie',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/Ventas.vue'),
+        component: () => import(/* webpackChunkName: "about" */ '../views/VentasOnline.vue'),
     },
     {
-        path: '/producto/:slug',
-        name: 'productoSlug',
+        path: '/ventaPresencial',
+        name: 'ventaPresencial',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/Producto.vue'),
+        component: () => import(/* webpackChunkName: "about" */ '../views/VentaPresencial.vue'),
     },
     {
         path: '/quienesSomos',
@@ -115,6 +118,14 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Historial.vue'),
     },
+    {
+        path: '/online',
+        name: 'online',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/Online.vue'),
+    },
 ];
 
 const router = new VueRouter({
@@ -122,6 +133,9 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 });
+
+router.beforeEach(recuperarCarrito);
+router.beforeEach(carritoAdmin);
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {

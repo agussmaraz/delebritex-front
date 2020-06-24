@@ -122,6 +122,7 @@
             ...mapActions({
                 removeFromCart: 'removeFromCart',
                 removeItemFromCart: 'removeItemFromCart',
+                removeQuantity: 'removeQuantity',
             }),
             // Funcion para modificar como es que queremos que se vea el pdf a la hora de exportarlo y con que data.
             exportPDF() {
@@ -152,6 +153,7 @@
                 const payload = this.carrito.map((producto) => {
                     const total = this.calcularPrecio(producto);
                     const info = {
+                        id: producto.id,
                         nombre: producto.nombre,
                         totalUnidad: producto.cantidadElegida,
                         precioUnidad: producto.precioUnidad,
@@ -163,16 +165,27 @@
                         precioTotal: total,
                     };
                     return info;
-                    console.log(info);
                 });
                 this.axios.post('/nuevo-carrito', payload).then((res) => {
                     this.mensaje.color = 'success';
                     this.mensaje.texto = 'La compra fue realizada con exito!';
+                    this.sacarCantidadesDB(payload);
+                    console.log(payload);
                     this.showAlert();
                     this.removeFromCart();
                 });
                 this.openTicket = false;
                 this.exportPDF();
+            },
+            sacarCantidadesDB(payload) {
+                for (let index = 0; index < payload.length; index++) {
+                    const element = payload[index];
+                    const id = element[id];
+                    this.removeQuantity(element);
+                    this.axios.put(`/stock/${id}`, payload).then((res) => {
+                        console.log(res.data);
+                    });
+                }
             },
             // Sacar el precio de las unidades que eligio
             calcularPrecio(item) {

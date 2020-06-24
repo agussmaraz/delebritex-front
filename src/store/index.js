@@ -4,7 +4,13 @@ import { LayoutPlugin } from 'bootstrap-vue';
 import axios from 'axios';
 Vue.use(Vuex);
 
+import movimientos from './movimientos';
+import carritos from './carrito'
 const store = new Vuex.Store({
+    modules: {
+        movimientos,
+        carritos
+    },
     state: {
         user: null,
         //productos es un array vacio
@@ -15,6 +21,7 @@ const store = new Vuex.Store({
         filtro: {
             productos: [],
         },
+        carritoAdmin: [],
     },
     getters: {
         isLogged: (state) => !!state.user,
@@ -50,27 +57,70 @@ const store = new Vuex.Store({
         },
         // una funcion con el producto que mande a traves del boton "añadir al carrito"
         addToCart({ commit }, producto) {
-            // si en el carrito no existe este producto
             if (!this.state.carrito.find((e) => e.slug == producto.slug)) {
                 // llevemoslo a hacer una mutacion
                 commit('ADD_TO_CART', producto);
             }
+            // si en el carrito no existe este producto
         },
         removeFromCart({ commit }) {
+            const data = [];
+            localStorage.setItem('carrito', data);
             commit('REMOVE_FROM_CART');
         },
         removeItemFromCart({ commit }, producto) {
+            const data = localStorage.getItem('carrito');
+            let carrito = JSON.parse(data);
+
+            for (let index = 0; index < carrito.length; index++) {
+                const element = carrito[index];
+                if (element.id == producto.id) {
+                    carrito = carrito.filter((e) => e != element);
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+                }
+            }
+
             if (this.state.carrito.find((e) => e.id == producto.id)) {
                 commit('REMOVE_ITEM_FROM_CART', producto);
             }
         },
         findProduct({ commit }, producto) {
-                const resultados = this.state.productos.filter((elemento) => {
-                    if (elemento.nombre.toLowerCase().includes(producto)) {
-                        return elemento;
-                    }
-                });
-                commit('SET_FILTER', resultados);
+            const resultados = this.state.productos.filter((elemento) => {
+                if (elemento.nombre.toLowerCase().includes(producto)) {
+                    return elemento;
+                }
+            });
+            commit('SET_FILTER', resultados);
+        },
+        addCartAdmin({ commit }, producto) {
+            commit('ADD_CART_ADMIN', producto);
+        },
+        removeCartAdmin({ commit }) {
+            const data = [];
+            localStorage.setItem('carritoAdmin', data);
+            commit('REMOVE_CART_ADMIN');
+        },
+        removeItemFromCartAdmin({ commit }, producto) {
+            const data = localStorage.getItem('carritoAdmin');
+            let carrito = JSON.parse(data);
+
+            for (let index = 0; index < carrito.length; index++) {
+                const element = carrito[index];
+                if (element.id == producto.id) {
+                    carrito = carrito.filter((e) => e != element);
+                    localStorage.setItem('carritoAdmin', JSON.stringify(carrito));
+                }
+            }
+
+            if (this.state.carrito.find((e) => e.id == producto.id)) {
+                commit('REMOVE_ITEM_FROM_CART_ADMIN', producto);
+            }
+        },
+        removeQuantity({ commit, state }, producto) {
+            let producto_de_estado = state.productos.find((e) => e.id == producto.id);
+            if (producto_de_estado) {
+                commit('REMOVE_QUANTITY', { producto: producto_de_estado, cantidad: producto });
+            }
         },
     },
     mutations: {
@@ -98,11 +148,34 @@ const store = new Vuex.Store({
             state.carrito = [];
         },
         REMOVE_ITEM_FROM_CART(state, producto) {
-            state.carrito = state.carrito.filter(e => e != producto)
+            state.carrito = state.carrito.filter((e) => e.id != producto.id);
         },
         // guardamos en el estado todos los productos
         SET_FILTER(state, resultados) {
             state.filtro.productos = resultados;
+        },
+        ADD_CART_ADMIN(state, producto) {
+            state.carritoAdmin.push(producto);
+        },
+        REMOVE_CART_ADMIN(state) {
+            state.carritoAdmin = [];
+        },
+        REMOVE_ITEM_FROM_CART_ADMIN(state, producto) {
+            state.carritoAdmin = state.carritoAdmin.filter((e) => e.id != producto.id);
+        },
+        REMOVE_QUANTITY(state, objeto) {
+            const estado = objeto['producto'];
+            const cantidad = objeto['cantidad'];
+            if (cantidad.empaques > 0 && cantidad.totalUnidad > 0) {
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.unidadPorEmpaque);
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.totalUnidad);
+            } else if (cantidad.empaques > 0) {
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.unidadPorEmpaque);
+            } else if (cantidad.totalUnidad > 0) {
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.totalUnidad);
+            } else if (cantidad.unidades > 0) {
+                estado.totalUnidad = estado.totalUnidad - Number(cantidad.unidades);
+            }
         },
     },
 });

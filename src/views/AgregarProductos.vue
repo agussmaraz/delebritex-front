@@ -167,6 +167,7 @@
             // Crear un objeto con los datos del formulario y mandarselo a la base de datos
             nuevoProducto() {
                 this.validacionProducto();
+
                 if (this.totalUnidadesPorPaquete) {
                     this.producto.totalUnidad = this.totalUnidadesPorPaquete;
                 } else if (!this.totalUnidadesPorPaquete) {
@@ -199,6 +200,7 @@
                 formulario.set('precioBulto', this.producto.precioBulto);
                 formulario.set('precioDistribuidoraUnidad', this.producto.precioDistribuidoraUnidad);
                 formulario.set('precioDistribuidoraBulto', this.producto.precioDistribuidoraBulto);
+
                 this.axios.post('/nuevoProducto', formulario).then((res) => {
                     this.producto.nombre = '';
                     this.producto.medidaId = '';

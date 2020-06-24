@@ -3,6 +3,9 @@
         <div class="container margin" data-app>
             <h1>Ventas Online</h1>
             <v-data-table :headers="headersReservas" :items="accederNumeroCompra" :items-per-page="5" class="elevation-1 tabla-reservas mt-5">
+                <template v-slot:item.estado="{ item }">
+                    <v-chip :color="getColor(item.estado)" dark>{{ item.estado }}</v-chip>
+                </template>
                 <template v-slot:top>
                     <v-dialog v-model="dialog" width="500">
                         <v-card class="mx-auto" outlined>
@@ -110,26 +113,14 @@
             },
             // Sacar el email del usuario para el objeto del carrito
             sacarEmail(carrito) {
-                for (let index = 0; index < carrito.length; index++) {
-                    const element = carrito[index];
-                    const email = element.usuario['email'];
-                    return email;
-                }
+                return carrito[0].usuario['email'];
             },
             sacarNumeroCompra(carrito) {
-                for (let index = 0; index < carrito.length; index++) {
-                    const element = carrito[index];
-                    const numeroCompra = element.numeroCompra;
-                    return numeroCompra;
-                }
+                return carrito[0].numeroCompra;
             },
             // Sacar el usuario del carrito para el objeto del carrito
             sacarUsuario(carrito) {
-                for (let index = 0; index < carrito.length; index++) {
-                    const element = carrito[index];
-                    const usuario = element.usuario['nombre'];
-                    return usuario;
-                }
+                return carrito[0].usuario['nombre'];
             },
             // Proximamente para saber en que estado esta la reserva
             calcularEstadoDeCarrito(carrito) {
@@ -191,14 +182,6 @@
                 this.dialog = true;
                 this.reservaEntrega = item;
                 this.reserva = item.productos;
-                for (let index = 0; index < this.reserva.length; index++) {
-                    const element = this.reserva[index];
-                    if (element.estado == 5) {
-                        this.entrega = true;
-                    } else {
-                        this.entrega = false;
-                    }
-                }
             },
             aceptarReserva(item) {
                 const numeroCompra = item.numeroCompra;
@@ -209,7 +192,6 @@
                         return (item.estado = 'Preparando');
                     }
                 });
-                this.entrega = true;
             },
             rechazarReserva(item) {
                 const numeroCompra = item.numeroCompra;
@@ -241,6 +223,11 @@
                 const totalUnidades = Number(item.unidades) * Number(item.precioUnidad);
                 return Number(totalPaquetes) + Number(totalUnidades);
             },
+            getColor(estado) {
+                if (estado == 'Preparando') return 'green';
+                else if (estado == 'Rechazado') return 'orange';
+                else return 'yellow';
+            },
         },
         computed: {
             // Calcular el total de ventas que se hizo en el dia
@@ -267,6 +254,7 @@
             // Todas las reservas transformas en array y separadas por objetos segun numero de compra, listo para usar en el crud y obtener datos.
             accederNumeroCompra() {
                 const reservas = this.arrayPorNumeroCompra();
+                console.log(reservas)
                 const lista = this.carritoAListaDeProductos(reservas);
                 return lista.filter((carritos) => {
                     if (carritos.estado !== 'Historial') {
