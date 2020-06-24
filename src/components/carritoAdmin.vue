@@ -103,9 +103,12 @@
                 return item.reduce((total, item) => total + Number(this.calcularPrecio(item)), 0);
             },
             verificarCompra() {
+                // console.log(this.carritoAdmin);
+                const numero = Math.round(Math.random() * 100000);
                 for (let index = 0; index < this.carritoAdmin.length; index++) {
                     const element = this.carritoAdmin[index];
                     element.precioTotal = this.calcularPrecio(element);
+                    element.numeroCompra = numero;
                 }
                 let payload = {};
                 payload.productos = this.carritoAdmin;
@@ -121,7 +124,7 @@
                     this.removeQuantity(element);
                     const id = element.id;
                     this.axios.put(`/stock/${id}`, this.carritoAdmin).then((res) => {
-                        console.log(res.data);
+                        // console.log(res.data);
                     });
                 }
             },

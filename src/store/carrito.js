@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Vue from 'vue';
 
 const state = () => {
     return {
@@ -30,13 +31,7 @@ const getters = {
                 estado: pedido[1][0].estado,
                 productos: pedido[1],
             };
-            if (buffer.estado == 1) {
-                buffer.estado = 'Nuevo';
-            } else if (buffer.estado == 3) {
-                buffer.estado = 'Rechazado';
-            } else if(buffer.estado == 5){
-                buffer.estado = 'Preparando'
-            }
+
             resultado.push(buffer);
         }
 
@@ -51,21 +46,21 @@ const actions = {
             commit('GET_CART', carrito);
         });
     },
-    changeState({ commit, getters }, carrito) {
+    changeState({ commit }, carrito) {
         axios.put(`/carrito/${carrito.numeroCompra}`, { estado: '5' });
-        const resultado = getters.productosPorCarrito.find((e) => e.numeroCompra == carrito.numeroCompra);
-        commit('CHANGE_STATE', [resultado, 5]);
+
+        commit('CHANGE_STATE', [carrito.numeroCompra, 5]);
     },
-    newMovement({ commit, getters }, carrito) {
+    newMovement({ commit }, carrito) {
         axios.post('/movimiento', carrito);
         axios.put(`/carrito/${carrito.numeroCompra}`, { estado: '10' });
-        const resultado = getters.productosPorCarrito.find((e) => e.numeroCompra == carrito.numeroCompra);
-        commit('CHANGE_STATE', [resultado, 10]);
+
+        commit('CHANGE_STATE', [carrito.numeroCompra, 10]);
     },
-    reject({ commit, getters }, carrito) {
+    reject({ commit }, carrito) {
         axios.put(`/carrito/${carrito.numeroCompra}`, { estado: '3' });
-        const resultado = getters.productosPorCarrito.find((e) => e.numeroCompra == carrito.numeroCompra);
-        commit('CHANGE_STATE', [resultado, 3]);
+
+        commit('CHANGE_STATE', [carrito.numeroCompra, 3]);
     },
 };
 
@@ -73,9 +68,10 @@ const mutations = {
     GET_CART(state, carrito) {
         state.lista = carrito;
     },
-    CHANGE_STATE(state, [resultado, estado]) {
+    CHANGE_STATE(state, [numeroCompra, estado]) {
+        const resultado = state.lista.find((e) => e.numeroCompra == numeroCompra);
+        // Vue.set(resultado, 'estado', estado);
         resultado.estado = estado;
-        // console.log(resultado);
     },
 };
 

@@ -9,7 +9,7 @@
             </v-app-bar>
             <paginate name="prod_filtered" :list="filtro" :per="9" :container="this">
                 <v-row>
-                    <v-card v-for="(item, index) in paginated('prod_filtered')" :key="index" class="texto-card m-3" max-width="300" max-height="350" @click="conseguirProducto(item)">
+                    <v-card v-for="(item, index) in paginated('prod_filtered')" :key="index" class="texto-card m-3" max-width="300" max-height="400" @click="conseguirProducto(item)">
                         <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                         <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
                         <v-card-text class="text--primary">
@@ -38,7 +38,7 @@
                 <v-list>
                     <v-treeview v-model="selection" return-object selectable selected-color="green" activatable shaped rounded open-on-click :items="items"> </v-treeview>
                     <p v-for="node in selection" :key="node.id">
-                        {{node.name}}
+                        {{ node.name }}
                     </p>
                 </v-list>
             </v-navigation-drawer>
@@ -61,8 +61,11 @@
                     </v-list-item>
 
                     <v-card-actions class="d-flex justify-content-around sm-1 mb-1">
-                        <div class="d-flex sm-1 marginBtn">
+                        <div class="d-flex sm-1">
                             <div>
+                                <p v-if="error" class=" catalogo-error">
+                                    {{ this.error.unidades }}
+                                </p>
                                 Unidades
                                 <div>
                                     <v-btn small @click="aumentarCantidad()">+ </v-btn>
@@ -70,12 +73,15 @@
                                     <v-btn small @click="restarCantidad()"> -</v-btn>
                                 </div>
                             </div>
-                            <div>
+                            <div class="ml-3">
+                                <p v-if="error" class=" catalogo-error">
+                                    {{ this.error.paquetes }}
+                                </p>
                                 Paquetes
                                 <div>
-                                    <v-btn class="ml-5" @click="aumentarCantidadPaquete()">+ </v-btn>
+                                    <v-btn small class="ml-5" @click="aumentarCantidadPaquete()">+ </v-btn>
                                     {{ cantidadPaquete }}
-                                    <v-btn @click="restarCantidadPaquete()"> -</v-btn>
+                                    <v-btn small @click="restarCantidadPaquete()"> -</v-btn>
                                 </div>
                             </div>
                             <v-divider></v-divider>
@@ -105,6 +111,7 @@
                 producto: '',
                 categorias: '',
                 selection: [],
+                error: {},
                 selectionType: 'leaf',
                 items: [
                     {
@@ -181,18 +188,35 @@
             // suma las cantidades que quiere el usuario
             aumentarCantidad() {
                 this.cantidades++;
+                if (this.cantidades > this.productoId.totalUnidad) {
+                    this.error.unidades = 'No hay esa cantidad de unidades';
+                    this.cantidades = this.productoId.totalUnidad;
+                }
             },
             aumentarCantidadPaquete() {
                 this.cantidadPaquete++;
+                if (this.cantidadPaquete > this.paquetes) {
+                    this.error.paquetes = 'No hay esa cantidad de paquetes';
+                    this.cantidadPaquete = this.paquetes;
+                }
             },
             restarCantidadPaquete() {
                 this.cantidadPaquete--;
+                if (this.cantidadPaquete <= 0) {
+                    this.cantidadPaquete = 0;
+                }
+                if (this.cantidadPaquete < this.paquetes) {
+                    this.error.paquetes = '';
+                }
             },
             // resta las cantidades que quiere el usuario
             restarCantidad() {
                 this.cantidades--;
                 if (this.cantidades <= 0) {
                     this.cantidades = 0;
+                }
+                if (this.cantidades < this.productoId.totalUnidad) {
+                    this.error.unidades = '';
                 }
             },
             buscarProducto() {
@@ -207,6 +231,11 @@
 </script>
 
 <style lang="scss">
+    .catalogo-error {
+        font-size: 13px;
+        color: red;
+        margin-bottom: 0 !important;
+    }
     .card {
         width: 250px;
     }

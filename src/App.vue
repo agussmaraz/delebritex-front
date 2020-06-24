@@ -17,7 +17,7 @@
                             <template v-slot:button-content>
                                 <em>Ventas</em>
                             </template>
-                            <b-dropdown-item to="/ventasOnline"> Ventas Online</b-dropdown-item>
+                            <b-dropdown-item to="/online"> Ventas Online</b-dropdown-item>
                             <b-dropdown-item to="/ventaPresencial">Venta Presencial</b-dropdown-item>
                             <b-dropdown-item to="/historial">Historial</b-dropdown-item>
                         </b-nav-item-dropdown>
