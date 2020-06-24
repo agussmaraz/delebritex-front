@@ -76,13 +76,13 @@
                 let buffer = {};
                 const storage = localStorage.getItem('usertoken');
                 const usuario = JSON.parse(storage);
-                const numero = Math.round(Math.random() * 100000);
+                // const numero = Math.round(Math.random() * 100000);
                 const id = usuario['id'];
                 buffer.usuario = {
                     nombre: 'Admin',
                 };
                 buffer.id = this.productoElegido.id;
-                buffer.numeroCompra = numero;
+                // buffer.numeroCompra = numero;
                 buffer.createdAt = new Date();
                 buffer.producto = this.productoElegido.nombre;
                 buffer.unidades = this.unidades;

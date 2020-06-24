@@ -1,18 +1,18 @@
 <template>
     <div>
-        <h1>Ventas Online</h1>
-        <v-data-table :headers="headersReservas" :items="productosPorCarrito" :items-per-page="5" class="elevation-1 mt-5">
+        <h1 class="mt-2">Ventas Online</h1>
+        <v-data-table :headers="headersReservas" :items="productosPorCarrito" :items-per-page="5" class="elevation-1 tabla-online mt-5">
             <template v-slot:item.estado="{ item }">
-                <v-chip :color="getColor(item.estado)" dark>{{ item.estado }}</v-chip>
+                <v-chip :color="getColor(item.estado)"  dark>{{ test(item.estado) }}</v-chip>
             </template>
             <template v-slot:item.actions="{ item }">
                 <v-icon small color=" blue darken-2" class="mr-2" @click="mostrarReserva(item)">
                     mdi-eye
                 </v-icon>
-                <v-icon v-if="item.estado == 'Nuevo'" small color="green darken-2" class="mr-2" @click="changeState(item)">
+                <v-icon v-if="item.estado == 1" small color="green darken-2" class="mr-2" @click="changeState(item)">
                     mdi-checkbox-marked-circle
                 </v-icon>
-                <v-icon v-if="item.estado == 'Nuevo'" small color="red darken-2" class="mr-2" @click="reject(item)">
+                <v-icon v-if="item.estado == 1" small color="red darken-2" class="mr-2" @click="reject(item)">
                     mdi-cancel
                 </v-icon>
             </template>
@@ -68,6 +68,15 @@
             };
         },
         methods: {
+            test(estado) {
+                if(estado == 1){
+                    return 'Nuevo'
+                } else if(estado == 3){
+                    return 'Rechazado'
+                } else {
+                    return 'Preparando'
+                }
+            },
             ...mapActions({
                 getCarritos: 'carritos/getAll',
                 changeState: 'carritos/changeState',
@@ -80,8 +89,8 @@
                 this.productos = carrito['productos'];
             },
             getColor(estado) {
-                if (estado == 'Preparando') return 'green';
-                else if (estado == 'Rechazado') return 'orange';
+                if (estado == 5) return 'green';
+                else if (estado == 3) return 'orange';
                 else return 'yellow';
             },
         },
@@ -107,5 +116,9 @@
         background-color: gray;
         color: white;
         margin-left: 4px;
+    }
+    .tabla-online {
+        width: 800px;
+        margin: 0 auto;
     }
 </style>
