@@ -1,12 +1,16 @@
 <template>
     <v-app>
+        <div class="space">
         <div class="list-checkout">
             <ul class="checkout-list">
-                <li class="checkout-product">
-                    <span class="product-price">asb</span>
-                    <span class="product-price">asd</span>
-                    <span class="product-price">asd</span>
-                    <span class="product-price">asd</span>
+                <li class="list-of-names">
+                    <span class="list-names"></span>
+                    <span class="list-names">Producto</span>
+                    <span class="list-names">Paquetes</span>
+                    <span class="list-names">Unidades</span>
+                    <span class="list-names">Precio Unidad</span>
+                    <span class="list-names">Subtotal</span>
+                    <span class="list-names">Eliminar</span>
                 </li>
             </ul>
         </div>
@@ -17,7 +21,7 @@
                     <img :src="item.imagen" alt="" class="product-image" />
                     <h3 class="product-name">{{ item.nombre }}</h3>
                     <span class="product-price">{{ item.paquetesElegidos }}</span>
-                    <span class="product-price">{{ cantidad(item) }} unidades</span>
+                    <span class="product-price">{{ cantidad(item) }}</span>
                     <span class="product-price">{{item.precioUnidad}}</span>
                     <span class="product-price">${{ calcularPrecio(item) }}</span>
                     <button class="product-remove" @click="removeItemFromCart(item)">X</button>
@@ -59,9 +63,12 @@
                     </v-card>
                 </v-overlay>
             </div>
-            <h3 v-if="carrito.length >= 1" class="total">Total: ${{ sumaPrecio(this.carrito) }}</h3>
-            <h3 class="total">{{ sacarPorcentaje }}</h3>
+            <div class="total">
+                <h3 v-if="carrito.length >= 1">Total: ${{ sumaPrecio(this.carrito) }}</h3>
+                <h3  v-if="carrito.paquetesElegidos >= 10">Con descuento: {{ sacarPorcentaje }}</h3>  
+            </div>
         </div>
+    </div>
     </v-app>
 </template>
 
@@ -188,13 +195,13 @@
     };
 </script>
 
-<style>
+<style lang="scss">
     .checkout-box {
         width: 100%;
         max-width: 1200px;
         display: flex;
         flex-direction: column;
-        margin: 50px auto;
+        margin: 0 auto;
         box-sizing: border-box;
         padding: 1em;
     }
@@ -221,8 +228,24 @@
         border-radius: 5px;
         list-style: none;
         box-sizing: border-box;
-        padding: 0.8em;
+        padding: 1.5em;
         margin: 1rem 0;
+    }
+
+    .list-of-names {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr 1fr;
+        background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
+        border-radius: 5px;
+        list-style: none;
+        box-sizing: border-box;
+        padding: 1.5em;
+        margin: 1rem 0;
+    }
+
+    .list-of-names * {
+        place-self: center;
     }
 
     .checkout-product * {
@@ -244,6 +267,19 @@
         font-weight: bold;
     }
 
+    .list-names{
+        font-size: 1.1vw;
+        @media screen and (max-width: 360px) {
+            font-size: 3vw;
+            margin: auto 0 auto 8px;
+        }
+        @media screen and (max-width: 768px) {
+            font-size: 3vw;
+            margin: auto 0 auto 12px;
+        }
+        font-weight: bold;
+    }
+
     .product-remove {
         width: 25px;
         height: 25px;
@@ -254,7 +290,11 @@
         cursor: pointer;
     }
 
-    .total {
+     .total{
+        align-self: flex-end;
+    }
+
+    .total h3{
         font-size: 2em;
         font-weight: bold;
         align-self: flex-end;
@@ -286,5 +326,10 @@
     .ticketText {
         color: #000 !important;
         margin-right: auto !important;
+    }
+    .space{
+    @media screen and (max-width: 768px) {
+            margin-bottom: 40rem;
+        }
     }
 </style>
