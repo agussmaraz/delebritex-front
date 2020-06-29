@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="space">
         <v-app>
             <v-card>
                 <div class="tamaño d-block font-weight-light">Nuestra historia</div>
@@ -49,9 +49,15 @@
     };
 </script>
 
-<style>
+<style lang="scss">
   
     .tamaño {
         font-size: 3rem;
+    }
+    
+    .space{
+    @media screen and (max-width: 360px) {
+            margin-bottom: 10rem;
+        }
     }
 </style>
