@@ -78,7 +78,7 @@
         computed: {
             ...mapState({
                 user: (state) => state.user,
-                carrito: (state) => state.carrito,
+                carrito: (state) => state.carritos.carrito,
             }),
             ...mapGetters({
                 isLogged: 'isLogged',

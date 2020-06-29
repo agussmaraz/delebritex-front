@@ -3,7 +3,7 @@
         <h1>Agregar nuevos productos</h1>
         <template>
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-            <v-form @submit.prevent="nuevoProducto()" enctype="multipart/form-data" class="formProducto" data-app>
+            <v-form enctype="multipart/form-data" class="formProducto" data-app>
                 <template>
                     <v-row>
                         <v-col cols="5" md="6">
@@ -78,7 +78,8 @@
                             </p>
                         </v-col>
                     </v-row>
-                    <v-btn color="secondary" type="submit">Enviar</v-btn>
+
+                    <input @click.prevent="nuevoProducto()" type="submit" value="Enviar" />
                 </template>
             </v-form>
         </template>
@@ -86,8 +87,38 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex';
     export default {
+        data() {
+            return {
+                producto: {
+                    nombre: '',
+                    totalUnidad: '',
+                    empaqueId: '',
+                    medidaId: '',
+                    pesoUnidad: '',
+                    unidadPorEmpaque: '',
+                    categoriaId: '',
+                    slug: '',
+                    imagen: '',
+                    precioUnidad: '',
+                    precioBulto: '',
+                    precioDistribuidoraUnidad: '',
+                    precioDistribuidoraBulto: '',
+                },
+                path: '',
+                dismissSecs: 5,
+                dismissCountDown: 0,
+                mensaje: { color: '', texto: '' },
+                error: {},
+            };
+        },
         computed: {
+            ...mapState({
+                medida: (state) => state.productos.medida,
+                categoria: (state) => state.productos.categorias,
+                empaque: (state) => state.productos.empaques,
+            }),
             totalUnidadesPorPaquete() {
                 if (this.producto.empaqueId == 'caja') {
                     const totalUnidadPorEmpaque = Number(this.producto.cantidadPaquetes) * Number(this.producto.unidadPorEmpaque);
@@ -110,39 +141,14 @@
                 }
             },
         },
-        data() {
-            return {
-                producto: {
-                    nombre: '',
-                    totalUnidad: '',
-                    empaqueId: '',
-                    medidaId: '',
-                    pesoUnidad: '',
-                    unidadPorEmpaque: '',
-                    categoriaId: '',
-                    slug: '',
-                    imagen: '',
-                    precioUnidad: '',
-                    precioBulto: '',
-                    precioDistribuidoraUnidad: '',
-                    precioDistribuidoraBulto: '',
-                },
-                medida: [],
-                empaque: [],
-                categoria: [],
-                path: '',
-                dismissSecs: 5,
-                dismissCountDown: 0,
-                mensaje: { color: '', texto: '' },
-                error: {},
-            };
-        },
-        created() {
-            this.listarMedida();
-            this.listarEmpaque();
-            this.listarCategoria();
-        },
+
         methods: {
+            ...mapActions({
+                listarMedidas: 'productos/listarMedidas',
+                listarBultos: 'productos/listarBultos',
+                listarCategorias: 'productos/listarCategorias',
+                newProduct: 'productos/newProduct',
+            }),
             // Conseguir la data de la imagen
             imagenSeleccionada(e) {
                 const files = e[0];
@@ -165,7 +171,7 @@
                 }
             },
             // Crear un objeto con los datos del formulario y mandarselo a la base de datos
-            nuevoProducto() {
+            async nuevoProducto() {
                 this.validacionProducto();
 
                 if (this.totalUnidadesPorPaquete) {
@@ -175,23 +181,11 @@
                 }
                 this.producto.slug = this.producto.nombre;
                 const formulario = new FormData();
-                if (this.producto.medidaId == 'kg') {
-                    formulario.set('medidaId', 2);
-                } else {
-                    formulario.set('medidaId', 3);
-                }
-                if (this.producto.empaqueId == 'caja') {
-                    formulario.set('empaqueId', 1);
-                } else {
-                    formulario.set('empaqueId', 2);
-                }
+                formulario.set('medidaId', this.producto.medidaId == 'kg' ? 2 : 3);
+                formulario.set('empaqueId', this.producto.empaqueId == 'caja' ? 1 : 2);
+                formulario.set('categoriaId', this.producto.categoriaId == 'hola' ? 2 : 3);
                 formulario.set('pesoUnidad', this.producto.pesoUnidad);
                 formulario.set('unidadPorEmpaque', this.producto.unidadPorEmpaque);
-                if (this.producto.categoriaId == 'hola') {
-                    formulario.set('categoriaId', 2);
-                } else {
-                    formulario.set('categoriaId', 3);
-                }
                 formulario.set('nombre', this.producto.nombre);
                 formulario.set('totalUnidad', this.producto.totalUnidad);
                 formulario.set('slug', this.producto.slug);
@@ -201,47 +195,15 @@
                 formulario.set('precioDistribuidoraUnidad', this.producto.precioDistribuidoraUnidad);
                 formulario.set('precioDistribuidoraBulto', this.producto.precioDistribuidoraBulto);
 
-                this.axios.post('/nuevoProducto', formulario).then((res) => {
-                    this.producto.nombre = '';
-                    this.producto.medidaId = '';
-                    this.producto.empaqueId = '';
-                    this.producto.unidadPorEmpaque = '';
-                    this.producto.pesoUnidad = '';
-                    this.producto.categoriaId = '';
-                    this.producto.precioUnidad = '';
-                    this.producto.precioBulto = '';
-                    this.producto.precioDistribuidoraUnidad = '';
-                    this.producto.precioDistribuidoraBulto = '';
+                await this.newProduct(formulario);
 
-                    this.producto.imagen = '';
-                    this.mensaje.texto = 'El producto fue agregado correctamente';
-                    this.mensaje.color = 'success';
-                    this.showAlert();
-                });
-            },
-            // buscar las medidas de la db y encerrarlo en un dato (para el select del form)
-            listarMedida() {
-                this.axios.get('/buscarMedida').then((res) => {
-                    this.medida = res.data.map((medida) => {
-                        return medida.medida;
-                    });
-                });
-            },
-            // buscar los empaques de la db py encerrarlo en un dato (para el select del form)
-            listarEmpaque() {
-                this.axios.get('/empaqueBuscar').then((res) => {
-                    this.empaque = res.data.map((empaque) => {
-                        return empaque.nombre;
-                    });
-                });
-            },
-            // buscar las categorias de la db py encerrarlo en un dato (para el select del form)
-            listarCategoria() {
-                this.axios.get('categoriaBuscar').then((res) => {
-                    this.categoria = res.data.map((categoria) => {
-                        return categoria.nombre;
-                    });
-                });
+                const producto = Object.entries(this.producto);
+                for (let index = 0; index < producto.length; index++) {
+                    const element = producto[index];
+                    element[1] = '';
+                }
+
+                this.showAlert();
             },
             // funciones de alert de bootstrap
             countDownChanged(dismissCountDown) {
@@ -250,6 +212,11 @@
             showAlert() {
                 this.dismissCountDown = this.dismissSecs;
             },
+        },
+        beforeMount() {
+            this.listarMedidas();
+            this.listarBultos();
+            this.listarCategorias();
         },
     };
 </script>

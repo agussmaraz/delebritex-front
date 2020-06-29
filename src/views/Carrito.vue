@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <div class="checkout-box">
+        <div class="checkout-box margin">
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
             <ul v-for="(item, index) in carrito" :key="index" class="checkout-list">
                 <li class="checkout-product">
@@ -50,13 +50,13 @@
                 </v-overlay>
             </div>
             <h3 v-if="carrito.length >= 1" class="total">Total: ${{ sumaPrecio(this.carrito) }}</h3>
-            <h3 class="total">{{ sacarPorcentaje }}</h3>
+            <h3 class="total">{{ this.descuento }}</h3>
         </div>
     </v-app>
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex';
+    import { mapState, mapActions, mapGetters } from 'vuex';
     import jsPDF from 'jspdf';
     import 'jspdf-autotable';
     export default {
@@ -68,28 +68,35 @@
                 ticket: [],
                 dismissSecs: 5,
                 dismissCountDown: 0,
-                mensaje: { color: '', texto: '' },
             };
         },
         computed: {
             ...mapState({
-                carrito: (state) => state.carrito,
+                carrito: (state) => state.carritos.carrito,
+                mensaje: (state) => state.carritos.mensaje,
             }),
-            sacarPorcentaje() {
+            ...mapGetters({
+                paquetes: 'carritos/paquetes',
+                cantidades: 'carritos/cantidadesElegida',
+            }),
+
+            descuento() {
+                console.log(this.paquetes);
                 if (this.paquetes >= 10) {
                     const porcentaje = (Number(this.sumaPrecio(this.carrito)) * 20) / 100;
                     const total = this.sumaPrecio(this.carrito) - Number(porcentaje);
                     return '$' + total;
+                    // console.log(total)
                 }
-            },
-            cantidadesElegida() {
-                return this.carrito.reduce((total, item) => total + Number(item.cantidadElegida), 0);
-            },
-            paquetes() {
-                return this.carrito.reduce((total, item) => total + Number(item.paquetesElegidos), 0);
             },
         },
         methods: {
+            ...mapActions({
+                removeFromCart: 'carritos/removeFromCart',
+                removeItemFromCart: 'carritos/removeItemFromCart',
+                removeQuantity: 'productos/removeQuantity',
+                newCart: 'carritos/newCartDB',
+            }),
             sumaPrecio(item) {
                 return item.reduce((total, item) => total + Number(this.calcularPrecio(item)), 0);
             },
@@ -102,11 +109,6 @@
             closeOverlay() {
                 this.openTicket = false;
             },
-            ...mapActions({
-                removeFromCart: 'removeFromCart',
-                removeItemFromCart: 'removeItemFromCart',
-                removeQuantity: 'removeQuantity',
-            }),
             // Funcion para modificar como es que queremos que se vea el pdf a la hora de exportarlo y con que data.
             exportPDF() {
                 var doc = new jsPDF('p', 'pt');
@@ -149,27 +151,12 @@
                     };
                     return info;
                 });
-                this.axios.post('/nuevo-carrito', payload).then((res) => {
-                    this.mensaje.color = 'success';
-                    this.mensaje.texto = 'La compra fue realizada con exito!';
-                    this.sacarCantidadesDB(payload);
-                    console.log(payload);
-                    this.showAlert();
-                    this.removeFromCart();
-                });
+                this.newCart(payload);
+                this.showAlert();
                 this.openTicket = false;
                 this.exportPDF();
             },
-            sacarCantidadesDB(payload) {
-                for (let index = 0; index < payload.length; index++) {
-                    const element = payload[index];
-                    const id = element[id];
-                    this.removeQuantity(element);
-                    this.axios.put(`/stock/${id}`, payload).then((res) => {
-                        console.log(res.data);
-                    });
-                }
-            },
+
             // Sacar el precio de las unidades que eligio
             calcularPrecio(item) {
                 const totalPaquetes = Number(item.paquetesElegidos) * Number(item.precioBulto);
@@ -191,7 +178,15 @@
     };
 </script>
 
-<style>
+<style lang="scss">
+    .margin {
+        @media screen and (max-width: 990px) {
+            margin-bottom: 40% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 40% !important;
+        }
+    }
     .checkout-box {
         width: 100%;
         max-width: 1200px;
