@@ -10,7 +10,7 @@ const state = () => {
         medida: [],
         empaques: [],
         categorias: [],
-       mensaje: {color: '', texto: ''}
+        mensaje: { color: '', texto: '' },
     };
 };
 
@@ -114,6 +114,9 @@ const mutations = {
     SET_MENSAJE(state, [mensaje, color]) {
         state.mensaje.texto = mensaje;
         state.mensaje.color = color;
+    },
+    SET_IMAGENES(state, imagenes) {
+        state.productos = imagenes;
     },
 };
 

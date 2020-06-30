@@ -36,7 +36,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Usuario.vue'),
-        // meta: { requiresAuth: true },
+        meta: { requiresAuth: true },
     },
     {
         path: '/agregarProductos',
@@ -85,6 +85,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/VentaPresencial.vue'),
+        meta: { requiresAuth: true },
     },
     {
         path: '/quienesSomos',
@@ -101,6 +102,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Carrito.vue'),
+        meta: { requiresAuth: true },
     },
     {
         path: '/historial',
@@ -109,6 +111,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Historial.vue'),
+        meta: { requiresAuth: true },
     },
     {
         path: '/online',
@@ -117,6 +120,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Online.vue'),
+        meta: { requiresAuth: true },
     },
 ];
 
@@ -131,7 +135,8 @@ router.beforeEach(carritoAdmin);
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {
-        if (!store.user) {
+        // console.log(store.state.user)
+        if (!store.state.user) {
             next({
                 name: 'Inicio de sesion',
             });

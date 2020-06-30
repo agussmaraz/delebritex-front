@@ -211,7 +211,7 @@
         },
         beforeMount() {
             this.getProducts();
-            this.conseguirCategorias();
+            // this.conseguirCategorias();
         },
     };
 </script>
