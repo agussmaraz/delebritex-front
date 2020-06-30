@@ -42,30 +42,32 @@
                     </p>
                 </v-list>
             </v-navigation-drawer>
-            <v-dialog v-model="dialog" max-width="650" class="mobile">
-                <v-card class="mx-auto" height="450" outlined>
-                    <v-list-item three-line>
-                        <v-img :src="this.productoId.imagen" width="70" height="280" class="m-3"> </v-img>
+            <v-dialog v-model="dialog" max-width="700" class="mobile">
+                <v-card class="mx-auto" height="600" width="700" outlined>
+                    <v-img :src="this.productoId.imagen" width="665" height="250" class="m-3 img-margin"></v-img>
+                       <v-list-item three-line class="space-buttons"> 
                         <v-list-item-content>
                             <v-list-item-title class="headline">{{ this.productoId.nombre }}</v-list-item-title>
                             <div class=" sm-1">
                                 <h5>Precio por unidad: ${{ this.productoId.precioUnidad }}</h5>
                                 <h5>Precio paquetes: ${{ this.productoId.precioBulto }}</h5>
                                 <small> Unidades por paquetes: {{ this.productoId.unidadPorEmpaque }} </small>
-                                <div class="d-flex">
-                                    <small>Stock unidades: {{ this.productoId.totalUnidad }}</small>
-                                    <small class="ml-2">Paquetes en stock: {{ this.paquetes }}</small>
-                                </div>
+                                <v-divider class="mx-4" vertical></v-divider>
+                                <small>Stock unidades: {{ this.productoId.totalUnidad }}</small>
+                                <v-divider class="mx-4" vertical></v-divider>
+                                <small class="ml-2">Paquetes en stock: {{ this.paquetes }}</small>
                             </div>
                         </v-list-item-content>
                     </v-list-item>
 
-                    <v-card-actions class="d-flex justify-content-around sm-1 mb-1">
+                    <v-card-actions class="d-flex justify-content-around sm-2 mb-2 size">
                         <div class="d-flex sm-1">
                             <div>
+                                <div>
                                 <p v-if="error" class=" catalogo-error">
                                     {{ this.error.unidades }}
                                 </p>
+                                </div>
                                 Unidades
                                 <div>
                                     <v-btn small @click="aumentarCantidad()">+ </v-btn>
@@ -163,6 +165,9 @@
             },
             // buscar el producto que selecciono el usuario en vuex
             conseguirProducto(item) {
+                this.error = {};
+                this.cantidadPaquete = 0;
+                this.cantidades = 0;
                 this.dialog = true;
                 const id = item.id;
                 for (let index = 0; index < this.productos.length; index++) {
@@ -183,6 +188,7 @@
                     this.dialog = false;
                     this.cantidades = 0;
                     this.cantidadPaquete = 0;
+                    this.error = {};
                 }
             },
             // suma las cantidades que quiere el usuario
@@ -231,11 +237,27 @@
 </script>
 
 <style lang="scss">
+    .img-margin{
+        margin: 1rem !important;
+        @media screen and (max-width: 430px) {
+           margin: 0 !important;
+        }
+    }
+
+    .space-buttons{
+        margin-bottom: 1rem !important;
+    }
+
     .catalogo-error {
         font-size: 13px;
         color: red;
-        margin-bottom: 0 !important;
+        position: absolute;
+        margin-top: -1.6rem !important;
+         @media screen and (max-width: 430px) {
+           margin-top: -2rem!important;
+        }
     }
+    
     .card {
         width: 250px;
     }

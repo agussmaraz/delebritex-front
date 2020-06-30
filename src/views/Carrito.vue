@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <div class="space">
-        <div class="list-checkout">
+        <div class="list-checkout" v-if="carrito.length >= 1">
             <ul class="checkout-list">
                 <li class="list-of-names">
                     <span class="list-names"></span>
@@ -29,6 +29,7 @@
             </ul>
             <div class="checkout-message">
                 <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
+                <v-img v-if="carrito.length == 0" src="/img/fondo.png" width="70%" class="background-margin"></v-img>
                 <div class="d-flex justify-content-around">
                     <v-btn icon smallto="/catalogo" class="boton"><v-icon class="fas fa-angle-left"></v-icon ></v-btn>
                     <v-btn icon small v-if="carrito.length >= 1" @click="removeFromCart()"><v-icon class="fas fa-trash"></v-icon></v-btn>
@@ -209,6 +210,11 @@
 </script>
 
 <style lang="scss">
+    .background-margin{
+        margin-left: auto !important;
+        margin-right: auto !important;
+        margin-bottom: 100px!important;
+    }
     .checkout-box {
         width: 100%;
         max-width: 1200px;
@@ -267,8 +273,12 @@
     .product-image {
         grid-column: 1/2;
         width: 50%;
-        height: 100%;
+        height: 120%;
         border-radius: 50%;
+        @media screen and (max-width:750px) {
+            height: 100%;
+            width: 70%;
+        }
     }
 
     .product-name {
