@@ -135,8 +135,7 @@ router.beforeEach(carritoAdmin);
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {
-        // console.log(store.state.user)
-        if (!store.state.user) {
+        if (!store.state.user && !localStorage.getItem('usertoken')) {
             next({
                 name: 'Inicio de sesion',
             });

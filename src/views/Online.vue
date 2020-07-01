@@ -3,7 +3,7 @@
         <h1 class="mt-2">Ventas Online</h1>
         <v-data-table :headers="headersReservas" :items="productosPorCarrito" :items-per-page="5" class="elevation-1 tabla-online mt-5">
             <template v-slot:item.estado="{ item }">
-                <v-chip :color="getColor(item.estado)"  dark>{{ test(item.estado) }}</v-chip>
+                <v-chip :color="getColor(item.estado)" dark>{{ test(item.estado) }}</v-chip>
             </template>
             <template v-slot:item.actions="{ item }">
                 <v-icon small color=" blue darken-2" class="mr-2" @click="mostrarReserva(item)">
@@ -39,9 +39,7 @@
                             </v-list-item-content>
                             <v-img class="white--text align-end" max-width="100"> </v-img>
                         </v-list-item>
-                        <div class="pb-3">
-                            <v-btn small class="ml-3" @click="newMovement(carrito)">Entregado</v-btn>
-                        </div>
+                        <div class="pb-3" v-if="carrito.estado == 5"><v-btn small class="ml-3" @click="entregar(carrito)">Entregado</v-btn></div>
                     </v-card>
                 </v-dialog>
             </template>
@@ -68,24 +66,29 @@
             };
         },
         methods: {
-            test(estado) {
-                if(estado == 1){
-                    return 'Nuevo'
-                } else if(estado == 3){
-                    return 'Rechazado'
-                } else {
-                    return 'Preparando'
-                }
-            },
             ...mapActions({
                 getCarritos: 'carritos/getAll',
                 changeState: 'carritos/changeState',
                 newMovement: 'carritos/newMovement',
                 reject: 'carritos/reject',
             }),
+            test(estado) {
+                if (estado == 1) {
+                    return 'Nuevo';
+                } else if (estado == 3) {
+                    return 'Rechazado';
+                } else {
+                    return 'Preparando';
+                }
+            },
+            entregar(carrito) {
+                this.newMovement(carrito);
+                this.dialog = false;
+            },
             mostrarReserva(carrito) {
                 this.dialog = true;
                 this.carrito = carrito;
+                console.log(carrito);
                 this.productos = carrito['productos'];
             },
             getColor(estado) {

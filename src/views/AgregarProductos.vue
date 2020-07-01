@@ -5,7 +5,7 @@
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
             <v-form enctype="multipart/form-data" class="formProducto" data-app>
                 <template>
-                    <v-row>
+                    <v-row class="form-margin">
                         <v-col cols="5" md="6">
                             <v-text-field v-model="producto.nombre" label="Nombre del producto" required></v-text-field>
                             <p v-if="error" class=" p-error">
@@ -222,6 +222,10 @@
 </script>
 
 <style lang="scss">
+    .form-margin {
+        margin-left: -50px !important;
+        margin-right: -100px !important;
+    }
     .margin {
         @media screen and (max-width: 990px) {
             margin-bottom: 40% !important;
