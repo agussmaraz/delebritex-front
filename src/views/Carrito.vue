@@ -16,28 +16,41 @@
         </div>
         <div class="checkout-box">
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-            <ul v-for="(item, index) in carrito" :key="index" class="checkout-list">
-                <li class="checkout-product">
-                    <img :src="item.imagen" alt="" class="product-image" />
-                    <h3 class="product-name">{{ item.nombre }}</h3>
-                    <span class="product-price">{{ item.paquetesElegidos }}</span>
-                    <span class="product-price">{{ cantidad(item) }}</span>
-                    <span class="product-price">{{item.precioUnidad}}</span>
-                    <span class="product-price">${{ calcularPrecio(item) }}</span>
-                    <button class="product-remove" @click="removeItemFromCart(item)">X</button>
-                </li>
-            </ul>
+            <div class="overflow-y-auto" style="max-height: 550px">
+                <ul v-for="(item, index) in carrito" :key="index" class="checkout-list overflow-y-auto" style="max-height: 300px">
+                    <li class="checkout-product">
+                        <img :src="item.imagen" alt="" class="product-image" />
+                        <h4 class="product-name">{{ item.nombre }}</h4>
+                        <span class="product-price">{{ item.paquetesElegidos }}</span>
+                        <span class="product-price">{{ cantidad(item) }}</span>
+                        <span class="product-price">{{item.precioUnidad}}</span>
+                        <span class="product-price">${{ calcularPrecio(item) }}</span>
+                        <button class="product-remove" @click="removeItemFromCart(item)">X</button>
+                    </li>
+                </ul>
+            </div>
+                
             <div class="checkout-message">
                 <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
                 <v-img v-if="carrito.length == 0" src="/img/fondo.png" width="70%" class="background-margin"></v-img>
                 <div class="d-flex justify-content-around">
-                    <v-btn icon smallto="/catalogo" class="boton"><v-icon class="fas fa-angle-left"></v-icon ></v-btn>
+                    <v-btn icon small to="/catalogo" class="boton"><v-icon class="fas fa-angle-left"></v-icon ></v-btn>
                     <v-btn icon small v-if="carrito.length >= 1" @click="removeFromCart()"><v-icon class="fas fa-trash"></v-icon></v-btn>
                     <v-btn icon small v-if="carrito.length >= 1" @click="openTicket = !openTicket"><v-icon  class="fas fa-angle-right"></v-icon></v-btn>
                 </div>
                 <v-overlay v-if="openTicket">
                     <v-card>
-                        <v-list class="ticket" :light="true">
+                        <v-list class="ticket overflow-y-auto" style="max-height: 300px" :light="true">
+                            <ul class="checkout-list">
+                                <li class="ticket-list">
+                                <span class="list-names"></span>
+                                <span class="list-names">Producto</span>
+                                <span class="list-names">Paquetes</span>
+                                <span class="list-names">Unidades</span>
+                                <span class="list-names">Precio Unidad</span>
+                                <span class="list-names">Subtotal</span>
+                                </li>
+                            </ul>
                             <v-list-item v-for="(item, index) in carrito" :key="index">
                                 <v-list-item-avatar>
                                     <v-img :src="item.imagen"></v-img>
@@ -52,6 +65,9 @@
 
                                 <v-list-item>
                                     <div>x{{ cantidad(item) }}</div>
+                                </v-list-item>
+                                <v-list-item>
+                                    <div>${{ item.precioUnidad }}</div>
                                 </v-list-item>
                                 <v-list-item>
                                     <div>${{ calcularPrecio(item) }}</div>
@@ -241,8 +257,21 @@
 
     .checkout-product {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr 1fr;
+        grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr 0.5fr 1fr;
         background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
+        border-radius: 5px;
+        list-style: none;
+        box-sizing: border-box;
+        padding: 1em;
+        margin: 0.5rem 0;
+    }
+
+    .list-of-names {
+        display: grid;
+        grid-template-columns: 0.7fr 1.5fr 1fr 1.5fr 1fr 1fr 1.5fr;
+        background-color: #424242;
+        color:#E9E9E9;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;
         list-style: none;
@@ -250,17 +279,22 @@
         padding: 1.5em;
         margin: 1rem 0;
     }
-
-    .list-of-names {
+    
+    .ticket-list {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr 1fr;
-        background-color: #fff;
+        grid-template-columns: 0.3fr 1.5fr 1fr 1.5fr 1fr 1.5fr;
+        background-color: #1E1E1E;
+        color:#E9E9E9;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;
         list-style: none;
         box-sizing: border-box;
-        padding: 1.5em;
-        margin: 1rem 0;
+        padding: 1em;
+        margin: -2rem -0.8rem 0 -0.8rem;
+    }
+
+    .ticket-list * {
+        place-self: center;
     }
 
     .list-of-names * {
@@ -273,11 +307,10 @@
     .product-image {
         grid-column: 1/2;
         width: 50%;
-        height: 120%;
+        height: 100%;
         border-radius: 50%;
         @media screen and (max-width:750px) {
-            height: 100%;
-            width: 70%;
+            display: none;
         }
     }
 
@@ -351,6 +384,7 @@
         margin-right: auto !important;
     }
     .space{
+
     @media screen and (max-width: 768px) {
             margin-bottom: 40rem;
         }
