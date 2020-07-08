@@ -82,7 +82,7 @@
         },
         methods: {
             ...mapActions({
-                getProducts: 'getProducts',
+                getProducts: 'productos/getProducts',
             }),
             // Transformar la fecha en DD-MM-YYYY
             formatearFecha(fecha) {
@@ -148,7 +148,7 @@
         },
         computed: {
             ...mapState({
-                productos: (state) => state.productos,
+                productos: (state) => state.productos.productos,
             }),
             // Transformar los productos en un array para acceder a los datos y transformarlo en un crud.
             obtenerProductos() {

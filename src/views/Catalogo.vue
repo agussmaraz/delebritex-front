@@ -126,32 +126,18 @@
         },
         computed: {
             ...mapState({
-                productos: (state) => state.productos,
-                carrito: (state) => state.carrito,
-                filtro: (state) => state.filtro.productos,
+                productos: (state) => state.productos.productos,
+                carrito: (state) => state.carritos.carrito,
+                filtro: (state) => state.productos.filtro.productos,
             }),
         },
         methods: {
             ...mapActions({
-                getProducts: 'getProducts',
-                addToCart: 'addToCart',
-                removeFromCart: 'removeFromCart',
-                findProduct: 'findProduct',
+                getProducts: 'productos/getProducts',
+                addToCart: 'carritos/addToCart',
+                removeFromCart: 'carritos/removeFromCart',
+                findProduct: 'productos/findProduct',
             }),
-            conseguirCategorias() {
-                this.axios.get('/categoriaBuscar').then((res) => {
-                    this.categorias = res.data.map((element) => {
-                        const payload = {
-                            name: element.nombre,
-                            id: element.id,
-                        };
-                        return payload;
-                    });
-
-                    this.items[0].children = this.categorias;
-                });
-            },
-
             calcularPaquetes(element) {
                 const empaques = Number(element.totalUnidad) / Number(element.unidadPorEmpaque);
                 this.paquetes = Math.ceil(empaques);
@@ -231,7 +217,7 @@
         },
         beforeMount() {
             this.getProducts();
-            this.conseguirCategorias();
+            // this.conseguirCategorias();
         },
     };
 </script>

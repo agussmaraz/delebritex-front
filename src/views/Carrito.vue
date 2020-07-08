@@ -56,15 +56,19 @@
                                     <v-img :src="item.imagen"></v-img>
                                 </v-list-item-avatar>
 
-                                <v-list-item>
-                                    <div>{{ item.nombre }}</div>
-                                </v-list-item>
-                                <v-list-item>
-                                    <div>{{ item.paquetesElegidos }}</div>
-                                </v-list-item>
+                                    <v-list-item>
+                                        <div>{{ item.nombre }}</div>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <div>{{ item.paquetesElegidos }}</div>
+                                    </v-list-item>
 
-                                <v-list-item>
-                                    <div>x{{ cantidad(item) }}</div>
+                                    <v-list-item>
+                                        <div>x{{ cantidad(item) }}</div>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <div>${{ calcularPrecio(item) }}</div>
+                                    </v-list-item>
                                 </v-list-item>
                                 <v-list-item>
                                     <div>${{ item.precioUnidad }}</div>
@@ -85,12 +89,11 @@
                 <h3  v-if="carrito.paquetesElegidos >= 10">Con descuento: {{ sacarPorcentaje }}</h3>  
             </div>
         </div>
-    </div>
     </v-app>
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex';
+    import { mapState, mapActions, mapGetters } from 'vuex';
     import jsPDF from 'jspdf';
     import 'jspdf-autotable';
     export default {
@@ -102,28 +105,35 @@
                 ticket: [],
                 dismissSecs: 5,
                 dismissCountDown: 0,
-                mensaje: { color: '', texto: '' },
             };
         },
         computed: {
             ...mapState({
-                carrito: (state) => state.carrito,
+                carrito: (state) => state.carritos.carrito,
+                mensaje: (state) => state.carritos.mensaje,
             }),
-            sacarPorcentaje() {
+            ...mapGetters({
+                paquetes: 'carritos/paquetes',
+                cantidades: 'carritos/cantidadesElegida',
+            }),
+
+            descuento() {
+                console.log(this.paquetes);
                 if (this.paquetes >= 10) {
                     const porcentaje = (Number(this.sumaPrecio(this.carrito)) * 20) / 100;
                     const total = this.sumaPrecio(this.carrito) - Number(porcentaje);
                     return '$' + total;
+                    // console.log(total)
                 }
-            },
-            cantidadesElegida() {
-                return this.carrito.reduce((total, item) => total + Number(item.cantidadElegida), 0);
-            },
-            paquetes() {
-                return this.carrito.reduce((total, item) => total + Number(item.paquetesElegidos), 0);
             },
         },
         methods: {
+            ...mapActions({
+                removeFromCart: 'carritos/removeFromCart',
+                removeItemFromCart: 'carritos/removeItemFromCart',
+                removeQuantity: 'productos/removeQuantity',
+                newCart: 'carritos/newCartDB',
+            }),
             sumaPrecio(item) {
                 return item.reduce((total, item) => total + Number(this.calcularPrecio(item)), 0);
             },
@@ -136,11 +146,6 @@
             closeOverlay() {
                 this.openTicket = false;
             },
-            ...mapActions({
-                removeFromCart: 'removeFromCart',
-                removeItemFromCart: 'removeItemFromCart',
-                removeQuantity: 'removeQuantity',
-            }),
             // Funcion para modificar como es que queremos que se vea el pdf a la hora de exportarlo y con que data.
             exportPDF() {
                 var doc = new jsPDF('p', 'pt');
@@ -160,7 +165,7 @@
                     head: [['Producto', 'Unidades', 'Precio']],
                     body: this.ticket,
                 });
-                 doc.save('ticket.pdf');
+                doc.save('ticket.pdf');
             },
             // Guardar el carrito en la base de datos transformandolo en el objeto que nos parece mas conveniente
             guardarCarrito() {
@@ -183,27 +188,12 @@
                     };
                     return info;
                 });
-                this.axios.post('/nuevo-carrito', payload).then((res) => {
-                    this.mensaje.color = 'success';
-                    this.mensaje.texto = 'La compra fue realizada con exito!';
-                    this.sacarCantidadesDB(payload);
-                    console.log(payload);
-                    this.showAlert();
-                    this.removeFromCart();
-                });
+                this.newCart(payload);
+                this.showAlert();
                 this.openTicket = false;
                 this.exportPDF();
             },
-            sacarCantidadesDB(payload) {
-                for (let index = 0; index < payload.length; index++) {
-                    const element = payload[index];
-                    const id = element[id];
-                    this.removeQuantity(element);
-                    this.axios.put(`/stock/${id}`, payload).then((res) => {
-                        console.log(res.data);
-                    });
-                }
-            },
+
             // Sacar el precio de las unidades que eligio
             calcularPrecio(item) {
                 const totalPaquetes = Number(item.paquetesElegidos) * Number(item.precioBulto);
@@ -226,10 +216,18 @@
 </script>
 
 <style lang="scss">
-    .background-margin{
+    .margin {
+        @media screen and (max-width: 990px) {
+            margin-bottom: 40% !important;
+        }
+        @media screen and (max-height: 1903px) {
+            margin-bottom: 40% !important;
+        }
+    }
+    .background-margin {
         margin-left: auto !important;
         margin-right: auto !important;
-        margin-bottom: 100px!important;
+        margin-bottom: 100px !important;
     }
     .checkout-box {
         width: 100%;
@@ -323,7 +321,7 @@
         font-weight: bold;
     }
 
-    .list-names{
+    .list-names {
         font-size: 1.1vw;
         @media screen and (max-width: 360px) {
             font-size: 3vw;
@@ -346,11 +344,11 @@
         cursor: pointer;
     }
 
-     .total{
+    .total {
         align-self: flex-end;
     }
 
-    .total h3{
+    .total h3 {
         font-size: 2em;
         font-weight: bold;
         align-self: flex-end;

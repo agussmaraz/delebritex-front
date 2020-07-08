@@ -20,18 +20,17 @@
                             <b-dropdown-item to="/ventaPresencial">Venta Presencial</b-dropdown-item>
                             <b-dropdown-item to="/historial">Historial</b-dropdown-item>
                         </b-nav-item-dropdown>
-                            <b-nav-item class="li-nav " to="/carrito" v-if="isLogged == true">
-                                <b-icon icon="bag"></b-icon>
-                                <p v-if="carrito.length > 0" class="cantidadCarrito">{{ carrito.length }}</p>      
-                            </b-nav-item>
-                            <b-nav-item-dropdown right class="">
-                                <template v-slot:button-content>
-                                    <em>{{ user.nombre }}</em>
-                                </template>
-                                <b-dropdown-item to="/usuario"> Compras</b-dropdown-item>
-                                <b-dropdown-item @click="logout">Cerrar sesión</b-dropdown-item>
-                            </b-nav-item-dropdown>
-
+                        <b-nav-item class="li-nav " to="/carrito" v-if="isLogged == true">
+                            <b-icon icon="bag"></b-icon>
+                            <p v-if="carrito.length > 0" class="cantidadCarrito">{{ carrito.length }}</p>
+                        </b-nav-item>
+                        <b-nav-item-dropdown v-if="isLogged == true" right class="">
+                            <template v-slot:button-content>
+                                <em>{{ user.nombre }}</em>
+                            </template>
+                            <b-dropdown-item to="/usuario"> Compras</b-dropdown-item>
+                            <b-dropdown-item @click="logout">Cerrar sesión</b-dropdown-item>
+                        </b-nav-item-dropdown>
                     </b-navbar-nav>
                 </b-collapse>
             </b-navbar>
@@ -76,7 +75,7 @@
         computed: {
             ...mapState({
                 user: (state) => state.user,
-                carrito: (state) => state.carrito,
+                carrito: (state) => state.carritos.carrito,
             }),
             ...mapGetters({
                 isLogged: 'isLogged',
@@ -88,12 +87,13 @@
                 setUser: 'setUser',
                 login: 'login',
                 loginWithToken: 'loginWithToken',
+                removeFromCart: 'carritos/removeFromCart',
             }),
             logout() {
                 const usuario = JSON.parse(localStorage.getItem('usertoken'));
                 const id = usuario['id'];
                 this.axios.delete(`/usuarioToken/${id}`, { data: usuario }).then((res) => {
-                    // console.log('se elimino el token');
+                    this.removeFromCart();
                     this.login(res.data);
                     this.$router.push({ name: 'Home' });
                 });
@@ -144,19 +144,11 @@
         position: absolute;
         top: 1px;
         right: -3px;
-        @media screen and (max-width: 991px) {
-            position: relative;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 5px;
-            margin-bottom: 0 !important;
-            width: 26px;
-            height: 26px;
-            font-size: 17px;
-            border-radius: 20px;
-        }
+       
     }
     .li-nav a {
         position: relative;
+        width: 40px;
+        margin: 0 auto;
     }
 </style>

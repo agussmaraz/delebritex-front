@@ -67,10 +67,10 @@
         },
         methods: {
             ...mapActions({
-                findProduct: 'findProduct',
-                addCartAdmin: 'addCartAdmin',
-                removeCartAdmin: 'removeCartAdmin',
-                getProducts: 'getProducts',
+                findProduct: 'productos/findProduct',
+                addCartAdmin: 'carritos/addCartAdmin',
+                removeCartAdmin: 'carritos/removeCartAdmin',
+                getProducts: 'productos/getProducts',
             }),
             agregarProducto() {
                 let buffer = {};
@@ -125,9 +125,9 @@
         },
         computed: {
             ...mapState({
-                productos: (state) => state.productos,
-                filtro: (state) => state.filtro.productos,
-                carritoAdmin: (state) => state.carritoAdmin,
+                productos: (state) => state.productos.productos,
+                filtro: (state) => state.productos.filtro.productos,
+                carritoAdmin: (state) => state.carritos.carritoAdmin,
             }),
             empaques() {
                 const unidadPorEmpaque = this.productoElegido.unidadPorEmpaque;

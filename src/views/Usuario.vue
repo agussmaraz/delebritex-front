@@ -1,28 +1,28 @@
 <template>
     <div class="usuario margin">
         <!-- <v-app> -->
-        <h1>Hola {{ usuario.nombre }}</h1>
-        <h5>Estas son las compras que hiciste ultimamente</h5>
-        <br />
-        <v-card class="mx-auto mb-4 " max-width="700" outlined v-for="(carrito, index) in accederNumeroCompra" :key="index">
-            <div class="p-usuario">Fecha: {{ carrito.fecha }}</div>
-            <v-list-item three-line v-for="(item, index) in carrito.productos" :key="index">
-                <v-list-item-content>
-                    <v-list-item-title class=" mb-1">{{ item.producto }}</v-list-item-title>
-                    <div class="d-flex">
-                        <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
-                        <v-list-item-subtitle>Empaques: {{ item.empaques }}</v-list-item-subtitle>
-                        <v-list-item-subtitle>Precio: ${{ item.precioTotal }}</v-list-item-subtitle>
-                    </div>
-                </v-list-item-content>
-                <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
-            </v-list-item>
+            <h1>Hola {{ usuario.nombre }}</h1>
+            <h5>Estas son las compras que hiciste ultimamente</h5>
             <br />
-            <div class="p-usuario">
-                <p>Total: $ {{ carrito.total }}</p>
-                <p>Estado: {{ carrito.estado }}</p>
-            </div>
-        </v-card>
+            <v-card class="mx-auto mb-4" color="#EBEBEB" max-width="700" outlined v-for="(carrito, index) in accederNumeroCompra" :key="index">
+                <div class="p-usuario">Fecha: {{ carrito.fecha }}</div>
+                <v-list-item three-line v-for="(item, index) in carrito.productos" :key="index">
+                    <v-list-item-content>
+                        <v-list-item-title class=" mb-1">{{ item.producto }}</v-list-item-title>
+                        <div class="d-flex">
+                            <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
+                            <v-list-item-subtitle>Empaques: {{ item.empaques }}</v-list-item-subtitle>
+                            <v-list-item-subtitle>Precio: ${{ item.precioTotal }}</v-list-item-subtitle>
+                        </div>
+                    </v-list-item-content>
+                    <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
+                </v-list-item>
+                <br />
+                <div class="p-usuario">
+                    <p>Total: $ {{ carrito.total }}</p>
+                    <p>Estado: {{ carrito.estado }}</p>
+                </div>
+            </v-card>
         <!-- </v-app> -->
     </div>
 </template>
