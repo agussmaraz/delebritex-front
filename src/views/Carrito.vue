@@ -38,34 +38,7 @@
                         <v-btn icon small v-if="carrito.length >= 1" @click="openTicket = !openTicket"><v-icon class="fas fa-angle-right"></v-icon></v-btn>
                     </div>
                     <v-overlay v-if="openTicket">
-                        <v-card>
-                            <v-list class="ticket overflow-y-auto" style="max-height: 300px" :light="true">
-                                <v-list-item v-for="(item, index) in carrito" :key="index">
-                                    <v-list-item-avatar>
-                                        <v-img :src="item.imagen"></v-img>
-                                    </v-list-item-avatar>
-
-                                    <v-list-item>
-                                        <div>{{ item.nombre }}</div>
-                                    </v-list-item>
-                                    <v-list-item>
-                                        <div>{{ item.paquetesElegidos }}</div>
-                                    </v-list-item>
-
-                                    <v-list-item>
-                                        <div>x{{ cantidad(item) }}</div>
-                                    </v-list-item>
-                                    <v-list-item>
-                                        <div>${{ calcularPrecio(item) }}</div>
-                                    </v-list-item>
-                                </v-list-item>
-                            </v-list>
-                            <div class="mt-2">
-                                <!-- <v-btn @click="exportPDF()" >Obtener ticket</v-btn> -->
-                                <v-btn class="mb-2" @click="guardarCarrito()"> Comprar </v-btn>
-                                <v-btn class="ml-5 mb-2" @click="closeOverlay()">Cerrar</v-btn>
-                            </div>
-                        </v-card>
+                        <dialogCarrito />
                     </v-overlay>
                 </div>
                 <div class="total">
@@ -81,7 +54,11 @@
     import { mapState, mapActions, mapGetters } from 'vuex';
     import jsPDF from 'jspdf';
     import 'jspdf-autotable';
+    import dialogCarrito from '../components/dialogCarrito';
     export default {
+        components: {
+            dialogCarrito: dialogCarrito,
+        },
         data() {
             return {
                 openTicket: false,

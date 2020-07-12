@@ -2,6 +2,11 @@
     <div>
         <h1 class="mt-2">Ventas Online</h1>
         <v-data-table :headers="headersReservas" :items="productosPorCarrito" :items-per-page="5" class="elevation-1 tabla-online mt-5">
+            <template v-slot:item.contacto="{ item }">
+                <v-icon small color=" blue darken-2" class="mr-2" @click="mostrarContacto(item)">
+                    mdi-eye
+                </v-icon>
+            </template>
             <template v-slot:item.estado="{ item }">
                 <v-chip :color="getColor(item.estado)" dark>{{ test(item.estado) }}</v-chip>
             </template>
@@ -43,6 +48,18 @@
                     </v-card>
                 </v-dialog>
             </template>
+            <template v-slot:top>
+                <v-dialog v-model="contacto" width="300px">
+                    <v-card outlined>
+                        <v-list v-for="(item, index) in productosPorCarrito" :key="index">
+                            <h5>Contacto</h5>
+                            <v-list-item-subtitle three-line> Dirección: {{ item.direccion }} </v-list-item-subtitle>
+                            <v-list-item-subtitle three-line> Piso: {{ item.piso }} </v-list-item-subtitle>
+                            <v-list-item-subtitle three-line> Telefono: {{ item.telefono }} </v-list-item-subtitle>
+                        </v-list>
+                    </v-card>
+                </v-dialog>
+            </template>
         </v-data-table>
     </div>
 </template>
@@ -56,13 +73,14 @@
                     { text: 'Fecha', value: 'fecha' },
                     { text: 'Numero', value: 'numeroCompra' },
                     { text: 'Usuario', value: 'usuario' },
-                    { text: 'Contacto', value: 'email' },
+                    { text: 'Contacto', value: 'contacto' },
                     { text: 'Estado', value: 'estado' },
                     { text: 'Accion', value: 'actions' },
                 ],
                 productos: [],
                 dialog: false,
                 carrito: '',
+                contacto: false,
             };
         },
         methods: {
@@ -95,6 +113,9 @@
                 if (estado == 5) return 'green';
                 else if (estado == 3) return 'orange';
                 else return 'yellow';
+            },
+            mostrarContacto(item) {
+                this.contacto = true;
             },
         },
         computed: {
