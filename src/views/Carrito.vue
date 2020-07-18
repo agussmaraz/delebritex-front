@@ -35,9 +35,9 @@
                     <div class="d-flex justify-content-around">
                         <v-btn icon small to="/catalogo" class="boton"><v-icon class="fas fa-angle-left"></v-icon></v-btn>
                         <v-btn icon small v-if="carrito.length >= 1" @click="removeFromCart()"><v-icon class="fas fa-trash"></v-icon></v-btn>
-                        <v-btn icon small v-if="carrito.length >= 1" @click="openTicket = !openTicket"><v-icon class="fas fa-angle-right"></v-icon></v-btn>
+                        <v-btn icon small v-if="carrito.length >= 1" @click="changeState()"><v-icon class="fas fa-angle-right"></v-icon></v-btn>
                     </div>
-                    <v-overlay v-if="openTicket">
+                    <v-overlay v-if="dialog">
                         <dialogCarrito />
                     </v-overlay>
                 </div>
@@ -52,8 +52,6 @@
 
 <script>
     import { mapState, mapActions, mapGetters } from 'vuex';
-    import jsPDF from 'jspdf';
-    import 'jspdf-autotable';
     import dialogCarrito from '../components/dialogCarrito';
     export default {
         components: {
@@ -61,7 +59,6 @@
         },
         data() {
             return {
-                openTicket: false,
                 info: [],
                 bodyInfo: [],
                 ticket: [],
@@ -73,6 +70,7 @@
             ...mapState({
                 carrito: (state) => state.carritos.carrito,
                 mensaje: (state) => state.carritos.mensaje,
+                dialog: (state) => state.dialog,
             }),
             ...mapGetters({
                 paquetes: 'carritos/paquetes',
@@ -95,6 +93,7 @@
                 removeItemFromCart: 'carritos/removeItemFromCart',
                 removeQuantity: 'productos/removeQuantity',
                 newCart: 'carritos/newCartDB',
+                changeState: 'changeStateDialogTrue'
             }),
             sumaPrecio(item) {
                 return item.reduce((total, item) => total + Number(this.calcularPrecio(item)), 0);
@@ -108,27 +107,7 @@
             closeOverlay() {
                 this.openTicket = false;
             },
-            // Funcion para modificar como es que queremos que se vea el pdf a la hora de exportarlo y con que data.
-            exportPDF() {
-                var doc = new jsPDF('p', 'pt');
-                doc.text('Delebritex', 40, 40);
-                this.info = this.carrito.map((element) => {
-                    return element;
-                });
-                this.info.forEach((element) => {
-                    const new_info = [element.nombre, element.cantidadElegida, '$' + element.precioUnidad];
-                    this.ticket.push(new_info);
-                });
-                const total = ['Total: ' + this.calcularTotal()];
-                this.ticket.push(total);
-                doc.autoTable({
-                    theme: 'striped',
-                    margin: { top: 60 },
-                    head: [['Producto', 'Unidades', 'Precio']],
-                    body: this.ticket,
-                });
-                doc.save('ticket.pdf');
-            },
+
             // Guardar el carrito en la base de datos transformandolo en el objeto que nos parece mas conveniente
             guardarCarrito() {
                 const storage = localStorage.getItem('usertoken');

@@ -1,5 +1,5 @@
 <template>
-    <v-stepper v-model="e1" class="step-style">
+    <v-stepper v-if="openTicket" v-model="e1" class="step-style">
         <v-stepper-header>
             <v-stepper-step :complete="e1 > 1" step="1">Dirección</v-stepper-step>
 
@@ -15,7 +15,7 @@
         <v-stepper-items>
             <v-stepper-content step="1">
                 <p class="p-step">Por favor, escriba la direccion de entrega del producto. El pago es en efectivo al momento de la entrega</p>
-                <vuetify-algolia-places v-model="direccion" />
+                <places v-model="direccion" placeholder="Inserte direccion" :options="options"> </places>
                 <v-text-field v-model="piso" label="Piso" required></v-text-field>
                 <v-text-field v-model="telefono" label="Telefono" required></v-text-field>
 
@@ -23,7 +23,7 @@
                     Continue
                 </v-btn>
 
-                <v-btn text>Cancel</v-btn>
+                <v-btn text @click="changeState()">Cancel</v-btn>
             </v-stepper-content>
 
             <v-stepper-content step="2">
@@ -35,7 +35,6 @@
                             </v-list-item-avatar>
 
                             <v-list-item>
-                                <!-- {{ direccion.city}} -->
                                 <div>{{ item.nombre }}</div>
                             </v-list-item>
                             <v-list-item>
@@ -55,19 +54,20 @@
                     Continue
                 </v-btn>
 
-                <v-btn text @click="e1 = 1">Cancel</v-btn>
+                <v-btn text @click="changeState()">Cancel</v-btn>
             </v-stepper-content>
             <v-stepper-content step="3">
                 <div>
-                    <p class="p-step" v-if="piso.length < 1">La entrega sera a nombre de {{ usuario.nombre }} en la direccion {{ direccion.name }}, {{ direccion.city }}</p>
-                    <p class="p-step" v-else>La entrega sera a nombre de {{ usuario.nombre }} en la direccion {{ direccion.name }}, {{ direccion.city }}, {{ piso }}</p>
+                    <p class="p-step" v-if="piso.length < 1">La entrega sera a nombre de {{ usuario.nombre }} en la direccion {{ direccion }}</p>
+                    <p class="p-step" v-else>La entrega sera a nombre de {{ usuario.nombre }} en la direccion {{ direccion }}, {{ piso }}</p>
+                    <p class="p-step">En 'Usuario' => 'Compras', le aparecerá la compra y el estado de la misma.</p>
                     <p>Total: ${{ sumaPrecio(this.carrito) }}</p>
                 </div>
                 <v-btn color="primary" @click="guardarCarrito()">
                     Continue
                 </v-btn>
 
-                <v-btn text @click="e1 = 1">Cancel</v-btn>
+                <v-btn text @click="changeState()">Cancel</v-btn>
             </v-stepper-content>
         </v-stepper-items>
     </v-stepper>
@@ -75,15 +75,25 @@
 
 <script>
     import { mapState, mapActions, mapGetters } from 'vuex';
+    import Places from 'vue-places';
+    import jsPDF from 'jspdf';
+    import 'jspdf-autotable';
     export default {
         name: 'dialogCarrito',
         data() {
             return {
+                openTicket: true,
+                options: {
+                    countries: ['AR'],
+                },
                 e1: 1,
                 direccion: '',
                 piso: '',
                 telefono: '',
             };
+        },
+        components: {
+            Places,
         },
         methods: {
             ...mapActions({
@@ -91,6 +101,7 @@
                 removeItemFromCart: 'carritos/removeItemFromCart',
                 removeQuantity: 'productos/removeQuantity',
                 newCart: 'carritos/newCartDB',
+                changeState: 'changeStateDialogFalse',
             }),
             cantidad(carrito) {
                 const totalUnidadesPaquete = Number(carrito.paquetesElegidos) * Number(carrito.unidadPorEmpaque);
@@ -106,7 +117,7 @@
                 return item.reduce((total, item) => total + Number(this.calcularPrecio(item)), 0);
             },
             guardarCarrito() {
-                let direccion = this.direccion.name + ',' + this.direccion.city;
+                let direccion = this.direccion;
                 const storage = localStorage.getItem('usertoken');
                 const usuario = JSON.parse(storage);
                 const id = usuario['id'];
@@ -134,12 +145,36 @@
                 this.openTicket = false;
                 this.exportPDF();
             },
+            exportPDF() {
+                var doc = new jsPDF('p', 'pt');
+                doc.text('Delebritex', 40, 40);
+                this.info = this.carrito.map((element) => {
+                    return element;
+                });
+                this.info.forEach((element) => {
+                    const new_info = [element.nombre, element.cantidadElegida, '$' + element.precioUnidad];
+                    this.ticket.push(new_info);
+                });
+                const total = ['Total: ' + this.calcularTotal()];
+                this.ticket.push(total);
+                doc.autoTable({
+                    theme: 'striped',
+                    margin: { top: 60 },
+                    head: [['Producto', 'Unidades', 'Precio']],
+                    body: this.ticket,
+                });
+                doc.save('ticket.pdf');
+            },
+            cerrarDialog() {
+                this.openTicket = false;
+            },
         },
         computed: {
             ...mapState({
                 carrito: (state) => state.carritos.carrito,
                 mensaje: (state) => state.carritos.mensaje,
                 usuario: (state) => state.user,
+                dialog: (state) => state.dialog,
             }),
             ...mapGetters({
                 paquetes: 'carritos/paquetes',
