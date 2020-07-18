@@ -34,13 +34,7 @@
                 </v-list-item>
 
                 <v-divider></v-divider>
-
-                <v-list>
-                    <v-treeview v-model="selection" return-object selectable selected-color="green" activatable shaped rounded open-on-click :items="items"> </v-treeview>
-                    <p v-for="node in selection" :key="node.id">
-                        {{ node.name }}
-                    </p>
-                </v-list>
+                
             </v-navigation-drawer>
             <v-dialog v-model="dialog" max-width="700" class="mobile">
                 <v-card class="mx-auto" height="600" width="700" outlined>

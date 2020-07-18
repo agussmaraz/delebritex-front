@@ -51,10 +51,11 @@ const getters = {
 
 const actions = {
     newCartDB({ commit, dispatch }, payload) {
-        dispatch('removeQuantityDB', payload);
+       
         axios
             .post('/nuevo-carrito', payload)
             .then((res) => {
+                dispatch('removeQuantityDB', payload);
                 const data = 'La compra fue exitosa';
                 commit('SET_MENSAJE', [data, 'success']);
                 commit('REMOVE_FROM_CART');

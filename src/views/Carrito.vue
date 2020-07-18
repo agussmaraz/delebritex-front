@@ -23,7 +23,7 @@
                         <h4 class="product-name">{{ item.nombre }}</h4>
                         <span class="product-price">{{ item.paquetesElegidos }}</span>
                         <span class="product-price">{{ cantidad(item) }}</span>
-                        <span class="product-price">{{item.precioUnidad}}</span>
+                        <span class="product-price">${{item.precioUnidad}}</span>
                         <span class="product-price">${{ calcularPrecio(item) }}</span>
                         <button class="product-remove" @click="removeItemFromCart(item)">X</button>
                     </li>
@@ -67,18 +67,15 @@
                                         <div>x{{ cantidad(item) }}</div>
                                     </v-list-item>
                                     <v-list-item>
+                                        <div>${{item.precioUnidad}}</div>
+                                    </v-list-item>
+                                    <v-list-item>
                                         <div>${{ calcularPrecio(item) }}</div>
                                     </v-list-item>
                                 </v-list-item>
-                                <v-list-item>
-                                    <div>${{ item.precioUnidad }}</div>
-                                </v-list-item>
-                                <v-list-item>
-                                    <div>${{ calcularPrecio(item) }}</div>
-                                </v-list-item>
-                            </v-list-item>
+                               
                         </v-list>
-                        <!-- <v-btn @click="exportPDF()" >Obtener ticket</v-btn> -->
+                        <v-btn @click="exportPDF()" >Obtener ticket</v-btn>
                         <v-btn @click="guardarCarrito()"> Comprar </v-btn>
                         <v-btn @click="closeOverlay()">Cerrar</v-btn>
                     </v-card>
@@ -89,6 +86,7 @@
                 <h3  v-if="carrito.paquetesElegidos >= 10">Con descuento: {{ sacarPorcentaje }}</h3>  
             </div>
         </div>
+    </div>
     </v-app>
 </template>
 
@@ -157,7 +155,7 @@
                     const new_info = [element.nombre, element.cantidadElegida, '$' + element.precioUnidad];
                     this.ticket.push(new_info);
                 });
-                const total = ['Total: ' + this.calcularTotal()];
+                const total = [" "," ",'Total: $' + this.calcularTotal()];
                 this.ticket.push(total);
                 doc.autoTable({
                     theme: 'striped',
@@ -191,7 +189,13 @@
                 this.newCart(payload);
                 this.showAlert();
                 this.openTicket = false;
-                this.exportPDF();
+                if (this.mensaje.color == 'success') {
+                    this.exportPDF();
+                }
+                if (this.mensaje.color == 'success') {
+                   this.removeFromCart(); 
+                }
+                
             },
 
             // Sacar el precio de las unidades que eligio
