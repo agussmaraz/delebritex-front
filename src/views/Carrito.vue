@@ -29,61 +29,22 @@
                     </li>
                 </ul>
             </div>
-                
-            <div class="checkout-message">
-                <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
-                <v-img v-if="carrito.length == 0" src="/img/fondo.png" width="70%" class="background-margin"></v-img>
-                <div class="d-flex justify-content-around">
-                    <v-btn icon small to="/catalogo" class="boton"><v-icon class="fas fa-angle-left"></v-icon ></v-btn>
-                    <v-btn icon small v-if="carrito.length >= 1" @click="removeFromCart()"><v-icon class="fas fa-trash"></v-icon></v-btn>
-                    <v-btn icon small v-if="carrito.length >= 1" @click="openTicket = !openTicket"><v-icon  class="fas fa-angle-right"></v-icon></v-btn>
+                <div class="checkout-message">
+                    <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
+                    <v-img v-if="carrito.length == 0" src="/img/fondo.png" width="70%" class="background-margin"></v-img>
+                    <div class="d-flex justify-content-around">
+                        <v-btn icon small to="/catalogo" class="boton"><v-icon class="fas fa-angle-left"></v-icon></v-btn>
+                        <v-btn icon small v-if="carrito.length >= 1" @click="removeFromCart()"><v-icon class="fas fa-trash"></v-icon></v-btn>
+                        <v-btn icon small v-if="carrito.length >= 1" @click="changeState()"><v-icon class="fas fa-angle-right"></v-icon></v-btn>
+                    </div>
+                    <v-overlay v-if="dialog">
+                        <dialogCarrito />
+                    </v-overlay>
                 </div>
-                <v-overlay v-if="openTicket">
-                    <v-card>
-                        <v-list class="ticket overflow-y-auto" style="max-height: 300px" :light="true">
-                            <ul class="checkout-list">
-                                <li class="ticket-list">
-                                <span class="list-names"></span>
-                                <span class="list-names">Producto</span>
-                                <span class="list-names">Paquetes</span>
-                                <span class="list-names">Unidades</span>
-                                <span class="list-names">Precio Unidad</span>
-                                <span class="list-names">Subtotal</span>
-                                </li>
-                            </ul>
-                            <v-list-item v-for="(item, index) in carrito" :key="index">
-                                <v-list-item-avatar>
-                                    <v-img :src="item.imagen"></v-img>
-                                </v-list-item-avatar>
-
-                                    <v-list-item>
-                                        <div>{{ item.nombre }}</div>
-                                    </v-list-item>
-                                    <v-list-item>
-                                        <div>{{ item.paquetesElegidos }}</div>
-                                    </v-list-item>
-
-                                    <v-list-item>
-                                        <div>x{{ cantidad(item) }}</div>
-                                    </v-list-item>
-                                    <v-list-item>
-                                        <div>${{item.precioUnidad}}</div>
-                                    </v-list-item>
-                                    <v-list-item>
-                                        <div>${{ calcularPrecio(item) }}</div>
-                                    </v-list-item>
-                                </v-list-item>
-                               
-                        </v-list>
-                        <v-btn @click="exportPDF()" >Obtener ticket</v-btn>
-                        <v-btn @click="guardarCarrito()"> Comprar </v-btn>
-                        <v-btn @click="closeOverlay()">Cerrar</v-btn>
-                    </v-card>
-                </v-overlay>
-            </div>
-            <div class="total">
-                <h3 v-if="carrito.length >= 1">Total: ${{ sumaPrecio(this.carrito) }}</h3>
-                <h3  v-if="carrito.paquetesElegidos >= 10">Con descuento: {{ sacarPorcentaje }}</h3>  
+                <div class="total">
+                    <h3 v-if="carrito.length >= 1">Total: ${{ sumaPrecio(this.carrito) }}</h3>
+                    <h3 v-if="carrito.paquetesElegidos >= 10">Con descuento: {{ this.descuento }}</h3>
+                </div>
             </div>
         </div>
     </div>
@@ -92,12 +53,13 @@
 
 <script>
     import { mapState, mapActions, mapGetters } from 'vuex';
-    import jsPDF from 'jspdf';
-    import 'jspdf-autotable';
+    import dialogCarrito from '../components/dialogCarrito';
     export default {
+        components: {
+            dialogCarrito: dialogCarrito,
+        },
         data() {
             return {
-                openTicket: false,
                 info: [],
                 bodyInfo: [],
                 ticket: [],
@@ -109,6 +71,7 @@
             ...mapState({
                 carrito: (state) => state.carritos.carrito,
                 mensaje: (state) => state.carritos.mensaje,
+                dialog: (state) => state.dialog,
             }),
             ...mapGetters({
                 paquetes: 'carritos/paquetes',
@@ -131,6 +94,7 @@
                 removeItemFromCart: 'carritos/removeItemFromCart',
                 removeQuantity: 'productos/removeQuantity',
                 newCart: 'carritos/newCartDB',
+                changeState: 'changeStateDialogTrue'
             }),
             sumaPrecio(item) {
                 return item.reduce((total, item) => total + Number(this.calcularPrecio(item)), 0);
@@ -143,27 +107,6 @@
             // Funcion para cerrar el ticket
             closeOverlay() {
                 this.openTicket = false;
-            },
-            // Funcion para modificar como es que queremos que se vea el pdf a la hora de exportarlo y con que data.
-            exportPDF() {
-                var doc = new jsPDF('p', 'pt');
-                doc.text('Delebritex', 40, 40);
-                this.info = this.carrito.map((element) => {
-                    return element;
-                });
-                this.info.forEach((element) => {
-                    const new_info = [element.nombre, element.cantidadElegida, '$' + element.precioUnidad];
-                    this.ticket.push(new_info);
-                });
-                const total = [" "," ",'Total: $' + this.calcularTotal()];
-                this.ticket.push(total);
-                doc.autoTable({
-                    theme: 'striped',
-                    margin: { top: 60 },
-                    head: [['Producto', 'Unidades', 'Precio']],
-                    body: this.ticket,
-                });
-                doc.save('ticket.pdf');
             },
             // Guardar el carrito en la base de datos transformandolo en el objeto que nos parece mas conveniente
             guardarCarrito() {

@@ -68,8 +68,8 @@
         methods: {
             ...mapActions({
                 findProduct: 'productos/findProduct',
-                addCartAdmin: 'carritos/addCartAdmin',
-                removeCartAdmin: 'carritos/removeCartAdmin',
+                addCartAdmin: 'addCartAdmin',
+                removeCartAdmin: 'removeCartAdmin',
                 getProducts: 'productos/getProducts',
             }),
             agregarProducto() {

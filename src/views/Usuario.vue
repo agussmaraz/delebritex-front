@@ -1,28 +1,28 @@
 <template>
     <div class="usuario margin">
         <!-- <v-app> -->
-            <h1>Hola {{ usuario.nombre }}</h1>
-            <h5>Estas son las compras que hiciste ultimamente</h5>
+        <h1>Hola {{ usuario.nombre }}</h1>
+        <h5>Estas son las compras que hiciste ultimamente</h5>
+        <br />
+        <v-card class="mx-auto mb-4" color="#EBEBEB" max-width="700" outlined v-for="(carrito, index) in accederNumeroCompra" :key="index">
+            <div class="p-usuario">Fecha: {{ carrito.fecha }}</div>
+            <v-list-item three-line v-for="(item, index) in carrito.productos" :key="index">
+                <v-list-item-content>
+                    <v-list-item-title class=" mb-1">{{ item.producto }}</v-list-item-title>
+                    <div class="d-flex">
+                        <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>Empaques: {{ item.empaques }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>Precio: ${{ item.precioTotal }}</v-list-item-subtitle>
+                    </div>
+                </v-list-item-content>
+                <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
+            </v-list-item>
             <br />
-            <v-card class="mx-auto mb-4" color="#EBEBEB" max-width="700" outlined v-for="(carrito, index) in accederNumeroCompra" :key="index">
-                <div class="p-usuario">Fecha: {{ carrito.fecha }}</div>
-                <v-list-item three-line v-for="(item, index) in carrito.productos" :key="index">
-                    <v-list-item-content>
-                        <v-list-item-title class=" mb-1">{{ item.producto }}</v-list-item-title>
-                        <div class="d-flex">
-                            <v-list-item-subtitle>Unidades: {{ item.unidades }}</v-list-item-subtitle>
-                            <v-list-item-subtitle>Empaques: {{ item.empaques }}</v-list-item-subtitle>
-                            <v-list-item-subtitle>Precio: ${{ item.precioTotal }}</v-list-item-subtitle>
-                        </div>
-                    </v-list-item-content>
-                    <v-img class="white--text align-end" max-width="100" :src="item.imagen"> </v-img>
-                </v-list-item>
-                <br />
-                <div class="p-usuario">
-                    <p>Total: $ {{ carrito.total }}</p>
-                    <p>Estado: {{ carrito.estado }}</p>
-                </div>
-            </v-card>
+            <div class="p-usuario">
+                <p>Total: $ {{ carrito.total }}</p>
+                <p>Estado: {{ carrito.estado }}</p>
+            </div>
+        </v-card>
         <!-- </v-app> -->
     </div>
 </template>
@@ -46,6 +46,7 @@
                 const carritos = this.separarProductosPorCarrito();
                 const lista = this.carritoAListaDeProductos(carritos);
 
+                // console.log(lista);
                 return lista;
             },
         },
@@ -65,14 +66,28 @@
             },
             // Tranformar las reservas en un array gigante para podes acceder a ellas por un for y tambien generando un objeto con data basica de cada carrito
             carritoAListaDeProductos(carrito) {
-                const lista_de_productos = [];
+                let lista_de_productos = [];
                 for (const key in carrito) {
                     if (carrito.hasOwnProperty(key)) {
                         const productos = carrito[key];
+                        // console.log(productos);
                         const carrito_final = this.generarObjetoDeCarrito(productos);
                         lista_de_productos.push(carrito_final);
                     }
                 }
+                lista_de_productos = lista_de_productos.sort((a, b) => {
+                    let split_a = a.fecha.split('/');
+                    let split_b = b.fecha.split('/');
+
+                    const fecha_ordenada_a = [split_a[1], split_a[0], split_a[2]].join('/');
+                    const fecha_ordenada_b = [split_b[1], split_b[0], split_b[2]].join('/');
+
+                    const fecha_de_a = new Date(fecha_ordenada_a).getTime();
+                    const fecha_de_b = new Date(fecha_ordenada_b).getTime();
+
+                    return fecha_de_a < fecha_de_b ? 1 : fecha_de_a === fecha_de_b ? 0 : -1;
+                });
+
                 return lista_de_productos;
             },
             // Objeto para guardar en el array de Reservas con data basica de cada carrito

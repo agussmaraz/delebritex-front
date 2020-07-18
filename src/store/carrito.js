@@ -33,6 +33,9 @@ const getters = {
                 fecha: new Date(pedido[1][0].createdAt).toLocaleDateString(),
                 estado: pedido[1][0].estado,
                 productos: pedido[1],
+                direccion: pedido[1][0].direccion,
+                piso: pedido[1][0].piso,
+                telefono: pedido[1][0].telefono,
             };
 
             resultado.push(buffer);
@@ -46,17 +49,16 @@ const getters = {
     cantidadesElegida(state) {
         return state.carrito.reduce((total, item) => total + Number(item.cantidadElegida), 0);
     },
- 
 };
 
 const actions = {
     newCartDB({ commit, dispatch }, payload) {
-       
         axios
             .post('/nuevo-carrito', payload)
             .then((res) => {
                 dispatch('removeQuantityDB', payload);
                 const data = 'La compra fue exitosa';
+                dispatch('removeQuantityDB', payload);
                 commit('SET_MENSAJE', [data, 'success']);
                 commit('REMOVE_FROM_CART');
             })

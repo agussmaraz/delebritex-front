@@ -1,7 +1,8 @@
 import store from '../store';
 
 export default (to, from, next) => {
-    localStorage.removeItem("carritoAdmin")
+    // localStorage.removeItem('carritoAdmin')
+
     const data = localStorage.getItem('carritoAdmin');
     if (store.state.carritoAdmin.length == 0) {
         if (data) {

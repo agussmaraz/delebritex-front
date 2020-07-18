@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     state: {
         user: null,
         carritoAdmin: [],
+        dialog: false,
     },
     getters: {
         isLogged: (state) => !!state.user,
@@ -64,6 +65,12 @@ const store = new Vuex.Store({
                 commit('REMOVE_ITEM_FROM_CART_ADMIN', producto);
             }
         },
+        changeStateDialogTrue({commit}){
+            commit('CHANGE_STATE');
+        },
+        changeStateDialogFalse({commit}){
+            commit('CHANGE_STATE_FALSE')
+        }
 
     },
     mutations: {
@@ -87,6 +94,12 @@ const store = new Vuex.Store({
         REMOVE_ITEM_FROM_CART_ADMIN(state, producto) {
             state.carritoAdmin = state.carritoAdmin.filter((e) => e.id != producto.id);
         },
+        CHANGE_STATE(state){
+            state.dialog = true
+        },
+        CHANGE_STATE_FALSE(state){
+            state.dialog = false
+        }
     },
 });
 

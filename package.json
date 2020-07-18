@@ -9,6 +9,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@fortawesome/fontawesome-free": "^5.8.2",
+    "algoliasearch": "^3.35.1",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.12.0",
@@ -16,6 +17,9 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.5.3",
     "jwt-decode": "^2.2.0",
+    "material-design-icons": "^3.0.1",
+    "material-icons": "^0.3.1",
+    "places.js": "^1.19.0",
     "roboto-fontface": "*",
     "slug": "^2.1.1",
     "vue": "^2.6.11",
@@ -23,10 +27,12 @@
     "vue-json-excel": "^0.2.98",
     "vue-mq": "^1.0.1",
     "vue-paginate": "^3.6.0",
+    "vue-places": "^2.2.0",
     "vue-print-nb": "^1.5.0",
     "vue-router": "^3.1.6",
     "vuejs-paginate": "^2.1.0",
     "vuetify": "^2.2.11",
+    "vuetify-algolia-places": "^1.0.1",
     "vuex": "^3.3.0"
   },
   "devDependencies": {
