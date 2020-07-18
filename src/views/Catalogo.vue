@@ -10,6 +10,9 @@
             <paginate name="prod_filtered" :list="filtro" :per="9" :container="this">
                 <v-row>
                     <v-card v-for="(item, index) in paginated('prod_filtered')" :key="index" class="texto-card m-3" max-width="300" max-height="400" @click="conseguirProducto(item)">
+                        <div v-if="item.totalUnidad == 0" class="agotado">
+                            AGOTADO
+                        </div>
                         <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                         <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
                         <v-card-text class="text--primary">
@@ -45,7 +48,7 @@
             <v-dialog v-model="dialog" max-width="700" class="mobile">
                 <v-card class="mx-auto" height="600" width="700" outlined>
                     <v-img :src="this.productoId.imagen" width="665" height="250" class="m-3 img-margin"></v-img>
-                       <v-list-item three-line class="space-buttons"> 
+                    <v-list-item three-line class="space-buttons">
                         <v-list-item-content>
                             <v-list-item-title class="headline">{{ this.productoId.nombre }}</v-list-item-title>
                             <div class=" sm-1">
@@ -64,9 +67,9 @@
                         <div class="d-flex sm-1">
                             <div>
                                 <div>
-                                <p v-if="error" class=" catalogo-error">
-                                    {{ this.error.unidades }}
-                                </p>
+                                    <p v-if="error" class=" catalogo-error">
+                                        {{ this.error.unidades }}
+                                    </p>
                                 </div>
                                 Unidades
                                 <div>
@@ -223,14 +226,23 @@
 </script>
 
 <style lang="scss">
-    .img-margin{
+    .agotado {
+        background-color: red;
+        font-weight: bold;
+        border: solid red 1px;
+        width: 50%;
+        position: absolute;
+        z-index: 1;
+        color: white;
+    }
+    .img-margin {
         margin: 1rem !important;
         @media screen and (max-width: 430px) {
-           margin: 0 !important;
+            margin: 0 !important;
         }
     }
 
-    .space-buttons{
+    .space-buttons {
         margin-bottom: 1rem !important;
     }
 
@@ -239,11 +251,11 @@
         color: red;
         position: absolute;
         margin-top: -1.6rem !important;
-         @media screen and (max-width: 430px) {
-           margin-top: -2rem!important;
+        @media screen and (max-width: 430px) {
+            margin-top: -2rem !important;
         }
     }
-    
+
     .card {
         width: 250px;
     }

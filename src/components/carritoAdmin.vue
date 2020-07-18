@@ -22,7 +22,7 @@
                                     <span>Unidades por bulto: {{ item.unidadPorEmpaque }}</span>
                                 </v-tooltip>
                             </v-list-item-subtitle>
-                            <v-list-item-subtitle> Total: ${{ calcularPrecio(item) }} <v-icon small @click="editarPrecio(item)">mdi-pencil</v-icon> <v-icon small @click="removeItemFromCartAdmin(item)">mdi-delete</v-icon></v-list-item-subtitle>
+                            <v-list-item-subtitle> Total: ${{ calcularPrecio(item) }} <v-icon small @click="editarPrecio(item)">mdi-pencil</v-icon> </v-list-item-subtitle>
                         </div>
                     </v-list-item-content>
                 </v-list-item>
@@ -63,6 +63,9 @@
 
 <script>
     import { mapState, mapGetters, mapActions } from 'vuex';
+    import jsPDF from 'jspdf';
+    import 'jspdf-autotable';
+
     export default {
         name: 'carritoAdmin',
         data() {
@@ -71,21 +74,25 @@
                 precioBulto: 0,
                 precioUnidad: 0,
                 dataEditar: '',
+                info: [],
+                bodyInfo: [],
+                ticket: [],
             };
         },
         computed: {
             ...mapState({
-                productos: (state) => state.productos,
-                filtro: (state) => state.filtro.productos,
+                productos: (state) => state.productos.productos,
+                filtro: (state) => state.productos.filtro.productos,
                 carritoAdmin: (state) => state.carritoAdmin,
             }),
         },
+
         methods: {
             ...mapActions({
-                findProduct: 'findProduct',
+                findProduct: 'productos/findProduct',
                 addCartAdmin: 'addCartAdmin',
                 removeCartAdmin: 'removeCartAdmin',
-                removeQuantity: 'removeQuantity',
+                removeQuantity: 'productos/removeQuantity',
                 removeItemFromCartAdmin: 'removeItemFromCartAdmin',
             }),
             editarPrecio(item) {
@@ -102,8 +109,47 @@
             sumaPrecio(item) {
                 return item.reduce((total, item) => total + Number(this.calcularPrecio(item)), 0);
             },
+            exportPDF() {
+                console.log(this.carritoAdmin);
+                var doc = new jsPDF('p', 'pt');
+                doc.text('Delebritex', 40, 40);
+                let total = 0;
+
+                this.info = this.carritoAdmin.map((element) => {
+                    total += this.calcularTotal(element);
+
+                    return element;
+                });
+                this.info.forEach((element) => {
+                    const new_info = [element.producto, element.empaques, element.unidades, '$' + element.precioUnidad, element.empaques > 0 ? '$' + element.precioBulto : '-'];
+                    this.ticket.push(new_info);
+                });
+
+                total = ['Total: $' + total];
+
+                this.ticket.push(total);
+                doc.autoTable({
+                    theme: 'striped',
+                    margin: { top: 60 },
+                    head: [['Producto', 'Empaques', 'Unidades', 'Precio Unidad', 'Precio Bulto']],
+                    body: this.ticket,
+                });
+                doc.save('ticket.pdf');
+            },
+            calcularTotal(item) {
+                let total = 0;
+
+                if (item.unidades > 0) {
+                    total += item.unidades * item.precioUnidad;
+                }
+                if (item.empaques > 0) {
+                    total += item.empaques * item.precioBulto;
+                }
+
+                return total;
+            },
             verificarCompra() {
-                // console.log(this.carritoAdmin);
+                this.exportPDF();
                 const numero = Math.round(Math.random() * 100000);
                 for (let index = 0; index < this.carritoAdmin.length; index++) {
                     const element = this.carritoAdmin[index];
