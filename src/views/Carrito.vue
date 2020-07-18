@@ -1,34 +1,34 @@
 <template>
     <v-app>
-        <div class="space margin">
-            <div class="list-checkout" v-if="carrito.length >= 1">
-                <ul class="checkout-list">
-                    <li class="list-of-names">
-                        <span class="list-names"></span>
-                        <span class="list-names">Producto</span>
-                        <span class="list-names">Paquetes</span>
-                        <span class="list-names">Unidades</span>
-                        <span class="list-names">Precio Unidad</span>
-                        <span class="list-names">Subtotal</span>
-                        <span class="list-names">Eliminar</span>
+        <div class="space">
+        <div class="list-checkout" v-if="carrito.length >= 1">
+            <ul class="checkout-list">
+                <li class="list-of-names">
+                    <span class="list-names"></span>
+                    <span class="list-names">Producto</span>
+                    <span class="list-names">Paquetes</span>
+                    <span class="list-names">Unidades</span>
+                    <span class="list-names">Precio Unidad</span>
+                    <span class="list-names">Subtotal</span>
+                    <span class="list-names">Eliminar</span>
+                </li>
+            </ul>
+        </div>
+        <div class="checkout-box">
+            <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
+            <div class="overflow-y-auto" style="max-height: 550px">
+                <ul v-for="(item, index) in carrito" :key="index" class="checkout-list overflow-y-auto" style="max-height: 300px">
+                    <li class="checkout-product">
+                        <img :src="item.imagen" alt="" class="product-image" />
+                        <h4 class="product-name">{{ item.nombre }}</h4>
+                        <span class="product-price">{{ item.paquetesElegidos }}</span>
+                        <span class="product-price">{{ cantidad(item) }}</span>
+                        <span class="product-price">${{item.precioUnidad}}</span>
+                        <span class="product-price">${{ calcularPrecio(item) }}</span>
+                        <button class="product-remove" @click="removeItemFromCart(item)">X</button>
                     </li>
                 </ul>
             </div>
-            <div class="checkout-box">
-                <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-                <div class="overflow-y-auto" style="max-height: 550px">
-                    <ul v-for="(item, index) in carrito" :key="index" class="checkout-list">
-                        <li class="checkout-product">
-                            <img :src="item.imagen" alt="" class="product-image" />
-                            <h4 class="product-name">{{ item.nombre }}</h4>
-                            <span class="product-price">{{ item.paquetesElegidos }}</span>
-                            <span class="product-price">{{ cantidad(item) }}</span>
-                            <span class="product-price">{{ item.precioUnidad }}</span>
-                            <span class="product-price">${{ calcularPrecio(item) }}</span>
-                            <button class="product-remove" @click="removeItemFromCart(item)">X</button>
-                        </li>
-                    </ul>
-                </div>
                 <div class="checkout-message">
                     <h3 v-if="carrito.length == 0">No tenes poductos en el carrito todavia!</h3>
                     <v-img v-if="carrito.length == 0" src="/img/fondo.png" width="70%" class="background-margin"></v-img>
@@ -47,6 +47,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </v-app>
 </template>
 
@@ -107,7 +108,6 @@
             closeOverlay() {
                 this.openTicket = false;
             },
-
             // Guardar el carrito en la base de datos transformandolo en el objeto que nos parece mas conveniente
             guardarCarrito() {
                 const storage = localStorage.getItem('usertoken');
@@ -132,7 +132,13 @@
                 this.newCart(payload);
                 this.showAlert();
                 this.openTicket = false;
-                this.exportPDF();
+                if (this.mensaje.color == 'success') {
+                    this.exportPDF();
+                }
+                if (this.mensaje.color == 'success') {
+                   this.removeFromCart(); 
+                }
+                
             },
 
             // Sacar el precio de las unidades que eligio
@@ -196,7 +202,7 @@
 
     .checkout-product {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr 1fr;
+        grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr 0.5fr 1fr;
         background-color: #fff;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;
@@ -208,14 +214,32 @@
 
     .list-of-names {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr 1fr;
-        background-color: #fff;
+        grid-template-columns: 0.7fr 1.5fr 1fr 1.5fr 1fr 1fr 1.5fr;
+        background-color: #424242;
+        color:#E9E9E9;
         box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
         border-radius: 5px;
         list-style: none;
         box-sizing: border-box;
         padding: 1.5em;
         margin: 1rem 0;
+    }
+    
+    .ticket-list {
+        display: grid;
+        grid-template-columns: 0.3fr 1.5fr 1fr 1.5fr 1fr 1.5fr;
+        background-color: #1E1E1E;
+        color:#E9E9E9;
+        box-shadow: 0px 0px 10px rgba(73, 74, 78, 0.1);
+        border-radius: 5px;
+        list-style: none;
+        box-sizing: border-box;
+        padding: 1em;
+        margin: -2rem -0.8rem 0 -0.8rem;
+    }
+
+    .ticket-list * {
+        place-self: center;
     }
 
     .list-of-names * {
@@ -227,12 +251,11 @@
     }
     .product-image {
         grid-column: 1/2;
-        width: 30%;
-        height: 140%;
+        width: 50%;
+        height: 100%;
         border-radius: 50%;
-        @media screen and (max-width: 750px) {
-            height: 100%;
-            width: 70%;
+        @media screen and (max-width:750px) {
+            display: none;
         }
     }
 
@@ -305,8 +328,9 @@
         color: #000 !important;
         margin-right: auto !important;
     }
-    .space {
-        @media screen and (max-width: 768px) {
+    .space{
+
+    @media screen and (max-width: 768px) {
             margin-bottom: 40rem;
         }
     }

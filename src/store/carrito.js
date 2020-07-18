@@ -56,6 +56,7 @@ const actions = {
         axios
             .post('/nuevo-carrito', payload)
             .then((res) => {
+                dispatch('removeQuantityDB', payload);
                 const data = 'La compra fue exitosa';
                 dispatch('removeQuantityDB', payload);
                 commit('SET_MENSAJE', [data, 'success']);
