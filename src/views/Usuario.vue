@@ -5,7 +5,10 @@
         <h5>Estas son las compras que hiciste ultimamente</h5>
         <br />
         <v-card class="mx-auto mb-4" color="#EBEBEB" max-width="700" outlined v-for="(carrito, index) in accederNumeroCompra" :key="index">
-            <div class="p-usuario">Fecha: {{ carrito.fecha }}</div>
+            <div class="d-flex">
+                <div class="p-usuario">Fecha: {{ carrito.fecha }}</div>
+                <div class="p-usuario">Numero Compra: {{ carrito.numeroCompra }}</div>
+            </div>
             <v-list-item three-line v-for="(item, index) in carrito.productos" :key="index">
                 <v-list-item-content>
                     <v-list-item-title class=" mb-1">{{ item.producto }}</v-list-item-title>
@@ -97,11 +100,13 @@
                     estado: '',
                     fecha: '',
                     productos: [],
+                    numeroCompra: '',
                 };
 
                 carrito_final.total = this.calcularTotalCarrito(productos);
                 carrito_final.fecha = this.sacarFechaCarrito(productos);
                 carrito_final.estado = this.calcularEstadoDeCarrito(productos);
+                carrito_final.numeroCompra = this.numeroCompra(productos);
 
                 carrito_final.productos = productos;
                 return carrito_final;
@@ -109,6 +114,13 @@
             // Sacar el total de cada carrito para guardar en el objeto
             calcularTotalCarrito(carrito) {
                 return carrito.reduce((total, item) => total + Number(item.precioTotal), 0);
+            },
+            numeroCompra(carrito) {
+                for (let index = 0; index < carrito.length; index++) {
+                    const element = carrito[index];
+                    const numeroCompra = element.numeroCompra;
+                    return numeroCompra;
+                }
             },
             // Sacar el estado de cada carrito para guardar en el objeto
             calcularEstadoDeCarrito(carrito) {
@@ -150,6 +162,7 @@
                 const id = usuario['id'];
                 this.axios.get(`/carrito/${id}`).then((res) => {
                     this.carrito = res.data;
+                    console.log(this.carrito);
                 });
             },
             // Tranformar la fecha en DD-MM-YYYY

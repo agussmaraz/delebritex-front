@@ -142,7 +142,7 @@
                 });
                 this.newCart(payload);
                 this.showAlert();
-                this.openTicket = false;
+                this.changeState();
                 this.exportPDF();
             },
             exportPDF() {
