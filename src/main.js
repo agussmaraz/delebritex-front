@@ -55,4 +55,4 @@ import '@fortawesome/fontawesome-free/css/all.css';
 Vue.use(VueAxios, axios);
 
 // Agregamos la URL base de nuestra API
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = 'https://api.delebritex.com';
