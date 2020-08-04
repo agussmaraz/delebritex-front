@@ -3,7 +3,7 @@
         <h1>Agregar nuevos productos</h1>
         <template>
             <b-alert :show="dismissCountDown" dismissible :variant="mensaje.color" @dismissed="dismissCountDown = 0" @dismiss-count-down="countDownChanged">{{ mensaje.texto }}</b-alert>
-            <v-form enctype="multipart/form-data" class="formProducto" data-app>
+            <v-form enctype="multipart/form-data" ref="form" class="formProducto" data-app>
                 <template>
                     <v-row class="form-margin">
                         <v-col cols="5" md="6">
@@ -79,7 +79,8 @@
                         </v-col>
                     </v-row>
 
-                    <input @click.prevent="nuevoProducto()" type="submit" value="Enviar" />
+                    <v-btn @click.prevent="nuevoProducto()" class="button-enviar"> Enviar </v-btn>
+                    <v-btn @click="vaciarData()">Vaciar</v-btn>
                 </template>
             </v-form>
         </template>
@@ -109,7 +110,6 @@
                 path: '',
                 dismissSecs: 5,
                 dismissCountDown: 0,
-                mensaje: { color: '', texto: '' },
                 error: {},
             };
         },
@@ -118,6 +118,7 @@
                 medida: (state) => state.productos.medida,
                 categoria: (state) => state.productos.categorias,
                 empaque: (state) => state.productos.empaques,
+                mensaje: (state) => state.productos.mensaje,
             }),
             totalUnidadesPorPaquete() {
                 if (this.producto.empaqueId == 'caja') {
@@ -196,15 +197,13 @@
                 formulario.set('precioDistribuidoraBulto', this.producto.precioDistribuidoraBulto);
 
                 await this.newProduct(formulario);
-
-                const producto = Object.entries(this.producto);
-                for (let index = 0; index < producto.length; index++) {
-                    const element = producto[index];
-                    element[1] = '';
-                }
-
+                this.vaciarData();
                 this.showAlert();
             },
+            vaciarData() {
+                this.$refs.form.reset();
+            },
+
             // funciones de alert de bootstrap
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown;
@@ -261,5 +260,8 @@
     }
     .p-error {
         color: red;
+    }
+    .button-enviar {
+        margin-right: 20px;
     }
 </style>
