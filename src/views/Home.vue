@@ -2,7 +2,7 @@
     <v-app>
         <v-container>
             <v-container>
-                <v-img src="/img/delebritex.jpeg/" max-height="50%" max-width="auto%" contain position> </v-img>
+                <v-img src="/img/delebritex.jpeg" max-height="50%" max-width="auto%" contain position> </v-img>
             </v-container>
         </v-container>
         <v-spacer></v-spacer>
