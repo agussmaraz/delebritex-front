@@ -35,7 +35,7 @@ const store = new Vuex.Store({
             if (data) {
                 const usuario = JSON.parse(data);
                 const token = usuario['token'];
-                axios.get(`http://localhost:3000/usuario/token/${token}`).then((res) => {
+                axios.get(`https://api.delebritex.com/usuario/token/${token}`).then((res) => {
                     const usuarioToken = res.data;
                     commit('SET_USER', usuarioToken);
                 });
