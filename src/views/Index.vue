@@ -11,9 +11,11 @@
                 <v-toolbar-title class="center">Nuestros productos</v-toolbar-title>
             </v-toolbar>
         </v-card>
-        <v-carousel class="space">
-            <v-carousel-item v-for="(item, i) in limitProduct()" :key="i" :src="item.imagen" reverse-transition="fade-transition" transition="fade-transition" to="/catalogo" show-arrows-on-hover cycle></v-carousel-item>
-        </v-carousel>
+        <div v-if="this.productos.length >= 5">
+            <v-carousel class="space">
+                <v-carousel-item v-for="(item, i) in limitProduct()" :key="i" :src="item.imagen" reverse-transition="fade-transition" transition="fade-transition" to="/catalogo" show-arrows-on-hover cycle></v-carousel-item>
+            </v-carousel>
+        </div>
     </v-app>
 </template>
 <script>

@@ -21,10 +21,10 @@
                                 {{ this.error.empaqueId }}
                             </p>
                         </v-col>
-                        <v-col cols="5" md="6" v-if="producto.empaqueId == 'caja'">
+                        <v-col cols="5" md="6" v-if="producto.empaqueId == 'bulto'">
                             <v-text-field v-model="producto.cantidadPaquetes" label="Cantidad de paquetes"></v-text-field>
                         </v-col>
-                        <v-col cols="5" md="6" v-if="this.producto.empaqueId == 'caja'">
+                        <v-col cols="5" md="6" v-if="this.producto.empaqueId == 'bulto'">
                             <v-text-field v-model="producto.unidadPorEmpaque" label="Unidades por paquetes" required></v-text-field>
                             <p>El total de unidades son: {{ totalUnidadesPorPaquete }}</p>
                             <p v-if="error" class=" p-error">
@@ -77,6 +77,10 @@
                                 {{ this.error.imagen }}
                             </p>
                         </v-col>
+                         <v-col cols="5" md="6">
+                            <v-text-field v-model="producto.descripcion" label="Descripción del producto" required></v-text-field>
+                          
+                        </v-col>
                     </v-row>
 
                     <v-btn @click.prevent="nuevoProducto()" class="button-enviar"> Enviar </v-btn>
@@ -106,6 +110,7 @@
                     precioBulto: '',
                     precioDistribuidoraUnidad: '',
                     precioDistribuidoraBulto: '',
+                    descripcion: ''
                 },
                 path: '',
                 dismissSecs: 5,
@@ -121,7 +126,7 @@
                 mensaje: (state) => state.productos.mensaje,
             }),
             totalUnidadesPorPaquete() {
-                if (this.producto.empaqueId == 'caja') {
+                if (this.producto.empaqueId == 'caja' || 'bulto') {
                     const totalUnidadPorEmpaque = Number(this.producto.cantidadPaquetes) * Number(this.producto.unidadPorEmpaque);
                     return totalUnidadPorEmpaque;
                 }
@@ -133,7 +138,7 @@
                 }
             },
             totalPeso() {
-                if (this.producto.empaqueId == 'caja') {
+                if (this.producto.empaqueId == 'caja' || 'bulto') {
                     const totalPeso = this.totalUnidadesPorPaquete * this.producto.pesoUnidad;
                     return totalPeso;
                 } else {
@@ -183,7 +188,7 @@
                 this.producto.slug = this.producto.nombre;
                 const formulario = new FormData();
                 formulario.set('medidaId', this.producto.medidaId == 'kg' ? 2 : 3);
-                formulario.set('empaqueId', this.producto.empaqueId == 'caja' ? 1 : 2);
+                formulario.set('empaqueId', this.producto.empaqueId == 'bulto' ? 1 : 2);
                 formulario.set('categoriaId', this.producto.categoriaId == 'hola' ? 2 : 3);
                 formulario.set('pesoUnidad', this.producto.pesoUnidad);
                 formulario.set('unidadPorEmpaque', this.producto.unidadPorEmpaque);
@@ -195,6 +200,7 @@
                 formulario.set('precioBulto', this.producto.precioBulto);
                 formulario.set('precioDistribuidoraUnidad', this.producto.precioDistribuidoraUnidad);
                 formulario.set('precioDistribuidoraBulto', this.producto.precioDistribuidoraBulto);
+                formulario.set('descripcion', this.producto.descripcion);
 
                 await this.newProduct(formulario);
                 this.vaciarData();
