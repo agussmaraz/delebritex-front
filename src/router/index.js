@@ -10,8 +10,8 @@ Vue.use(VueRouter);
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: () => import('../views/Home.vue'),
+        name: 'Index',
+        component: () => import('../views/Index.vue'),
     },
     {
         path: '/contacto',

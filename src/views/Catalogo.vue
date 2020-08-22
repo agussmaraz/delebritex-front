@@ -16,7 +16,7 @@
                         <v-img class="white--text align-end" height="200px" :src="item.imagen"> </v-img>
                         <v-card-title class="text-capitalize">{{ item.nombre }}</v-card-title>
                         <v-card-text class="text--primary">
-                            <div>Whitsunday Island, Whitsunday Islands</div>
+                            <div>{{ item.descripcion }}</div>
                             <div>${{ item.precioUnidad }}</div>
                         </v-card-text>
                     </v-card>
@@ -37,21 +37,23 @@
                 </v-list-item>
 
                 <v-divider></v-divider>
-                
             </v-navigation-drawer>
             <v-dialog v-model="dialog" max-width="700" class="mobile">
                 <v-card class="mx-auto" height="600" width="700" outlined>
                     <v-img :src="this.productoId.imagen" width="665" height="250" class="m-3 img-margin"></v-img>
                     <v-list-item three-line class="space-buttons">
                         <v-list-item-content>
-                            <v-list-item-title class="headline">{{ this.productoId.nombre }}</v-list-item-title>
+                            <v-list-item-title class="headline text-capitalize">{{ this.productoId.nombre }}</v-list-item-title>
+                            <p>{{ this.productoId.descripcion }}</p>
                             <div class=" sm-1">
-                                <h5>Precio por unidad: ${{ this.productoId.precioUnidad }}</h5>
-                                <h5>Precio paquetes: ${{ this.productoId.precioBulto }}</h5>
+                                <div class="d-flex justify-center mt-3">
+                                    <h6>Precio por unidad: ${{ this.productoId.precioUnidad }}</h6>
+                                    <h6 class="ml-4">Precio paquetes: ${{ this.productoId.precioBulto }}</h6>
+                                </div>
                                 <small> Unidades por paquetes: {{ this.productoId.unidadPorEmpaque }} </small>
-                                <v-divider class="mx-4" vertical></v-divider>
+                                <v-divider class="mx-3" vertical></v-divider>
                                 <small>Stock unidades: {{ this.productoId.totalUnidad }}</small>
-                                <v-divider class="mx-4" vertical></v-divider>
+                                <v-divider class="mx-3" vertical></v-divider>
                                 <small class="ml-2">Paquetes en stock: {{ this.paquetes }}</small>
                             </div>
                         </v-list-item-content>

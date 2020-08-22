@@ -29,6 +29,9 @@
                                             <v-text-field v-model="productoEditar.precioUnidad" label="Precio Unidad"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="productoEditar.descripcion" label="Descripcion"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
                                             <v-text-field v-model="productoEditar.precioBulto" label="Precio Bulto"></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -43,7 +46,7 @@
                         </v-card>
                     </v-dialog>
                 </template>
-                <template v-slot:item.actions="{ item }">
+                <template v-slot:[`item.actions`]="{ item }">
                     <v-icon small class="mr-2" @click="editarProductoId(item)">
                         mdi-pencil
                     </v-icon>
@@ -69,6 +72,7 @@
                     { text: 'Paquetes', value: 'empaque' },
                     { text: 'Precio Unidad', value: 'precioUnidad' },
                     { text: 'Precio Bulto', value: 'precioBulto' },
+                    { text: 'Descripcion', value: 'descripcion' },
                     { text: 'Acciones', value: 'actions', sortable: false },
                 ],
                 producto: [],
@@ -119,6 +123,7 @@
                     this.productos[index].pesoUnidad = this.productoEditar.pesoUnidad;
                     this.productos[index].precioUnidad = this.productoEditar.precioUnidad;
                     this.productos[index].precioBulto = this.productoEditar.precioBulto;
+                    this.productos[index].descripcion = this.productoEditar.descripcion;
                     this.productoEditar = {};
                     this.dialog = false;
                 });
@@ -131,7 +136,7 @@
                 const unidadPorEmpaque = item.unidadPorEmpaque;
 
                 item.totalUnidad = Number(empaques) * Number(unidadPorEmpaque);
-                item.empaque = empaques + ' cajas';
+                item.empaque = empaques + ' bultos';
             },
             empaques(item) {
                 const unidades = item.totalUnidad;
@@ -155,8 +160,8 @@
                 return this.productos.map((producto) => {
                     producto.createdAt = this.formatearFecha(producto.createdAt);
                     producto.updatedAt = this.formatearFecha(producto.updatedAt);
-                    if (producto.empaque.nombre == 'caja') {
-                        producto.empaque = Math.ceil(this.empaques(producto)) + ' cajas';
+                    if (producto.empaque.nombre == 'bulto') {
+                        producto.empaque = Math.ceil(this.empaques(producto)) + ' bultos';
                     } else if (producto.empaque.nombre == 'unidad') {
                         producto.empaque = producto.totalUnidad + ' unidades';
                     }
