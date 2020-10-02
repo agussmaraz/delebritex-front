@@ -77,9 +77,8 @@
                                 {{ this.error.imagen }}
                             </p>
                         </v-col>
-                         <v-col cols="5" md="6">
+                        <v-col cols="5" md="6">
                             <v-text-field v-model="producto.descripcion" label="Descripción del producto" required></v-text-field>
-                          
                         </v-col>
                     </v-row>
 
@@ -110,7 +109,7 @@
                     precioBulto: '',
                     precioDistribuidoraUnidad: '',
                     precioDistribuidoraBulto: '',
-                    descripcion: ''
+                    descripcion: '',
                 },
                 path: '',
                 dismissSecs: 5,
@@ -228,8 +227,7 @@
 
 <style lang="scss">
     .form-margin {
-        margin-left: -50px !important;
-        margin-right: -100px !important;
+        justify-content: center;
     }
     .margin {
         @media screen and (max-width: 990px) {
@@ -244,7 +242,6 @@
     }
 
     .formProducto {
-        width: 60%;
         margin: 0 auto;
     }
     .input-form {

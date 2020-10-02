@@ -81,7 +81,7 @@
                         localStorage.setItem('usertoken', JSON.stringify(payload));
                         this.usuario.email = '';
                         this.usuario.contraseña = '';
-                        this.$router.push({ name: 'Home' });
+                        this.$router.push({ name: 'Index' });
                     })
                     .catch((e) => {
                         this.mensaje.color = 'danger';
