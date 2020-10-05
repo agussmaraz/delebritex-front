@@ -88,7 +88,7 @@
                         this.usuario.email = '';
                         this.usuario.contraseña = '';
                         this.usuario = res.data;
-                        this.$router.push({ name: 'Home' });
+                        this.$router.push({ name: 'Index' });
                     })
                     .catch((err) => {
                         this.mensaje.color = 'danger';

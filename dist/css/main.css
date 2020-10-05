@@ -6,7 +6,6 @@
 }   
 
 #app{
-    font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -14,7 +13,6 @@
 }
 
 nav{
-    font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 16px;
     color: rgb(red)
