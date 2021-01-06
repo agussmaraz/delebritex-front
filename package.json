@@ -10,7 +10,7 @@
     "@babel/polyfill": "^7.4.4",
     "@fortawesome/fontawesome-free": "^5.8.2",
     "algoliasearch": "^3.35.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.12.0",
     "core-js": "^3.6.4",
